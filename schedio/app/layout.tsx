@@ -42,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+      style={{width: '100vw', overflow: 'hidden'}}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarProvider>

@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 // app/schedule/page.tsx
 import { MessageSquareMore } from 'lucide-react';
 import { Camera } from 'lucide-react';
-
+import Editor from '@draft-js-plugins/editor';
+import { EditorState } from 'draft-js';
 
 export default function ComposePage() {
   const divRef = useRef(null);
@@ -21,27 +22,43 @@ export default function ComposePage() {
     }
   };
 
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
+
+  const editorStyle = {
+    flexGrow: 1,
+    width: '100%',
+    maxWidth: '100%',
+    // minHeight: '100px',
+    padding: '8px',
+    border: '1px solid #ccc',
+    boxSizing: 'border-box',
+  };
+
+
   <div
     ref={divRef}
     contentEditable
     suppressContentEditableWarning={true}
     onInput={handleInput}
     style={{
-      minHeight: '50px',
-      padding: '10px',
+      // minHeight: '50px',
+      flexGrow: 1,
+      // padding: '10px',
       border: '1px solid #ccc',
       borderRadius: '5px',
       overflow: 'hidden', // Hide overflow while resizing
       whiteSpace: 'pre-wrap',
       overflowWrap: 'break-word',
-      width: '100%', // Full width or set as needed
+      // width: '100%', // Full width or set as needed
     }}
   >
     {content}
   </div>
 
   return (
-    <div style={{ height: '100vh', backgroundColor: '#F5F5F5', display: 'flex', flexDirection: 'row' }}>
+    <div style={{ height: '100vh', backgroundColor: '#F5F5F5', display: 'flex', flexDirection: 'row', width: '100%', overflowX: 'hidden' }}>
       <div className={styles.composePostCenterDiv}>
         <div className={styles.createPostCard}>
 
@@ -55,25 +72,11 @@ export default function ComposePage() {
             </div>
           </div>
 
-          <div style={{ width: '100%', flexGrow: 1, border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#efeded', display: 'flex', flexDirection: 'column' }}>
-            <div
-              ref={divRef}
-              contentEditable
-              suppressContentEditableWarning={true}
-              onInput={handleInput}
-              style={{
-                // minHeight: '50px',
-                padding: '10px',
-                // flexGrow: 1,
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                overflow: 'hidden', // Hide overflow while resizing
-                whiteSpace: 'pre-wrap',
-                overflowWrap: 'break-word',
-                width: '100%', // Full width or set as needed
-              }}
-            >
-              {content}
+          <div style={{ width: '100%', maxWidth: '100%', flexGrow: 1, border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#efeded', display: 'flex', flexDirection: 'column' }}>
+            <div className={styles.outerContainer}>
+              <div className={styles.innerContainer}>
+                <textarea className={styles.textarea} placeholder="Type here..."></textarea>
+              </div>
             </div>
 
 
