@@ -1,33 +1,34 @@
 /* Container to fill the entire viewport height */
 .container {
-    height: 100%; /* Makes the outer container take up the full viewport height */
+    height: 100%;
+    /* Makes the outer container take up the full viewport height */
     display: flex;
-  flex-direction: column;
-  overflow-y: hidden;
-  padding: 20px;
-  }
-  
-  /* Title styling */
+    flex-direction: column;
+    overflow-y: hidden;
+    padding: 20px;
+}
 
-  /* Scrollable table container */
-  .scrollableTable {
+/* Title styling */
+
+/* Scrollable table container */
+.scrollableTable {
     height: 100%;
     flex: 1;
     overflow-y: auto;
-  }
-  
-  /* Table Styling */
-  .calendarTable {
+}
+
+/* Table Styling */
+.calendarTable {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
-  }
-  
-  /* Sticky Header (Days of the Week) */
-  .calendarTable thead th {
+}
+
+/* Sticky Header (Days of the Week) */
+.calendarTable thead th {
     position: sticky;
     top: 0;
-    background-color:#F5F5F5;
+    background-color: #F5F5F5;
     z-index: 2;
     padding: 8px;
     font-weight: bold;
@@ -36,13 +37,13 @@
     color: #4a5568;
     border-bottom: 1px solid #e0e0e0;
     border-right: 1px solid #e0e0e0;
-  }
-  
-  /* Sticky Time Column */
-  .timeCell {
+}
+
+/* Sticky Time Column */
+.timeCell {
     position: sticky;
     left: 0;
-    background-color:#F5F5F5;
+    background-color: #F5F5F5;
     width: 80px;
     padding: 8px;
     text-align: right;
@@ -50,34 +51,45 @@
     color: #718096;
     border-right: 1px solid #e0e0e0;
     z-index: 1;
-  }
-  
-  /* Time header (top-left corner) */
-  .timeHeader {
+}
+
+/* Time header (top-left corner) */
+.timeHeader {
     position: sticky;
     top: 0;
     left: 0;
-    background-color:#F5F5F5;
+    background-color: #F5F5F5;
     z-index: 2;
     border-bottom: 1px solid #F5F5F5;
     border-right: 1px solid #e0e0e0;
-    border-left: 1px solid  #F5F5F5;
-  }
-  
-  /* Table Body Cell Styling */
-  .calendarTable tbody td {
+    border-left: 1px solid #F5F5F5;
+}
+
+/* Table Body Cell Styling */
+.calendarTable tbody td {
     height: 60px;
     border: 1px solid #e0e0e0;
     text-align: center;
     border-left: 1px solid #F5F5F5;
-  }
-  
+}
 
-  .chevron { // make bigger
+
+.chevron {
+    // make bigger
     transition: all 0.2s ease;
     cursor: pointer;
     border-radius: 24px;
+    color: #7C3AED;
+    font-size: 19px;
     &:hover {
         background-color: #E0E0E0;
     }
+}
+
+
+/* Style for selected/active tab */
+.custom-tabs-trigger {
+    color: #ffffff; /* Text color for selected tab */
+    background-color: #a855f7; /* Custom background color for selected tab */
+    font-weight: bold;
   }

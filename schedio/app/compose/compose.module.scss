@@ -1,0 +1,43 @@
+
+.composePostCenterDiv {
+    height: 100%;
+    flex-grow: 1;
+    background-color: #F5F5F5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // Shrink padding for bigger screen sizes
+    padding: 20px;
+}
+
+.composePostSidePanel {
+    // change side with screen size
+    height: 100%;
+    width: 479px;
+    background-color: red;
+}
+
+@media (max-width: 990px) {
+    .composePostSidePanel {
+      width: 400px;
+    }
+  }
+
+  @media (max-width: 766px) {
+    .composePostSidePanel {
+      width: 320px;
+    }
+  }
+
+
+.createPostCard {
+    width: 100%;
+     min-height: 250px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: -14px 18px 17px #eaeaea81;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
