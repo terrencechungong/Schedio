@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import localFont from "next/font/local";
 import "./globals.scss";
 import { AppSidebar } from "./app-sidebar"
@@ -31,6 +31,30 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+interface ModalStatesContextType {
+  showMediaModal: boolean;
+  setShowMediaModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
+
+const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
+  return (
+    <ModalStatesContext.Provider value={{ showMediaModal, setShowMediaModal }}>
+      {children}
+    </ModalStatesContext.Provider>
+  );
+};
+
+export const useModalStatesContext = () => {
+  const context = useContext(ModalStatesContext);
+  if (!context) {
+    throw new Error("useModalStatesContext must be used within a ModalStatesProvider");
+  }
+  return context;
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,34 +66,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-      style={{width: '100vw', overflow: 'hidden'}}
+        style={{ width: '100vw', overflow: 'hidden', }}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            {/* <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                <div className="flex items-center gap-2 px-4">
-                  <SidebarTrigger className="-ml-1" />
-                  <Separator orientation="vertical" className="mr-2 h-4" />
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem className="hidden md:block">
-                        <BreadcrumbLink href="#">
-                          Building Your Application
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div>
-              </header> */}
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
+        <ModalStatesProvider >
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              {children}
+            </SidebarInset>
+          </SidebarProvider>
+        </ModalStatesProvider>
       </body>
     </html>
   );
