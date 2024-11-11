@@ -1,13 +1,13 @@
 import React from "react";
 
 
-interface TextAreaComponentInterface {
+interface BackdropProps {
     children: React.ReactNode;
     handleClose: () => void;
 }
   
 
-export const Backdrop: React.FC<TextAreaComponentInterface> = ({ handleClose, children }) => {
+export const Backdrop: React.FC<BackdropProps> = ({ handleClose, children }) => {
 
     return (
         <div
@@ -22,8 +22,18 @@ export const Backdrop: React.FC<TextAreaComponentInterface> = ({ handleClose, ch
                 alignItems: 'center',
                 zIndex: 20
             }}
-            onClick={() => handleClose()}>
-            {children}
+            onClick={() =>{
+                
+                console.log("closing")
+                handleClose()}}>
+            <div style={{ width: '200px', height: '200px', backgroundColor: 'white', zIndex: 22 }}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    console.log("STOP")
+                }}
+            >
+
+            </div>
         </div>
     )
 }

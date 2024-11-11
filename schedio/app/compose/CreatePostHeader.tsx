@@ -19,7 +19,7 @@ export const CreatePostHeader: React.FC<CreatePostHeaderProps> = ({ divRef })=> 
             </div>
             <div>
                 <h6 style={{ padding: 0, margin: 0 }}>Create a post</h6>
-                <p style={{ fontSize: '13px', color: '' }}>Create a high-impact post to share your message</p>
+                <p style={{ fontSize: '13px', lineHeight: '15px', color: 'rgb(120, 120, 120)' }}>Create a high-impact post to share your message</p>
             </div>
         </div>
     )

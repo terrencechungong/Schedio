@@ -19,6 +19,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { usePathname } from 'next/navigation'; // Use usePathname for current route
+import AppCode from "@/AppCode";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -70,12 +71,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ModalStatesProvider >
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              {children}
-            </SidebarInset>
-          </SidebarProvider>
+          <AppCode> 
+            {children}
+          </AppCode>
         </ModalStatesProvider>
       </body>
     </html>

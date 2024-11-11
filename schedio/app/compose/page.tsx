@@ -5,7 +5,6 @@ import { MessageSquareMore } from 'lucide-react';
 import { Camera } from 'lucide-react';
 import { CreatePostHeader } from './CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
-import { Backdrop } from '../Backdrop';
 
 
 export default function ComposePage() {
@@ -47,7 +46,6 @@ export default function ComposePage() {
 
   return (
     <div className={styles.container}>
-      {showMediaModal && <Backdrop children={(<p></p>)} handleClose={() => setShowMediaModal(false)} />}
       <div className={styles.composePostCenterDiv}>
         <div className={styles.createPostCard}>
           <CreatePostHeader divRef={divRef} />
@@ -76,7 +74,7 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ textareaRef, 
     <div className={styles.textAreaWrapper}>
       <textarea
         className={styles.textarea}
-        placeholder="Type here..."
+        placeholder="What would you like to share?"
         onInput={handleInput}
         ref={textareaRef}
       ></textarea>

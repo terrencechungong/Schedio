@@ -89,6 +89,9 @@
 .createPostMessageIcon {
     width: 45px;
     height: 45px;
+    min-width: 45px; /* Prevents it from shrinking below 45px */
+    min-height: 45px;
+    resize: none;
     background-color: #E9D5FF;
     display: flex;
     flex-direction: column;
