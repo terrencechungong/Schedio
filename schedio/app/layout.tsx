@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject } from "react";
 import localFont from "next/font/local";
 import "./globals.scss";
 import { AppSidebar } from "./app-sidebar"
@@ -35,14 +35,25 @@ const geistMono = localFont({
 interface ModalStatesContextType {
   showMediaModal: boolean;
   setShowMediaModal: React.Dispatch<React.SetStateAction<boolean>>;
+  textareaRef: RefObject<HTMLTextAreaElement>;
+  setPostCaption: React.Dispatch<React.SetStateAction<string>>;
+  postCaption: string;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
+  const [postCaption, setPostCaption] = useState<string>("");
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   return (
-    <ModalStatesContext.Provider value={{ showMediaModal, setShowMediaModal }}>
+    <ModalStatesContext.Provider value={{
+      showMediaModal,
+      setShowMediaModal,
+      textareaRef,
+      postCaption,
+      setPostCaption
+    }}>
       {children}
     </ModalStatesContext.Provider>
   );
@@ -71,7 +82,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ModalStatesProvider >
-          <AppCode> 
+          <AppCode>
             {children}
           </AppCode>
         </ModalStatesProvider>

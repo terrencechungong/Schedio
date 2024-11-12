@@ -17,8 +17,8 @@ export default function AppCode({
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
-            {showMediaModal && 
-            <AddMediaModal />}
+            {showMediaModal &&
+                <AddMediaModal />}
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>

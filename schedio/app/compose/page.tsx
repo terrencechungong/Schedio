@@ -1,25 +1,24 @@
 "use client"
 import styles from './compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef } from 'react';
-import { MessageSquareMore } from 'lucide-react';
 import { Camera } from 'lucide-react';
 import { CreatePostHeader } from './CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
+import { ComposePoseSidePanel } from './ComposePostSidePanel';
 
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const { showMediaModal, setShowMediaModal, textareaRef, setPostCaption } = useModalStatesContext();
 
   const handleInput = () => {
     const textarea = textareaRef.current;
     if (textarea) {
+      setPostCaption(textareaRef.current.value)
       textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   };
-
-  const { showMediaModal, setShowMediaModal } = useModalStatesContext();
 
   useEffect(() => {
     const div = divRef.current;
@@ -52,10 +51,7 @@ export default function ComposePage() {
           <TextAreaComponent textareaRef={textareaRef} handleInput={handleInput} setShow={setShowMediaModal} />
         </div>
       </div>
-
-      <div className={styles.composePostSidePanel}>
-        <p id="compyy"></p>
-      </div>
+      <ComposePoseSidePanel />
     </div>
   );
 }

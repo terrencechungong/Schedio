@@ -1,0 +1,50 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #EBEBEB;
+    overflow-wrap: anywhere;
+    padding: 13px;
+    align-items: center;
+}
+
+.genericPostPreviewContainer {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 5px;
+    padding:  0 10px 0;
+    border: 1px solid #D3D3D3;
+}
+
+
+.genericPostPreviewHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 13px 0 10px;
+    gap: 10px;
+    font-size: 14px;
+
+}
+
+.genericPostPreviewCaption {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 20px;
+}
+
+.genericPostPreviewFooter {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border-top: 1px solid #D3D3D3;
+    padding: 13px 0 13px;
+    gap: 12px;
+}
