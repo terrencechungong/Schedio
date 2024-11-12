@@ -1,5 +1,7 @@
+import { AnimatePresence } from "framer-motion";
 import { AppSidebar } from "./app/app-sidebar";
 import { AddMediaModal } from "./app/compose/AddMediaModal";
+import { AiGenGaption } from "./app/compose/AiGenGaption";
 import { useModalStatesContext } from "./app/layout";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
 
@@ -12,13 +14,19 @@ export default function AppCode({
     children: React.ReactNode;
 }>) {
 
-    const { showMediaModal, setShowMediaModal } = useModalStatesContext();
+    const { showMediaModal, showAiGenCaption } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
-            {showMediaModal &&
-                <AddMediaModal />}
+            <AnimatePresence>
+                {showMediaModal &&
+                    <AddMediaModal />}
+            </AnimatePresence>
+            <AnimatePresence>
+                {showAiGenCaption &&
+                    <AiGenGaption />}
+            </AnimatePresence>
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>

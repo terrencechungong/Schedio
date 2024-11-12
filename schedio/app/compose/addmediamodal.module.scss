@@ -26,3 +26,13 @@
     background-color: #F5F5F5;
     z-index: 40;
 }
+
+.closeModal {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    &:hover {
+        background-color: #eae5e5;
+    }
+}

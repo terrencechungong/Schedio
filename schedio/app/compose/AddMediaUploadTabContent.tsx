@@ -3,15 +3,12 @@ import styles from './uploadtabcontent.module.scss'
 import { FcAddImage } from "react-icons/fc";
 import { ImageUp, X } from "lucide-react";
 
-interface AddMediaUploadTabContentInput {
-    inputRef: React.MutableRefObject<HTMLInputElement | null>;
-}
 
-export const AddMediaUploadTabContent: React.FC<AddMediaUploadTabContentInput> = ({ inputRef }) => {
+export const AddMediaUploadTabContent: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.uploadImageDiv}>
+            <div className={`${styles.uploadImageDiv} bg-accent`}>
                 <FcAddImage style={{ width: '105px', height: '105px' }} />
                 <div style={{ textAlign: 'center' }}>
                     <p >Drag and drop your media, or click to upload files</p>
