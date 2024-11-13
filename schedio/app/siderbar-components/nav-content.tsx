@@ -39,7 +39,6 @@ export function NavContent({
 }) {
   const { isMobile } = useSidebar();
   const { selectedTab, setSelectedTab } = useContext(TabContext);
-  console.log(selectedTab);
   const pathname = usePathname();
   const isActive = (path: string) => {
     path = path.toLowerCase().split(' ').join('');

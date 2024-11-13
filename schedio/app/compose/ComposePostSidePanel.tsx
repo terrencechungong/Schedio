@@ -9,7 +9,8 @@ export const ComposePoseSidePanel: React.FC = () => {
 
     return (
         <div className={styles.composePostSidePanel}>
-            {/* <p id="compyy"></p> */}
+                        {/* <p id="compyy"></p> */}
+
                 {/* FIX THE TABS IN MODALS TO BE THE SAME */}
                 <Tabs defaultValue="preview" className={`w-full ${styles.composePostSidePanelHeader} `} >
                     <TabsList className="flex border-b border-gray-200 rounded-none bg-transparent border-b-2 pl-4 pr-4 w-full">
