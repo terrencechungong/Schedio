@@ -132,8 +132,6 @@
 }
 
 
-
-
 .createPostMessageIcon {
     width: 45px;
     height: 45px;
@@ -164,7 +162,6 @@
 }
 
 
-
 .textAreaWrapper {
     width: 100%;
     max-width: 100%;
@@ -189,8 +186,6 @@
 }
 
 
-
-
 .toolsCard {
     width: 100%;
     min-height: 250px;
@@ -200,11 +195,8 @@
     // padding: 20px;
     display: flex;
     flex-direction: column;
-    // gap: 10px;
-
     height: 100px;
 }
-
 
 
 .composeToolsDiv {
@@ -214,54 +206,15 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    // add padding
-    // background-color: red;
-
 }
-
-
-
-// @media (min-width: 527px) {
-//     .composeToolsDiv {
-//         padding: 20px 15px 20px;
-//     }
-// }
-
-// @media (min-width: 664px) {
-//     .composeToolsDiv {
-//         padding: 20px 20px 20px;
-//     }
-// }
-
-// @media (min-width: 800px) {
-//     .composeToolsDiv {
-//         padding: 20px 26px 20px;
-//     }
-// }
-
-// @media (min-width: 1091px) {
-//     .composeToolsDiv {
-//         padding: 20px 35px 20px;
-//     }
-// }
-
-// @media (min-width: 1414px) {
-//     .composeToolsDiv {
-//         padding: 20px 66px 20px;
-//     }
-// }
-
 
 
 @media (min-width: 1690px) {
     .composeToolsDiv {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        /* Two equal-width columns */
         grid-auto-rows: auto;
         gap: 10px;
     }
 }
 
-
-// 1690

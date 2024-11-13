@@ -64,17 +64,6 @@ export default function ComposePage() {
     };
   }, []);
 
-  useEffect(() => {
-    const hideEmoji = () => {
-      setShowEmoji(false);
-    };
-    window.addEventListener('click', hideEmoji);
-    return () => {
-      window.removeEventListener('click', hideEmoji);
-    };
-  }, []);
-
-
 
   const onSmileClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
