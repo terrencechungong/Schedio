@@ -11,62 +11,11 @@ export const PostCommentsComponent: React.FC = () => {
     const [showEmoji, setShowEmoji] = useState(false);
     const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
     const selectedMessage = useRef(null);
-    const emojiCounterRef = useRef<{ [messageId: string]: { [emoji: string]: [number, number] } }>({});
     const [messageData, setMessageData] = useState(MessageData);
-    const [renderTrigger, setRenderTrigger] = useState(false); // Dummy state for re-rendering
-
-    const toggleRender = () => setRenderTrigger((prev) => !prev); // Function to trigger re-render
-
-    // Populate `emojiCounterRef` only when `MessageData` changes
-    useEffect(() => {
-        emojiCounterRef.current = {}; // Reset on each change
-
-        messageData.forEach((message) => {
-            if (!emojiCounterRef.current[message.id]) {
-                emojiCounterRef.current[message.id] = {}; // Initialize counter for each message
-            }
-
-            message.reactions.forEach((reaction, index) => {
-                if (!emojiCounterRef.current[message.id][reaction.emoji]) {
-                    emojiCounterRef.current[message.id][reaction.emoji] = [1, index]; // Initialize count and position
-                } else {
-                    emojiCounterRef.current[message.id][reaction.emoji][0] += 1; // Increment count if emoji exists
-                }
-            });
-        });
-        toggleRender()
-    }, [messageData]);
-
-
-    // just initialize the ref to this using map and reduce
-
-    useEffect(() => {
-        if ( emojiCounterRef.current || Object.keys(emojiCounterRef.current).length > 0) return
-        emojiCounterRef.current = {}; // Reset on each change
-
-        messageData.forEach((message) => {
-            if (!emojiCounterRef.current[message.id]) {
-                emojiCounterRef.current[message.id] = {}; // Initialize counter for each message
-            }
-
-            message.reactions.forEach((reaction, index) => {
-                if (!emojiCounterRef.current[message.id][reaction.emoji]) {
-                    emojiCounterRef.current[message.id][reaction.emoji] = [1, index]; // Initialize count and position
-                } else {
-                    emojiCounterRef.current[message.id][reaction.emoji][0] += 1; // Increment count if emoji exists
-                }
-            });
-        });
-        // toggleRender()
-    }, []);
-
-    // Memoize sorted messages
-    const messagesWithSortedReactions = useMemo(() => {
-        return messageData.map((message) => ({
-            ...message,
-            reactions: [...message.reactions].sort((a, b) => a.emoji.localeCompare(b.emoji)),
-        }));
-    }, [messageData]);
+    const [showingReplies, setShowingReplies] = useState<{ [key: string]: boolean }>(messageData.reduce((acc, message) => ({
+        ...acc,
+        [message.id]: false
+    }), {}));
 
     useEffect(() => {
         const hideEmoji = () => {
@@ -112,8 +61,15 @@ export const PostCommentsComponent: React.FC = () => {
             )
         );
         setShowEmoji(false)
-        toggleRender()
     }
+
+    const toggleReplies = (id: string) => {
+        setShowingReplies((prev) => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
 
     return (
         <div className={`${styles.container} bg-accent`}>
@@ -134,9 +90,7 @@ export const PostCommentsComponent: React.FC = () => {
                     onEmojiClick={(e) => { addEmoji(e) }}
                 />
             </div>
-            {messagesWithSortedReactions.map((message, index) => {
-                message.reactions = message.reactions.sort((a, b) => a.emoji.localeCompare(b.emoji));
-                let seenEmojis = new Set();
+            {messageData.map((message, index) => {
                 return (
                     <div key={index} className={`${styles.messageContainer} shadow-md`}>
                         <div className={styles.messageHeader}>
@@ -157,24 +111,17 @@ export const PostCommentsComponent: React.FC = () => {
                         </div>
                         <div className={styles.reactionsAndReplyButton}>
                             <div className={styles.reactions}>
-                                {/* <div className={styles.reactionEmojis} > */}
-                                    {message.reactions.reduce<JSX.Element[]>((acc, reaction) => {
-                                        if (seenEmojis.has(reaction.emoji)) return acc;
-                                        const messageReactions = emojiCounterRef.current[message.id];
-                                        const count = messageReactions?.[reaction.emoji]?.[0] || 0;
-
-                                        if (count > 0) {
-                                            seenEmojis.add(reaction.emoji)
-                                            acc.push(
-                                                <div key={reaction.emoji} className={emojiClassName}>
-                                                    {reaction.emoji} {count}
-                                                </div>
-                                            );
-                                        }
-                                        return acc;
-                                    }, [])}
+                                {Object.entries(message.reactions.reduce<Record<string, number>>((acc, reaction) => ({
+                                    ...acc,
+                                    [reaction.emoji]: (acc[reaction.emoji] || 0) + 1
+                                }), {})).map(([emoji, count], index) => (
+                                    <div key={index} className={emojiClassName}>
+                                        {emoji} {count}
+                                    </div>
+                                ))}
                                 {/* </div> */}
-                                <div className={`${styles.addReactionButton} rounded-lg bg-accent`} onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => onSmileClick(e, message)}>
+                                <div className={`${styles.addReactionButton} rounded-lg bg-accent`}
+                                    onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => onSmileClick(e, message)}>
                                     <SmilePlus size={12} strokeWidth={1.25} />
                                 </div>
                             </div>
@@ -183,38 +130,33 @@ export const PostCommentsComponent: React.FC = () => {
                         </div>
                         <div className={styles.replies}>
                             {message.replies.map((reply, index) => {
-                                if (index == 0) {
-                                    return (
-                                        <div key={index} className={styles.firstReaction}>
-                                            <Avatar><AvatarFallback>{reply.sender.charAt(0)}V</AvatarFallback></Avatar>
-                                            <div className={`${styles.replyMessageBox} bg-accent`}>
-                                                <div className={styles.replyMessageHeader}>
-                                                    <p style={{ fontWeight: 'bold' }}>{reply.sender}</p>
-                                                    <p>{reply.dateSent}</p>
-                                                </div>
-                                                <p>{reply.body}</p>
+                                const style = { display: showingReplies[message.id] ? 'flex' : 'none' }
+                                return (
+                                    <div key={index} className={styles.firstReply} style={index > 0 ? style : {}}>
+                                        <Avatar><AvatarFallback>{reply.sender.charAt(0)}V</AvatarFallback></Avatar>
+                                        <div className={`${styles.replyMessageBox} bg-accent`}>
+                                            <div className={styles.replyMessageHeader}>
+                                                <p style={{ fontWeight: 'bold' }}>{reply.sender}</p>
+                                                <p>{reply.dateSent}</p>
                                             </div>
-
-                                        </div>
-                                    )
-                                } else {
-                                    return (
-                                        <div key={index} className={styles.otherReaction}>
-                                            <Avatar><AvatarFallback>{reply.sender.charAt(0)}V</AvatarFallback></Avatar>
                                             <p>{reply.body}</p>
                                         </div>
-                                    )
-                                }
+
+                                    </div>
+                                )
                             })}
                         </div>
+                        {(message.replies.length > 1 && showingReplies[message.id]) &&
+                            <div className={styles.showMoreOrLess} onClick={() => toggleReplies(message.id)}>Show Less</div>}
+                        {(message.replies.length > 1 && !showingReplies[message.id]) &&
+                            <div className={styles.showMoreOrLess} onClick={() => toggleReplies(message.id)}>Show More</div>}
                     </div>
                 )
             })}
-
-
         </div >
     )
 }
 
 
-// clicking reactions instant load of emojis hide emojis that cant show on this platform
+// hide emojis that cant show on this platform
+// change toggler so you can close but not open

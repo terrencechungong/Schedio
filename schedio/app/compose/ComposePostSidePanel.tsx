@@ -3,6 +3,7 @@ import styles from './compose.module.scss';
 import { PostPreviewComponent } from './PostPreviewComponent';
 import { useModalStatesContext } from '../layout';
 import { PostCommentsComponent } from './PostCommentsComponent';
+import { SchedulePostComponent } from './SchedulePostComponent';
 
 
 
@@ -48,7 +49,7 @@ export const ComposePoseSidePanel: React.FC = () => {
                     <PostPreviewComponent />
                 </TabsContent>
                 <TabsContent value="schedule" className="h-full w-full m-0">
-                    {/* <PostCommentsComponent /> */}
+                    <SchedulePostComponent />
                 </TabsContent>
                 <TabsContent value="conversation" className="h-full w-full m-0">
                     <PostCommentsComponent />

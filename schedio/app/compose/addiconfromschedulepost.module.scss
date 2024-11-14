@@ -1,0 +1,45 @@
+.modalContainer {
+    width: 490px;
+    height: 470px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    overflow-y: scroll;
+
+    .header {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .labelColumns {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px 0 10px;
+        width: 100%;
+
+        .labelRow {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            align-items: center;
+            width: 100%;
+
+            .label {
+                flex-grow: 1;
+                border-radius: 7px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 3px;
+                height: 40px;
+            }
+
+            .editLabel {}
+        }
+    }
+
+}

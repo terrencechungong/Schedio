@@ -40,11 +40,14 @@ interface ModalStatesContextType {
   postCaption: string;
   showAiGenCaption: boolean;
   setShowAiGenCaption: React.Dispatch<React.SetStateAction<boolean>>;
+  showAddLabelFromSchedulePost: boolean;
+  setShowAddLabelFromSchedulePost: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [ showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost ] = useState(false)
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
   const [showAiGenCaption, setShowAiGenCaption] = useState<boolean>(false);
   const [postCaption, setPostCaption] = useState<string>("");
@@ -57,7 +60,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       postCaption,
       setPostCaption,
       showAiGenCaption,
-      setShowAiGenCaption
+      setShowAiGenCaption,
+      showAddLabelFromSchedulePost,
+      setShowAddLabelFromSchedulePost
     }}>
       {children}
     </ModalStatesContext.Provider>

@@ -183,7 +183,7 @@ export function AppSidebar() {
             if (d) {
                 d.innerText = `${currentWidth}`;
             }
-          if (currentWidth < 1280 && previousWidth.current >= 1280) {
+          if (currentWidth < 1280) {
             // Retracting below 1280px
             setOpen(false);
           } else if (currentWidth >= 1280 && previousWidth.current < 1280) {

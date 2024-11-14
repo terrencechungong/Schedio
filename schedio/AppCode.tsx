@@ -4,6 +4,7 @@ import { AddMediaModal } from "./app/compose/AddMediaModal";
 import { AiGenGaption } from "./app/compose/AiGenGaption";
 import { useModalStatesContext } from "./app/layout";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
+import { AddIconFromSchedulePostModal } from "./app/compose/AddIconFromSchedulePostModal";
 
 
 
@@ -14,11 +15,15 @@ export default function AppCode({
     children: React.ReactNode;
 }>) {
 
-    const { showMediaModal, showAiGenCaption } = useModalStatesContext();
+    const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
+            <AnimatePresence>
+                {showAddLabelFromSchedulePost &&
+                <AddIconFromSchedulePostModal />}
+            </AnimatePresence>
             <AnimatePresence>
                 {showMediaModal &&
                     <AddMediaModal />}
