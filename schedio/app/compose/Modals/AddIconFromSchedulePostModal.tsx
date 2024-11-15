@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import styles from './addiconfromschedulepost.module.scss'
-import { useModalStatesContext } from "../layout";
+import styles from '../ScssModules/addiconfromschedulepost.module.scss'
+import { useModalStatesContext } from "@/app/layout";
 import { PencilLine, PlusIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";

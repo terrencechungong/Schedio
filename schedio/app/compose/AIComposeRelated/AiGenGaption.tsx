@@ -1,9 +1,9 @@
 "use client"
-import { useModalStatesContext } from "../layout";
+import { useModalStatesContext } from '@/app/layout';
 import { Loader2, X } from 'lucide-react';
-import styles from './aigencaption.module.scss'
+import styles from '../ScssModules/aigencaption.module.scss'
 import { motion } from "framer-motion";
-import { SearchAudienceDropDown } from "./SearchAudienceDropDown";
+import { SearchAudienceDropDown } from '../SimpleUIComponents/SearchAudienceDropDown';
 import { SelectAiCaptionTone } from "./SelectAiCaptionTone";
 import { Button } from "@/components/ui/button"
 

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './uploadtabcontent.module.scss'
+import styles from '../ScssModules/uploadtabcontent.module.scss'
 import { FcAddImage } from "react-icons/fc";
 import { ImageUp, X } from "lucide-react";
 

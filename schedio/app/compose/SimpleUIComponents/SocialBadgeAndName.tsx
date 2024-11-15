@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaLinkedin } from "react-icons/fa"
-import styles from './schedulepostcomponent.module.scss';
+import styles from '../ScssModules/schedulepostcomponent.module.scss';
 import { IconType } from "react-icons/lib";
 import { FaYoutube } from "react-icons/fa";
 

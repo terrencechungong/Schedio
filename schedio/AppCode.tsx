@@ -1,11 +1,11 @@
 import { AnimatePresence } from "framer-motion";
 import { AppSidebar } from "./app/app-sidebar";
-import { AddMediaModal } from "./app/compose/AddMediaModal";
-import { AiGenGaption } from "./app/compose/AiGenGaption";
+import { AddMediaModal } from "./app/compose/Modals/AddMediaModal";
+import { AiGenGaption } from "./app/compose/AIComposeRelated/AiGenGaption";
 import { useModalStatesContext } from "./app/layout";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
-import { AddIconFromSchedulePostModal } from "./app/compose/AddIconFromSchedulePostModal";
-import { SelectTimeToScheduleModal } from "./app/compose/SelectTimeToScheduleModal";
+import { AddIconFromSchedulePostModal } from "./app/compose/Modals/AddIconFromSchedulePostModal";
+import { SelectTimeToScheduleModal } from "./app/compose/Modals/SelectTimeToScheduleModal";
 
 
 

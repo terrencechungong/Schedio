@@ -1,9 +1,9 @@
 "use client"
 // subtract 10 min
-import styles from './compose.module.scss';
+import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { Camera, EllipsisVertical, Hash, SmilePlus, WandSparkles } from 'lucide-react';
-import { CreatePostHeader } from './CreatePostHeader';
+import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';

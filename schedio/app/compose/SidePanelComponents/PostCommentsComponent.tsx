@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import styles from './postcomments.module.scss';
-import { MessageData } from "./mockData";
+import styles from '../ScssModules/postcomments.module.scss';
+import { MessageData } from "../Utilities/mockData";
 import { AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { SmilePlus } from "lucide-react";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";

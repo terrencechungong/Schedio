@@ -1,6 +1,6 @@
 import { ImageUp, Search, X } from 'lucide-react';
-import styles from './giftabcontent.module.scss'
-import { createGifOverlay } from './abstraction/GifTabAbstraction';
+import styles from '../ScssModules/giftabcontent.module.scss'
+import { createGifOverlay } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
 
 export const AddMediaGifTabContent: React.FC = () => {

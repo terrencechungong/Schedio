@@ -66,7 +66,7 @@ export default function SchedulePage() {
         return days;
     };
 
-    const dayOfWeekStyle = {borderRight:'0.5px solid #ddd', textAlign: 'center',padding:'5px'};
+    const dayOfWeekStyle: React.CSSProperties = {borderRight:'0.5px solid #ddd', textAlign: 'center',padding:'5px'};
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const handlePrevMonth = () => {

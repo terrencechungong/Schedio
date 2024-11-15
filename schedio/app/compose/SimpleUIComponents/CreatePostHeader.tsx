@@ -1,5 +1,5 @@
 "use client"
-import styles from './compose.module.scss';
+import styles from '../ScssModules/compose.module.scss';
 import React, { RefObject } from 'react';
 import { MessageSquareMore } from 'lucide-react';
 import { Camera } from 'lucide-react';

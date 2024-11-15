@@ -1,6 +1,6 @@
 import { ImageUp, Search, X } from 'lucide-react';
-import styles from './photostabcontent.module.scss'
-import { createGifOverlay, createImageOverlay } from './abstraction/GifTabAbstraction';
+import styles from '../ScssModules/photostabcontent.module.scss'
+import { createGifOverlay, createImageOverlay } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
 
 export const AddMediaPhotosTabContent: React.FC = () => {

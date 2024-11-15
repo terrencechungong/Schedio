@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button';
-import styles from './schedulepostcomponent.module.scss';
+import styles from '../ScssModules/schedulepostcomponent.module.scss';
 import { BadgeInfo, CalendarClock, Linkedin, MoveUpRight, PencilLine, PlusIcon } from 'lucide-react';
-import { CategorizeDropdown } from './CategorizeDropdown';
+import { CategorizeDropdown } from '../CategorizeDropdown';
 import { Switch } from '@/components/ui/switch';
-import NumberInputHours from './number-input';
+import NumberInputHours from '../SimpleUIComponents/number-input';
 import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar';
 import { FaLinkedin } from "react-icons/fa";
-import { SocialBadgeAndName } from './SocialBadgeAndName';
-import { useModalStatesContext } from '../layout';
+import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
+import { useModalStatesContext } from '@/app/layout';
 
 export const SchedulePostComponent: React.FC = () => {
     const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal } = useModalStatesContext()

@@ -1,5 +1,3 @@
-
-
 export const createGifOverlay = (overlay: HTMLDivElement) => {
     const useGifDiv = document.createElement('div');
     useGifDiv.style.width = '80%';

@@ -1,10 +1,10 @@
-import { useModalStatesContext } from "../layout";
+import { useModalStatesContext } from '@/app/layout';
 import { X } from 'lucide-react';
-import styles from './addmediamodal.module.scss'
+import styles from '../ScssModules/addmediamodal.module.scss'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AddMediaUploadTabContent } from "./AddMediaUploadTabContent";
-import { AddMediaGifTabContent } from "./AddMediaGifTabContent";
-import { AddMediaPhotosTabContent } from "./AddMediaPhotosTabContent";
+import { AddMediaUploadTabContent } from '../MediaRelatedComponents/AddMediaUploadTabContent';
+import { AddMediaGifTabContent } from "../MediaRelatedComponents/AddMediaGifTabContent";
+import { AddMediaPhotosTabContent } from "../MediaRelatedComponents/AddMediaPhotosTabContent";
 import { motion } from 'framer-motion';
 
 export const AddMediaModal: React.FC = () => {
