@@ -5,6 +5,7 @@ import { AiGenGaption } from "./app/compose/AiGenGaption";
 import { useModalStatesContext } from "./app/layout";
 import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
 import { AddIconFromSchedulePostModal } from "./app/compose/AddIconFromSchedulePostModal";
+import { SelectTimeToScheduleModal } from "./app/compose/SelectTimeToScheduleModal";
 
 
 
@@ -15,11 +16,15 @@ export default function AppCode({
     children: React.ReactNode;
 }>) {
 
-    const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost } = useModalStatesContext();
+    const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
+            <AnimatePresence>
+                {showSelectPostTimeModal &&
+                <SelectTimeToScheduleModal />}
+            </AnimatePresence>
             <AnimatePresence>
                 {showAddLabelFromSchedulePost &&
                 <AddIconFromSchedulePostModal />}

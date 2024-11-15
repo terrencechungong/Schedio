@@ -10,12 +10,14 @@ import { SocialBadgeAndName } from './SocialBadgeAndName';
 import { useModalStatesContext } from '../layout';
 
 export const SchedulePostComponent: React.FC = () => {
-    const { setShowAddLabelFromSchedulePost } = useModalStatesContext()
+    const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal } = useModalStatesContext()
 
     return (
         <div className={styles.container}>
             <div className={styles.schedulePostHeader}>
-                <Button className='text-primary border-primary border-[0.5px] bg-white hover:bg-[#f3eafc] pl-9 pr-9 pt-5 pb-5 shadow-none'>
+                <Button
+                    onClick={() => setShowSelectPostTimeModal(true)}
+                    className='text-primary border-primary border-[0.5px] bg-white hover:bg-[#f3eafc] pl-9 pr-9 pt-5 pb-5 shadow-none'>
                     <CalendarClock size={13} strokeWidth={1.25} />
                     Pick Time
                 </Button>
@@ -27,15 +29,17 @@ export const SchedulePostComponent: React.FC = () => {
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 <div className={styles.socialAccounts}>
-                    <SocialBadgeAndName />
-                    <SocialBadgeAndName />
-
-
-
+                    <SocialBadgeAndName color={'#0a66c2'} />
+                    <SocialBadgeAndName color={'#0a66c2'} />
+                </div>
+                <p>PUBLISH REEL/SHORT</p>
+                <div className={styles.socialAccounts}>
+                    <SocialBadgeAndName color={'#FF0000'} />
+                    <SocialBadgeAndName color={'#FF0000'} />
                 </div>
                 <div
-                    style={{ color: 'gray', fontSize: '14px', fontWeight: 600 }}
-                    className=' !pt-0 pl-3 pr-3 !pb-1 bg-accent border-[0.5px] border-gray shadow-none rounded-sm' >Not scheduled</div>
+                    style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}
+                    className='bg-accent border-[0.5px] border-gray shadow-none rounded-sm' >Not scheduled</div>
             </div>
             <div className={styles.categorize}>
                 <p>CATEGORIZE</p>
@@ -44,8 +48,8 @@ export const SchedulePostComponent: React.FC = () => {
                         <CategorizeDropdown />
                     </div>
                     <div className={`bg-accent border-lightgrey border-[0.5px] ${styles.categorizePencil}`} onClick={() => {
-                        console.log("dkahfbaskhfbsjk")
-                        setShowAddLabelFromSchedulePost(true)}} >
+                        setShowAddLabelFromSchedulePost(true)
+                    }} >
                         <PencilLine size={14} />
                     </div>
                 </div>

@@ -5,6 +5,7 @@
     padding: 15px 30px 15px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 
     p {
         color: gray;
