@@ -210,7 +210,9 @@ export const SelectTimeToScheduleModal = () => {
                     <AmOrPmSelector />
                 </div>
                 <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%', gap:'15px', height:'100%', padding:'0px 5px 0'}}>
-                    <Button className="bg-white hover:bg-accent text-black shadow-none w-full h-full rounded-md">Cancel</Button>
+                    <Button 
+                    onClick={() => setShowSelectPostTimeModal(false)}
+                    className="bg-white hover:bg-accent text-black shadow-none w-full h-full rounded-md">Cancel</Button>
                     <Button className="bg-primary text-white hover:brightness-90 w-full h-full rounded-md">Pick time</Button>
                 </div>
             </motion.div >

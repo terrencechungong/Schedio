@@ -44,15 +44,24 @@ interface ModalStatesContextType {
   setShowAddLabelFromSchedulePost: React.Dispatch<React.SetStateAction<boolean>>;
   showSelectPostTimeModal: boolean;
   setShowSelectPostTimeModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowPostNowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showUserPermissionModal: boolean;
+  setShowUserPermissionModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showPostNowModal: boolean;
+  showAddTeamMemberModal: boolean;
+  setShowAddTeamMemberModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [ showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost ] = useState(false)
+  const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
+  const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState(false)
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
   const [showAiGenCaption, setShowAiGenCaption] = useState<boolean>(false);
   const [showSelectPostTimeModal, setShowSelectPostTimeModal] = useState<boolean>(false);
+  const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
+  const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
   const [postCaption, setPostCaption] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   return (
@@ -67,7 +76,13 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showAddLabelFromSchedulePost,
       showSelectPostTimeModal,
       setShowSelectPostTimeModal,
-      setShowAddLabelFromSchedulePost
+      showPostNowModal,
+      setShowPostNowModal,
+      setShowAddLabelFromSchedulePost,
+      showUserPermissionModal,
+      setShowUserPermissionModal,
+      showAddTeamMemberModal,
+      setShowAddTeamMemberModal
     }}>
       {children}
     </ModalStatesContext.Provider>

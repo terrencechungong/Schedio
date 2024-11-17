@@ -1,0 +1,14 @@
+.modalContainer {
+    width: 500px;
+    max-height: 400px;
+    height: auto; /* Add this line */
+    overflow-y: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 15px;
+    flex-grow: 0; /* Prevents the container from growing to fill available space */
+    flex-shrink: 1;
+    box-shadow: -5px 5px 18px rgba(0, 0, 0, 0.24);
+}

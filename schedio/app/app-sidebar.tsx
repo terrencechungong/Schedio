@@ -3,15 +3,17 @@
 import * as React from "react"
 import {
     AudioWaveform,
-    BookOpen,
-    Bot,
+    Workflow,
+    Inbox,
     Command,
-    Frame,
     GalleryVerticalEnd,
-    Map,
-    PieChart,
-    Settings2,
-    SquareTerminal,
+    Group,
+    BoxIcon,
+    NotebookPen,
+    BookUser,
+    CalendarDays,
+    Users,
+    Settings 
 } from "lucide-react"
 
 import { NavMain } from "./siderbar-components/nav-main"
@@ -53,110 +55,57 @@ const data = {
             plan: "Free",
         },
     ],
-    navMain: [
-        {
-            title: "Playground",
-            url: "#",
-            icon: SquareTerminal,
-            isActive: true,
-            items: [
-                {
-                    title: "History",
-                    url: "#",
-                },
-                {
-                    title: "Starred",
-                    url: "#",
-                },
-                {
-                    title: "Settings",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Models",
-            url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Documentation",
-            url: "#",
-            icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Settings",
-            url: "#",
-            icon: Settings2,
-            items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
-            ],
-        },
-    ],
     content: [
         {
             name: "Compose",
             url: "compose",
-            icon: Frame,
+            icon: NotebookPen,
         },
         {
             name: "Schedule",
             url: "schedule",
-            icon: PieChart,
+            icon: CalendarDays,
         },
         {
             name: "Posts",
             url: "posts",
-            icon: Map,
+            icon: Group,
+        },
+        {
+            name: "Resources",
+            url: "resources",
+            icon: BoxIcon,
         },
     ],
+    configuration: [
+        {
+            name: "Pages",
+            url: "pages",
+            icon: BookUser,
+        },
+        {
+            name: "Team",
+            url: "team",
+            icon: Users,
+        },
+        {
+            name: "Settings",
+            url: "settings",
+            icon: Settings,
+        },
+    ],
+    interactions: [
+        {
+            name: "Inbox",
+            url: "inbox",
+            icon: Inbox,
+        },
+        {
+            name: "Automation",
+            url: "automation",
+            icon: Workflow,
+        }
+    ]
 }
 
 export interface SidebarProps {
@@ -216,8 +165,9 @@ export function AppSidebar() {
                     <TeamSwitcher teams={data.teams} />
                 </SidebarHeader>
                 <SidebarContent>
-                    <NavMain items={data.navMain} />
-                    <NavContent sections={data.content} />
+                    <NavContent title="CONTENT" sections={data.content} />
+                    <NavContent title="INTERACTIONS" sections={data.interactions} />
+                    <NavContent title="CONFIGURATION" sections={data.configuration} />
                 </SidebarContent>
                 <SidebarFooter>
                     <NavUser user={data.user} />

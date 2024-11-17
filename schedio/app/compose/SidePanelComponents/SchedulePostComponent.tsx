@@ -10,7 +10,7 @@ import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
 import { useModalStatesContext } from '@/app/layout';
 
 export const SchedulePostComponent: React.FC = () => {
-    const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal } = useModalStatesContext()
+    const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext()
 
     return (
         <div className={styles.container}>
@@ -21,7 +21,9 @@ export const SchedulePostComponent: React.FC = () => {
                     <CalendarClock size={13} strokeWidth={1.25} />
                     Pick Time
                 </Button>
-                <Button className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
+                <Button 
+                onClick={() => setShowPostNowModal(true)}
+                className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
                     Post Now
                     <MoveUpRight size={13} strokeWidth={1.25} />
                 </Button>

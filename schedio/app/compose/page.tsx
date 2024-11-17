@@ -2,11 +2,14 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { Camera, EllipsisVertical, Hash, SmilePlus, WandSparkles } from 'lucide-react';
+import { Camera, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, SmilePlus, WandSparkles, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import lightbulb from '@/app/assets/light-bulb-with-removebg-preview (2).png'
+import { GetInspirationHeader, PostTemplatesHeader, UseHashtagsHeader, UseVariablesHeader, VariablesHeader } from './SimpleUIComponents/ToolCardHeader';
+import { Button } from '@/components/ui/button';
 
 
 export default function ComposePage() {
@@ -22,7 +25,7 @@ export default function ComposePage() {
     const handleMouseMove = (event: MouseEvent) => {
       if (moving.current) {
         // Update the div's position directly in the DOM
-        moving.current.style.top = `${event.clientY -40}px`; // Offset to avoid overlapping the cursor
+        moving.current.style.top = `${event.clientY - 40}px`; // Offset to avoid overlapping the cursor
         moving.current.style.left = `${event.clientX - 309}px`;
       }
     };
@@ -94,7 +97,7 @@ export default function ComposePage() {
       <div className={styles.composePostCenterDiv}>
         {hoverStates.emojiHover[0] && (
           <div
-          ref={moving}
+            ref={moving}
 
             style={{
               position: 'absolute',
@@ -110,7 +113,7 @@ export default function ComposePage() {
         )}
         {hoverStates.cameraHover[0] && (
           <div
-          ref={moving}
+            ref={moving}
 
             style={{
               position: 'absolute',
@@ -126,7 +129,7 @@ export default function ComposePage() {
         )}
         {hoverStates.wandHover[0] && (
           <div
-          ref={moving}
+            ref={moving}
 
             style={{
               position: 'absolute',
@@ -142,7 +145,7 @@ export default function ComposePage() {
         )}
         {hoverStates.hashtagHover[0] && (
           <div
-          ref={moving}
+            ref={moving}
 
             style={{
               position: 'absolute',
@@ -164,18 +167,69 @@ export default function ComposePage() {
         then  2 columns */}
 
         <div className={styles.composeToolsDiv}>
-          <div className={styles.toolsCard}>
 
-          </div>
           <div className={styles.toolsCard}>
+            <GetInspirationHeader />
+            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
 
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                <Button className='text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]'>Use inspiration</Button>
+                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+              </div>
+              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+            </div>
           </div>
+
+
           <div className={styles.toolsCard}>
+            <PostTemplatesHeader />
+            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
 
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use template</Button>
+                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+              </div>
+              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+            </div>
           </div>
+
+
           <div className={styles.toolsCard}>
+            <UseHashtagsHeader />
+            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
 
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use hashtags</Button>
+                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+              </div>
+              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+            </div>
           </div>
+
+          <div className={styles.toolsCard}>
+            <VariablesHeader />
+            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
+
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use variable</Button>
+                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+              </div>
+              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+            </div>
+          </div>
+
           <div className={styles.toolsCard}>
 
           </div>

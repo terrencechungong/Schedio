@@ -29,13 +29,15 @@ import {
 import { usePathname } from 'next/navigation';
 
 export function NavContent({
+  title,
   sections,
 }: {
   sections: {
     name: string
     url: string
     icon: LucideIcon
-  }[]
+  }[],
+  title: string
 }) {
   const { isMobile } = useSidebar();
   const { selectedTab, setSelectedTab } = useContext(TabContext);
@@ -48,18 +50,18 @@ export function NavContent({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Content</SidebarGroupLabel>
+      <SidebarGroupLabel style={{fontSize:'14px', color:'#9F9F9F'}}>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {sections.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
-              style={{ height: '40px' }}
+              style={{ height: '45px', paddingLeft:'12px' }}
               asChild >
               <a
                 onClick={() => setSelectedTab(item.name)}
                 href={item.url} className={`${isActive(item.name) ? styles.selectedSidebarMenuItem : styles.sidebarMenuItem}`}>
-                <item.icon />
-                <span>{item.name}</span>
+                <item.icon style={{width:'23px', height:'23px'}}/>
+                <span style={{fontSize:'18px'}}>{item.name}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
@@ -91,12 +93,6 @@ export function NavContent({
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   )
