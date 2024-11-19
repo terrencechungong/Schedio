@@ -6,14 +6,14 @@ import { Info, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CreateDraftDropdown } from "../SimpleUiComponents/CreateDraftDropdown";
 import { Button } from "@/components/ui/button";
-import { SocialBadgeAndName } from "@/app/compose/SimpleUIComponents/SocialBadgeAndName";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaLinkedin } from "react-icons/fa";
 import { CategorizeDropdown } from "@/app/compose/CategorizeDropdown";
-import React from "react";
+import React, { useState } from "react";
 
 export const TriggerInformation = () => {
     const { setShowTriggerInfoModal } = useModalStatesContext();
+    const [socialBadgeColored, setSocialBadgeColored] = useState<{ [key: number]: boolean }>({ 0: false, 1: false, 2: false });
 
     const containerStyle: React.CSSProperties = {
         position: 'absolute',
@@ -99,18 +99,17 @@ export const TriggerInformation = () => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingBottom: '20px', borderBottom: '0.5px solid #F0F0F0' }}>
                             <p className="text-gray-500 text-sm">CHOOSE SOCIAL</p>
                             <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '15px' }}>
-                                <div className={`${styles.socialBadge}`} style={{ filter: 'grayscale(100%)' }}>
-                                    <div className={`rounded-full  ${styles.profileCircle}`} style={{ backgroundColor: 'white' }}>
-                                        <Avatar>
-                                            <AvatarImage width={35} height={35} src="https://github.com/shadcn.png" alt="@shadcn" />
-                                            <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>
-                                    </div>
+                                {Object.keys(socialBadgeColored).map((key) => (
+                                    <RevisedBadge
+                                        // Add a key for each element in a list
+                                        color={socialBadgeColored[Number(key)]} // Use a color conditionally if needed
+                                        clickFunction={() => setSocialBadgeColored((prev) => ({
+                                            ...prev, // Spread the previous state
+                                            [Number(key)]: !prev[Number(key)] // Toggle the boolean value for the current key
+                                        }))}
+                                    />
+                                ))}
 
-                                    <div className={`rounded-full h-5 w-5 bg-white ${styles.socialPlatformIconCircle}`} >
-                                        <FaLinkedin color={'#0a66c2'} size={14} />
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -134,4 +133,28 @@ export const TriggerInformation = () => {
 
         </div>
     );
+}
+
+// 4523
+
+const RevisedBadge = ({ color, clickFunction }: { color: boolean, clickFunction: () => void }) => {
+
+    return (
+        <div className={`${styles.socialBadge} transition-transform duration-100 transform hover:scale-105 active:scale-95`}
+            onClick={() => clickFunction()}
+            style={{ filter: (color ? '' : 'grayscale(100%)') }}>
+            <div className={`rounded-full  ${styles.profileCircle}`} style={{ backgroundColor: 'white' }}>
+                <Avatar>
+                    <AvatarImage width={35} height={35} src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+            </div>
+
+            <div className={`rounded-full h-5 w-5 bg-white ${styles.socialPlatformIconCircle}`} >
+                <FaLinkedin color={'#0a66c2'} size={14} />
+            </div>
+            {/* truncate */}
+            <p style={{ textAlign: 'center', color:'#0a66c2' }}>Terrence Chungong</p>
+        </div>
+    )
 }

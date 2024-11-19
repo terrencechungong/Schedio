@@ -28,11 +28,15 @@
 }
 
 .socialBadge {
-    width: 55px;
-    height: 56px;
+    width: 75px;
+    height: 96px;
     // background-color: aqua;
     position: relative;
     cursor: pointer;
+    line-height: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .profileCircle {
         display: flex;
@@ -45,8 +49,8 @@
 
     .socialPlatformIconCircle {
         position: absolute;
-        right: 4px;
-        bottom: 5px;
+        right: 14px;
+        bottom: 45px;
         display: flex;
         align-items: center;
         justify-content: center

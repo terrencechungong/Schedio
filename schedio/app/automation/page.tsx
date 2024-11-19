@@ -66,11 +66,11 @@ export default function AutomationPage() {
                     <p className={`border-b border-b-[2px] cursor-pointer ${selectedTab && 'border-b-primary text-primary'}`}
                         style={{ width: '115px', textAlign: 'center', padding: '6px' }}
                         onClick={() => setSelected(true)}
-                        >Triggers</p>
+                    >Triggers</p>
                     <p className={`border-b border-b-[2px] cursor-pointer ${!selectedTab && 'border-b-primary text-primary'}`}
                         style={{ width: '135px', textAlign: 'center', padding: '6px' }}
                         onClick={() => setSelected(false)}
-                        >Notifications</p>
+                    >Notifications</p>
                 </div>
                 <Button className='bg-primary text-white !p-5'
                     onClick={() => setShowTriggerInfoModal(true)}
@@ -83,43 +83,84 @@ export default function AutomationPage() {
                 <div className={styles.tableWrapper}>
                     <table>
                         <thead>
-                            <tr>
-                                <th><Checkbox className='' /></th>
-                                <th>CREATED</th>
-                                <th>NAME</th>
-                                <th>TRIGGER URL</th>
-                                <th>ACTION</th>
-                                <th>ACTIVE</th>
-                                <th></th>
-                            </tr>
+                            {selectedTab ?
+                                <tr>
+                                    <th><Checkbox className='' /></th>
+                                    <th>CREATED</th>
+                                    <th>NAME</th>
+                                    <th>TRIGGER URL</th>
+                                    <th>ACTION</th>
+                                    <th>ACTIVE</th>
+                                    <th></th>
+                                </tr> :
+                                <tr>
+                                    <th><Checkbox className='' /></th>
+                                    <th>CREATED</th>
+                                    <th>NAME</th>
+                                    <th>WEBHOOK URL</th>
+                                    <th>EVENT</th>
+                                    <th>ACTIVE</th>
+                                    <th></th>
+                                </tr>
+                            }
                         </thead>
                         <tbody>
-                            {datas.map((data, index) => (
-                                <tr key={index} style={{}}>
-                                    <td ><Checkbox className='' /></td>
-                                    <td>{data.CREATED}</td>
-                                    <td className='cursor-pointer hover:bg-gray-100'>
-                                        {data.NAME}
-                                    </td>
-                                    <td>
-                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', maxWidth: '90%' }}>
-                                            <span className='text-blue-500 cursor-pointer'>{truncate(data['TRIGGER URL'])}</span>
-                                            <div className={`bg-accent border-[0px] hover:brightness-90 transition duration-200 ${styles.copyUrl}`}
-                                            >
-                                                <Copy size={14} />
+                            {selectedTab ?
+
+                                datas.map((data, index) => (
+                                    <tr key={index} style={{}}>
+                                        <td ><Checkbox className='' /></td>
+                                        <td>{data.CREATED}</td>
+                                        <td className='cursor-pointer hover:bg-gray-100'>
+                                            {data.NAME}
+                                        </td>
+                                        <td>
+                                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', maxWidth: '90%' }}>
+                                                <span className='text-blue-500 cursor-pointer'>{truncate(data['TRIGGER URL'])}</span>
+                                                <div className={`bg-accent border-[0px] hover:brightness-90 transition duration-200 ${styles.copyUrl}`}
+                                                >
+                                                    <Copy size={14} />
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{data.ACTION}</td>
-                                    <td><Switch /></td>
-                                    <td>
-                                        <div className={`bg-white border-[0px] hover:brightness-90 transition duration-200 ${styles.ellipsis}`}
-                                        >
-                                            <Ellipsis />
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td>{data.ACTION}</td>
+                                        <td><Switch /></td>
+                                        <td>
+                                            <div className={`bg-white border-[0px] hover:brightness-90 transition duration-200 ${styles.ellipsis}`}
+                                            >
+                                                <Ellipsis />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                                :
+                                datas.map((data, index) => (
+                                    <tr key={index} style={{}}>
+                                        <td ><Checkbox className='' /></td>
+                                        <td>{data.CREATED}</td>
+                                        <td className='cursor-pointer hover:bg-gray-100'>
+                                            {data.NAME}
+                                        </td>
+                                        <td>
+                                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', maxWidth: '90%' }}>
+                                                <span className='text-blue-500 cursor-pointer'>Not set</span>
+                                                <div className={`bg-accent border-[0px] hover:brightness-90 transition duration-200 ${styles.copyUrl}`}
+                                                >
+                                                    <Copy size={14} />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{data.ACTION}</td>
+                                        <td><Switch /></td>
+                                        <td>
+                                            <div className={`bg-white border-[0px] hover:brightness-90 transition duration-200 ${styles.ellipsis}`}
+                                            >
+                                                <Ellipsis />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                 </div>
