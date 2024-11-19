@@ -1,0 +1,55 @@
+.modalContainer {
+    width: 900px;
+    height: 550px;
+    background-color: white;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        // background-color: green;
+
+
+        .headerX {
+            border-radius: 8px;
+            padding: 5px 5px 5px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+    }
+}
+
+.socialBadge {
+    width: 55px;
+    height: 56px;
+    // background-color: aqua;
+    position: relative;
+    cursor: pointer;
+
+    .profileCircle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #0a66c2;
+        height: 51px;
+        width: 51px;
+    }
+
+    .socialPlatformIconCircle {
+        position: absolute;
+        right: 4px;
+        bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center
+    }
+
+}

@@ -49,48 +49,21 @@ export function NavContent({
   };
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup className="">
       <SidebarGroupLabel style={{fontSize:'14px', color:'#9F9F9F'}}>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {sections.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
-              style={{ height: '45px', paddingLeft:'12px' }}
+              style={{ height: '45px'}}
               asChild >
               <a
                 onClick={() => setSelectedTab(item.name)}
                 href={item.url} className={`${isActive(item.name) ? styles.selectedSidebarMenuItem : styles.sidebarMenuItem}`}>
-                <item.icon style={{width:'23px', height:'23px'}}/>
-                <span style={{fontSize:'18px'}}>{item.name}</span>
+                <item.icon strokeWidth={2}/>
+                <span style={{fontSize:'17px'}}>{item.name}</span>
               </a>
             </SidebarMenuButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction showOnHover>
-                  <MoreHorizontal />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>View Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Forward className="text-muted-foreground" />
-                  <span>Share Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
-                  <span>Delete Project</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </SidebarMenuItem>
         ))}
       </SidebarMenu>

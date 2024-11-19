@@ -8,12 +8,16 @@ import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar';
 import { FaLinkedin } from "react-icons/fa";
 import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
 import { useModalStatesContext } from '@/app/layout';
+import React from 'react';
 
 export const SchedulePostComponent: React.FC = () => {
     const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext()
-
+    const [isOpen, setIsOpen] = React.useState(false);
+    
     return (
-        <div className={styles.container}>
+        <div className={styles.container}
+        onClick={() => setIsOpen(false)}
+        >
             <div className={styles.schedulePostHeader}>
                 <Button
                     onClick={() => setShowSelectPostTimeModal(true)}
@@ -21,9 +25,9 @@ export const SchedulePostComponent: React.FC = () => {
                     <CalendarClock size={13} strokeWidth={1.25} />
                     Pick Time
                 </Button>
-                <Button 
-                onClick={() => setShowPostNowModal(true)}
-                className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
+                <Button
+                    onClick={() => setShowPostNowModal(true)}
+                    className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
                     Post Now
                     <MoveUpRight size={13} strokeWidth={1.25} />
                 </Button>
@@ -47,7 +51,7 @@ export const SchedulePostComponent: React.FC = () => {
                 <p>CATEGORIZE</p>
                 <div style={{ gap: '8px', display: 'flex', flexDirection: 'row', alignItems: 'centera' }}>
                     <div style={{ flexGrow: 1 }}>
-                        <CategorizeDropdown />
+                        <CategorizeDropdown isOpen={isOpen} setIsOpen={setIsOpen} />
                     </div>
                     <div className={`bg-accent border-lightgrey border-[0.5px] ${styles.categorizePencil}`} onClick={() => {
                         setShowAddLabelFromSchedulePost(true)

@@ -34,12 +34,13 @@ export default function TeamPage() {
                             <th>TEAM MEMBER</th>
                             <th>EMAIL</th>
                             <th>ROLE</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {members.map((member, index) => (
                             <tr key={index} style={{}}>
-                                <td style={{ width: '37%' }}>
+                                <td>
                                     <div style={{ display: 'flex', flexDirection: 'row', gap: '14px', alignItems: 'center' }}>
                                         <Avatar><AvatarFallback>T</AvatarFallback></Avatar>
                                         <div>
@@ -47,16 +48,18 @@ export default function TeamPage() {
                                         </div>
                                     </div>
                                 </td>
-                                <td style={{ width: '37%' }}>{member.email}</td>
-                                <td style={{ width: '26%' }}>
+                                <td>{member.email}</td>
+                                <td>
                                     <div className={styles.roleDiv}>
                                         <Button
                                             style={{ fontSize: '13px' }}
                                             className='bg-accent text-black shadow-none hover:bg-gray-200'
                                             onClick={() => setShowUserPermissionModal(true)}
                                         >View/Edit permissions</Button>
-                                        <TakeActionOnUser />
                                     </div>
+                                </td>
+                                <td>
+                                    <TakeActionOnUser />
                                 </td>
                             </tr>
                         ))}

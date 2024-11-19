@@ -50,6 +50,8 @@ interface ModalStatesContextType {
   showPostNowModal: boolean;
   showAddTeamMemberModal: boolean;
   setShowAddTeamMemberModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showTriggerInfoModal: boolean;
+  setShowTriggerInfoModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -60,6 +62,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
   const [showAiGenCaption, setShowAiGenCaption] = useState<boolean>(false);
   const [showSelectPostTimeModal, setShowSelectPostTimeModal] = useState<boolean>(false);
+  const [showTriggerInfoModal, setShowTriggerInfoModal] = useState<boolean>(false);
   const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
   const [postCaption, setPostCaption] = useState<string>("");
@@ -82,7 +85,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showUserPermissionModal,
       setShowUserPermissionModal,
       showAddTeamMemberModal,
-      setShowAddTeamMemberModal
+      setShowAddTeamMemberModal,
+      showTriggerInfoModal,
+      setShowTriggerInfoModal
     }}>
       {children}
     </ModalStatesContext.Provider>

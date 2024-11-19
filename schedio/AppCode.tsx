@@ -9,6 +9,7 @@ import { SelectTimeToScheduleModal } from "./app/compose/Modals/SelectTimeToSche
 import { PostNowModal } from "./app/compose/Modals/PostNowModal";
 import { UserPermissionsModal } from "./app/team/modals/UserPermissionsModal";
 import { AddTeamMemberModal } from "./app/team/modals/AddTeamMemberModal";
+import { TriggerInformation } from "./app/automation/Modals/TriggerInformation";
 
 
 
@@ -20,12 +21,16 @@ export default function AppCode({
 }>) {
 
     const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal,
-        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal
+        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal
      } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
+            <AnimatePresence>
+                {showTriggerInfoModal &&
+                <TriggerInformation/>}
+            </AnimatePresence>
             <AnimatePresence>
                 {showAddTeamMemberModal &&
                 <AddTeamMemberModal/>}
