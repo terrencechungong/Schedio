@@ -133,7 +133,7 @@
 .createPostHeader {
     display: flex;
     flex-direction: row;
-    gap:13px;
+    gap: 13px;
     align-items: center;
 
 }
@@ -201,9 +201,11 @@
     // font-family: Open;
     border-top: 1px solid lightgrey;
     color: grey;
-    h4{
-        color:#121212
+
+    h4 {
+        color: #121212
     }
+
     // height:10px;
     // overflow-x: hidden;
 }
@@ -237,6 +239,19 @@
 
 .editableDiv {
     position: relative;
+    overflow-wrap: anywhere;
+    // overflow-wrap: break-word;
+    /* Fallback for older browsers */
+    word-wrap: break-word;
+    /* Ensures words wrap */
+    word-break: break-word;
+    max-width: 100%;
+    display: block;
+    word-wrap: break-word;
+    min-height: 100px;
+    overflow-x: hidden;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .editableDiv::before {
@@ -256,4 +271,8 @@
 .editableDiv:not(:empty)::before {
     content: "";
     /* Remove placeholder when focused or content is present */
+}
+
+.toolBoxDashDiv {
+    font-size: 12px;
 }

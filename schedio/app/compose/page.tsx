@@ -2,7 +2,7 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { Camera, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
+import { Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
@@ -18,7 +18,8 @@ import variableIcon from '../assets/independent-variable.png'
 import browser from '../assets/browser.png';
 import settings from '../assets/settings.png';
 import settings1 from '../assets/settings (1).png';
-
+import { AnimatePresence, motion } from 'framer-motion';
+import variable from '../assets/variable2.png'
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
@@ -82,11 +83,18 @@ export default function ComposePage() {
 
 
   const handleInput = (inputTextArea = null) => {
-    const textarea = inputTextArea == null ? textareaRef.current : inputTextArea;
-    if (textarea) {
-      setPostCaption(textarea.value)
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    const textarea = inputTextArea == null ? textareaRef : inputTextArea;
+    console.log(textarea, inputTextArea)
+    if (textarea.current) {
+      console.log("sdhsdhs")
+      if (inputTextArea == null) {
+        setPostCaption(textarea.current.value)
+      } else {
+        // width
+        console.log()
+      }
+      textarea.current.style.height = 'auto';
+      textarea.current.style.height = `${textarea.current.scrollHeight}px`;
     }
     if (cardRef.current && toolRef.current) {
       toolRef.current.style.maxWidth = cardRef.current.style.width
@@ -117,7 +125,7 @@ export default function ComposePage() {
     }
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
-        handleInput();
+        handleInput(null);
       }
     });
 
@@ -232,9 +240,9 @@ export default function ComposePage() {
 
 
         <div className={styles.toolsSection}>
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom:'5px' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom: '5px' }}>
             <h4 style={{ padding: '0px 0px 12.5px', fontWeight: '500', margin: 0, color: '#303030', fontSize: '20px' }}>TOOLS</h4>
-            <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom:'12.5px' }}>
+            <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom: '12.5px' }}>
               <img src={settings1.src} width={"20px"} height={"20px"} />
             </div>
           </div>
@@ -242,8 +250,8 @@ export default function ComposePage() {
 
           <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+            <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
+              <div className={`${showAiGenTemplate ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-[#E7F8E9] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
                     <img src={templateIcon.src} width={"27px"} height={"27px"} />
@@ -267,96 +275,109 @@ export default function ComposePage() {
               </div>
 
               {/* Categories Section */}
-              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showAiGenTemplate ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
-                  <p style={{ color: 'black' }}>Category</p>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      overflowX: 'scroll',
-                      padding: '4px',
-                      maxWidth: '50%',
-                      margin: 0,
-                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+              <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {showAiGenTemplate && <motion.div
+                    key="content"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
                     }}
-                  >
-                    {Array.from({ length: 9 }).map((_, idx) => (
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
+                      <p style={{ color: 'black' }}>Category</p>
                       <div
-                        onClick={() => setSelectedIndex(idx)}
-                        key={idx}
-                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
                         style={{
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap', // Prevent text overflow
-                          // flexShrink: 0, // Prevent child from shrinking or stretching
-                          margin: '0 5px', // Add margin instead of gap
+                          display: 'flex',
+                          flexDirection: 'row',
+                          overflowX: 'scroll',
+                          padding: '4px',
+                          maxWidth: '50%',
+                          margin: 0,
+                          // boxSizing: 'border-box', // Ensures padding is included in the width calculation
                         }}
                       >
-                        Item {idx + 1}
+                        {Array.from({ length: 9 }).map((_, idx) => (
+                          <div
+                            onClick={() => setSelectedIndex(idx)}
+                            key={idx}
+                            className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                            style={{
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap', // Prevent text overflow
+                              // flexShrink: 0, // Prevent child from shrinking or stretching
+                              margin: '0 5px', // Add margin instead of gap
+                            }}
+                          >
+                            Item {idx + 1}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: '89%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                  }}
-                >
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveLeft size={24} />
-                  </div>
-                  <div
-                    style={{
-                      overflowWrap: 'break-word',
-                      fontSize: '14px',
-                      wordWrap: 'break-word',
-                      maxWidth: '82%',
-                      whiteSpace: 'normal', // Ensures wrapping of long text
-                      flexGrow: 1,
-                    }}
-                  >
-                    Preparing for a job interview? Don't forget to do your research! Learn about the company's mission, values, and culture.
+                    </div>
+                    <div
+                      style={{
+                        width: '89%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveLeft size={24} />
+                      </div>
+                      <div
+                        style={{
+                          overflowWrap: 'break-word',
+                          fontSize: '14px',
+                          wordWrap: 'break-word',
+                          maxWidth: '82%',
+                          whiteSpace: 'normal', // Ensures wrapping of long text
+                          flexGrow: 1,
+                        }}
+                      >
+                        Preparing for a job interview? Don't forget to do your research! Learn about the company's mission, values, and culture.
 
-                    This helps you understand if the company is the right fit for you and shows that you're genuinely interested in the position. Good luck!
-                  </div>
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveRight size={24} />
-                  </div>
-                </div>
+                        This helps you understand if the company is the right fit for you and shows that you're genuinely interested in the position. Good luck!
+                      </div>
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveRight size={24} />
+                      </div>
+                    </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignSelf: 'flex-end',
-                    gap: '10px',
-                    marginTop: '13px',
-                  }}
-                >
-                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                    Expand
-                  </Button>
-                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                    Use Inspiration
-                  </Button>
-                </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                        Use Inspiration
+                      </Button>
+                    </div>
 
-              </div>}
-
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+            <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className={`${showHashtagGroupTool ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-[#ffeeb6] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
                     <img src={hashtagIcon.src} width={"27px"} height={"27px"} />
@@ -379,96 +400,111 @@ export default function ComposePage() {
                   </div>)}
               </div>
 
-              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showHashtagGroupTool ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
-                  <p style={{ color: 'black' }}>Group name</p>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      overflowX: 'scroll',
-                      padding: '4px',
-                      maxWidth: '50%',
-                      margin: 0,
-                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+              <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+
+                  {showHashtagGroupTool && <motion.div
+                    key="content2"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
                     }}
-                  >
-                    {Array.from({ length: 9 }).map((_, idx) => (
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
+                      <p style={{ color: 'black' }}>Group name</p>
                       <div
-                        onClick={() => setSelectedIndex(idx)}
-                        key={idx}
-                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
                         style={{
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap', // Prevent text overflow
-                          // flexShrink: 0, // Prevent child from shrinking or stretching
-                          margin: '0 5px', // Add margin instead of gap
+                          display: 'flex',
+                          flexDirection: 'row',
+                          overflowX: 'scroll',
+                          padding: '4px',
+                          maxWidth: '50%',
+                          margin: 0,
+                          // boxSizing: 'border-box', // Ensures padding is included in the width calculation
                         }}
                       >
-                        Item {idx + 1}
+                        {Array.from({ length: 9 }).map((_, idx) => (
+                          <div
+                            onClick={() => setSelectedIndex(idx)}
+                            key={idx}
+                            className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                            style={{
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap', // Prevent text overflow
+                              // flexShrink: 0, // Prevent child from shrinking or stretching
+                              margin: '0 5px', // Add margin instead of gap
+                            }}
+                          >
+                            Item {idx + 1}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: '89%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                  }}
-                >
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveLeft size={24} />
-                  </div>
-                  <div
-                    style={{
-                      overflowWrap: 'break-word',
-                      fontSize: '14px',
-                      wordWrap: 'break-word',
-                      maxWidth: '80%',
-                      whiteSpace: 'normal', // Ensures wrapping of long text
-                      flexGrow: 1,
-                    }}
-                  >
-                    #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
-                    #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
+                    </div>
+                    <div
+                      style={{
+                        width: '89%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveLeft size={24} />
+                      </div>
+                      <div
+                        style={{
+                          overflowWrap: 'break-word',
+                          fontSize: '14px',
+                          wordWrap: 'break-word',
+                          maxWidth: '80%',
+                          whiteSpace: 'normal', // Ensures wrapping of long text
+                          flexGrow: 1,
+                        }}
+                      >
+                        #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
+                        #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
 
-                  </div>
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveRight size={24} />
-                  </div>
-                </div>
+                      </div>
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveRight size={24} />
+                      </div>
+                    </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignSelf: 'flex-end',
-                    gap: '10px',
-                    marginTop: '13px',
-                  }}
-                >
-                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                    Expand
-                  </Button>
-                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                    Use Hashtags
-                  </Button>
-                </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                        Use Hashtags
+                      </Button>
+                    </div>
 
-              </div>}
-
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+
+            <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
+              <div className={`${showPostInternalNotes ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
                     <img src={notepad.src} width={"27px"} height={"27px"} />
@@ -489,31 +525,49 @@ export default function ComposePage() {
                   <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
                     <ChevronLeft color='black' onClick={() => setShowPostInternalNotes(true)} /></div>}
               </div>
+              < div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {showPostInternalNotes && <motion.div
+                    key="content"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+                    className='rounded-t-none rounded-b-lg' style={{ maxWidth: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', alignItems: 'center' }}>
+                      <div style={{ height: '19px', width: '19px', borderRadius: '26px', backgroundColor: '#13b27a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Check color='white' size={16} strokeWidth={3} />
+                      </div>
+                      <p style={{ fontSize: '15px', paddingTop: '1px', color: 'black' }} className="m-0">Saved</p>
+                    </div>
 
-              {showPostInternalNotes &&
-                <div
-                  contentEditable={true}
-                  ref={notesInput}
-                  className={`${styles.textarea} rounded-lg ${styles.editableDiv}`}
-                  style={{ width: '90%', backgroundColor: 'white', alignSelf: 'center', minHeight: '150px' }}
-                  // placeholder="Keep internal notes for your post... put names and note like [NOTE]:note"
-                  onInput={(e) => {
-                    handleNotesInput(e)
-                    handleInput(notesInput)
-                  }}
-                >
-
-
-                </div>
-              }
+                    <div className={styles.textAreaWrapper}>
+                      <div
+                        contentEditable={true}
+                        ref={notesInput}
+                        className={`${styles.editableDiv} ${styles.textarea}`}
+                        onInput={(e) => {
+                          handleInput(notesInput)
+                          handleNotesInput(e)
+                        }}
+                      >
+                      </div>
+                    </div>
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
             </div>
+
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
 
               <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                   <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
                     <div className='bg-purple-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={variableIcon.src} width={"27px"} height={"27px"} />
+                      <img src={variable.src} width={"27px"} height={"27px"} />
                     </div>
                     <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Variables</h4>
                   </div>
@@ -527,108 +581,91 @@ export default function ComposePage() {
               </div>
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={browser.src} width={"24px"} height={"24px"} />
-                    </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
+            <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className={`${showUserTemplateTools ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={browser.src} width={"27px"} height={"27px"} />
                   </div>
-                  {showUserTemplateTools &&
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronDown color='black' onClick={() => setShowUserTemplateTools(false)} /></div>}
-                  {!showUserTemplateTools &&
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronLeft color='black' onClick={() => setShowUserTemplateTools(true)} /></div>}
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
                 </div>
+
+
+                {showUserTemplateTools &&
+
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowUserTemplateTools(false)} />
+                  </div>
+
+
+                }
+                {!showUserTemplateTools && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowUserTemplateTools(true)} />
+                  </div>)}
               </div>
 
-              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showUserTemplateTools ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
-                  <p style={{ color: 'black' }}>Template name</p>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      overflowX: 'scroll',
-                      padding: '4px',
-                      maxWidth: '50%',
-                      margin: 0,
-                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+              {<div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+
+                  {showUserTemplateTools && <motion.div
+                    key="content2"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
                     }}
-                  >
-                    {Array.from({ length: 9 }).map((_, idx) => (
-                      <div
-                        onClick={() => setSelectedIndex(idx)}
-                        key={idx}
-                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
-                        style={{
-                          borderRadius: '6px',
-                          fontSize: '11px',
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap', // Prevent text overflow
-                          // flexShrink: 0, // Prevent child from shrinking or stretching
-                          margin: '0 5px', // Add margin instead of gap
-                        }}
-                      >
-                        Item {idx + 1}
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '140px', gap: '13px' }}>
+                      <div className={`${styles.toolBoxDashDiv} =rounded-md bg-blue-100`} style={{ width: '140px', border: '3px dashed navy', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+                        {/* Truncate function */}
+                        <p>Added * 10/12/120</p>
+                        <p>{`{{ name }}`}</p>
+                        <p> eefefeffe erfefe ...</p>
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: '89%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignSelf: 'center',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                  }}
-                >
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveLeft size={24} />
-                  </div>
-                  <div
-                    style={{
-                      overflowWrap: 'break-word',
-                      fontSize: '14px',
-                      wordWrap: 'break-word',
-                      maxWidth: '80%',
-                      whiteSpace: 'normal', // Ensures wrapping of long text
-                      flexGrow: 1,
-                    }}
-                  >
-                    #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
-                    #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
 
-                  </div>
-                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                    <MoveRight size={24} />
-                  </div>
-                </div>
+                      <div className={`${styles.toolBoxDashDiv} =rounded-md bg-blue-100`} style={{ width: '140px', border: '3px dashed navy', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+                        <p>Added * 10/12/120</p>
+                        <p>{`{{ name }}`}</p>
+                        <p> eefefeffe erfefe ...</p>
+                      </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignSelf: 'flex-end',
-                    gap: '10px',
-                    marginTop: '13px',
-                  }}
-                >
-                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                    Expand
-                  </Button>
-                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                    Use template
-                  </Button>
-                </div>
+                      <div className={`${styles.toolBoxDashDiv} =rounded-md bg-blue-100`} style={{ width: '140px', border: '3px dashed navy', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+                        <p>Added * 10/12/120</p>
+                        <p>{`{{ name }}`}</p>
+                        <p> eefefeffe erfefe ...</p>
+                      </div>
 
+                      <div className={`${styles.toolBoxDashDiv} =rounded-md bg-blue-100`} style={{ width: '140px', border: '3px dashed navy', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around' }}>
+                        <p>Added * 10/12/120</p>
+                        <p>{`{{ name }}`}</p>
+                        <p> eefefeffe erfefe ...</p>
+                      </div>
+
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                        Use Template
+                      </Button>
+                    </div>
+
+                  </motion.div>}
+                </AnimatePresence>
               </div>}
 
             </div>
