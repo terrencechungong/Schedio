@@ -2,7 +2,7 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { Camera, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, SmilePlus, WandSparkles, X } from 'lucide-react';
+import { Camera, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
@@ -10,6 +10,14 @@ import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import lightbulb from '@/app/assets/light-bulb-with-removebg-preview (2).png'
 import { GetInspirationHeader, PostTemplatesHeader, UseHashtagsHeader, UseVariablesHeader, VariablesHeader } from './SimpleUIComponents/ToolCardHeader';
 import { Button } from '@/components/ui/button';
+import { MoveRight } from 'lucide-react';
+import templateIcon from '../assets/interface.png'
+import hashtagIcon from '../assets/hashtag.png'
+import notepad from '../assets/notepad.png';
+import variableIcon from '../assets/independent-variable.png'
+import browser from '../assets/browser.png';
+import settings from '../assets/settings.png';
+import settings1 from '../assets/settings (1).png';
 
 
 export default function ComposePage() {
@@ -19,7 +27,16 @@ export default function ComposePage() {
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
   const moving = useRef<HTMLDivElement | null>(null);
+  const toolRef = useRef<HTMLDivElement | null>(null)
+  const [showAiGenTemplate, setShowAiGenTemplate] = useState(false);
+  const [showPostInternalNotes, setShowPostInternalNotes] = useState(false);
   const hoverStates = { emojiHover: useState(false), cameraHover: useState(false), wandHover: useState(false), hashtagHover: useState(false) };
+  const previousNote = useRef("");
+  const notesInput = useRef(null);
+  const [selectedIndex, setSelectedIndex] = useState(3);
+  const [showHashtagGroupTool, setShowHashtagGroupTool] = useState(false);
+  const [showUserTemplateTools, setShowUserTemplateTools] = useState(false);
+  const [showVariables, setShowVariables] = useState(false)
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -38,18 +55,66 @@ export default function ComposePage() {
   }, []);
 
 
+  const setCursorToEnd = (element) => {
+    // Focus the contentEditable element
+    element.focus();
 
-  const handleInput = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      setPostCaption(textareaRef.current.value)
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    // Create a range
+    const range = document.createRange();
+
+    // Get the last child node
+    const lastChild = element.lastChild;
+
+    // Set the range to the end of the content
+    if (lastChild) {
+      range.setStart(lastChild, lastChild.textContent?.length || 0);
+      range.setEnd(lastChild, lastChild.textContent?.length || 0);
+    }
+
+    // Get the selection object
+    const selection = window.getSelection();
+    if (selection) {
+      // Remove all ranges and add the new range
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
   };
 
+
+  const handleInput = (inputTextArea = null) => {
+    const textarea = inputTextArea == null ? textareaRef.current : inputTextArea;
+    if (textarea) {
+      setPostCaption(textarea.value)
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+    if (cardRef.current && toolRef.current) {
+      toolRef.current.style.maxWidth = cardRef.current.style.width
+    }
+  };
+
+  const handleNotesInput = (e: React.MouseEvent<HTMLDivElement>) => {
+    // MAKE IT UNDEETABLE
+    if (!notesInput.current) return
+    console.log("tjrerkejr", previousNote.current, notesInput.current.innerText)
+    if (previousNote.current == '') {
+      notesInput.current.innerHTML = `
+          <div contenteditable="false" style="display:inline; font-weight: bold; color: white; background-color: blue; padding:3px; border-radius:5px; margin-right:2px">
+            Terrence:
+          </div>
+          ${notesInput.current.innerText}
+        `;
+      previousNote.current = "more"
+    }
+    setCursorToEnd(notesInput.current);
+  }
+
   useEffect(() => {
     const div = divRef.current;
+    if (textareaRef.current && toolRef.current) {
+      toolRef.current.style.maxWidth = String(Number(textareaRef.current.style.width) / 4);
+      console.log("ioerieorioeir", String(Number(textareaRef.current.style.width) / 4))
+    }
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
         handleInput();
@@ -76,6 +141,7 @@ export default function ComposePage() {
     }
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
+
     // since the left of the card will change with size ill change this too
     setEmojiPosition({
       top: rect.bottom - 18,
@@ -159,80 +225,416 @@ export default function ComposePage() {
             Hashtag is hovered over!
           </div>
         )}
-        <div className={styles.createPostCard} ref={cardRef}>
+        <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
           <CreatePostHeader divRef={divRef} />
           <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
         </div>
-        {/* single column until 1690
-        then  2 columns */}
 
-        <div className={styles.composeToolsDiv}>
 
-          <div className={styles.toolsCard}>
-            <GetInspirationHeader />
-            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
-
+        <div className={styles.toolsSection}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom:'5px' }}>
+            <h4 style={{ padding: '0px 0px 12.5px', fontWeight: '500', margin: 0, color: '#303030', fontSize: '20px' }}>TOOLS</h4>
+            <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom:'12.5px' }}>
+              <img src={settings1.src} width={"20px"} height={"20px"} />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                <Button className='text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]'>Use inspiration</Button>
-                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+          </div>
+
+
+          <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#E7F8E9] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={templateIcon.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>AI Generated Templates</h4>
+                </div>
+
+
+                {showAiGenTemplate &&
+
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowAiGenTemplate(false)} />
+                  </div>
+
+
+                }
+                {!showAiGenTemplate && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowAiGenTemplate(true)} />
+                  </div>)}
               </div>
-              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+
+              {/* Categories Section */}
+              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showAiGenTemplate ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
+                  <p style={{ color: 'black' }}>Category</p>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      overflowX: 'scroll',
+                      padding: '4px',
+                      maxWidth: '50%',
+                      margin: 0,
+                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+                    }}
+                  >
+                    {Array.from({ length: 9 }).map((_, idx) => (
+                      <div
+                        onClick={() => setSelectedIndex(idx)}
+                        key={idx}
+                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                        style={{
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap', // Prevent text overflow
+                          // flexShrink: 0, // Prevent child from shrinking or stretching
+                          margin: '0 5px', // Add margin instead of gap
+                        }}
+                      >
+                        Item {idx + 1}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: '89%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveLeft size={24} />
+                  </div>
+                  <div
+                    style={{
+                      overflowWrap: 'break-word',
+                      fontSize: '14px',
+                      wordWrap: 'break-word',
+                      maxWidth: '82%',
+                      whiteSpace: 'normal', // Ensures wrapping of long text
+                      flexGrow: 1,
+                    }}
+                  >
+                    Preparing for a job interview? Don't forget to do your research! Learn about the company's mission, values, and culture.
+
+                    This helps you understand if the company is the right fit for you and shows that you're genuinely interested in the position. Good luck!
+                  </div>
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveRight size={24} />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    gap: '10px',
+                    marginTop: '13px',
+                  }}
+                >
+                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                    Expand
+                  </Button>
+                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                    Use Inspiration
+                  </Button>
+                </div>
+
+              </div>}
+
             </div>
-          </div>
+
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#ffeeb6] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={hashtagIcon.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Hashtag Groups</h4>
+                </div>
 
 
-          <div className={styles.toolsCard}>
-            <PostTemplatesHeader />
-            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
+                {showHashtagGroupTool &&
 
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use template</Button>
-                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowHashtagGroupTool(false)} />
+                  </div>
+
+
+                }
+                {!showHashtagGroupTool && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowHashtagGroupTool(true)} />
+                  </div>)}
               </div>
-              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
+
+              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showHashtagGroupTool ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
+                  <p style={{ color: 'black' }}>Group name</p>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      overflowX: 'scroll',
+                      padding: '4px',
+                      maxWidth: '50%',
+                      margin: 0,
+                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+                    }}
+                  >
+                    {Array.from({ length: 9 }).map((_, idx) => (
+                      <div
+                        onClick={() => setSelectedIndex(idx)}
+                        key={idx}
+                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                        style={{
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap', // Prevent text overflow
+                          // flexShrink: 0, // Prevent child from shrinking or stretching
+                          margin: '0 5px', // Add margin instead of gap
+                        }}
+                      >
+                        Item {idx + 1}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: '89%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveLeft size={24} />
+                  </div>
+                  <div
+                    style={{
+                      overflowWrap: 'break-word',
+                      fontSize: '14px',
+                      wordWrap: 'break-word',
+                      maxWidth: '80%',
+                      whiteSpace: 'normal', // Ensures wrapping of long text
+                      flexGrow: 1,
+                    }}
+                  >
+                    #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
+                    #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
+
+                  </div>
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveRight size={24} />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    gap: '10px',
+                    marginTop: '13px',
+                  }}
+                >
+                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                    Expand
+                  </Button>
+                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                    Use Hashtags
+                  </Button>
+                </div>
+
+              </div>}
+
             </div>
-          </div>
 
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={notepad.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Post Notes</h4>
+                </div>
 
-          <div className={styles.toolsCard}>
-            <UseHashtagsHeader />
-            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
-
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use hashtags</Button>
-                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+                {showPostInternalNotes &&
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => {
+                      console.log("dsjadskjds")
+                      setShowPostInternalNotes(false)
+                    }
+                    } />
+                  </div>
+                }
+                {!showPostInternalNotes &&
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowPostInternalNotes(true)} /></div>}
               </div>
-              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
-            </div>
-          </div>
 
-          <div className={styles.toolsCard}>
-            <VariablesHeader />
-            <div style={{ display: 'flex', flexDirection: 'column', border: '3px dashed lightgray', width: '100%', borderRadius: '4px', height: '92px' }}>
+              {showPostInternalNotes &&
+                <div
+                  contentEditable={true}
+                  ref={notesInput}
+                  className={`${styles.textarea} rounded-lg ${styles.editableDiv}`}
+                  style={{ width: '90%', backgroundColor: 'white', alignSelf: 'center', minHeight: '150px' }}
+                  // placeholder="Keep internal notes for your post... put names and note like [NOTE]:note"
+                  onInput={(e) => {
+                    handleNotesInput(e)
+                    handleInput(notesInput)
+                  }}
+                >
 
+
+                </div>
+              }
             </div>
-            <div style={{ display: 'flex', flexDirection: 'row', height: '45px', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
-              <ChevronLeft className='text-primary' style={{ cursor: 'pointer' }} />
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                <Button className='text-primary shadow-none hover:bg-[#d9c6ed] bg-[#E9D5FF]'>Use variable</Button>
-                <Button className='text-black bg-accent shadow-none hover:bg-gray-200'><Expand /></Button>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
+                    <div className='bg-purple-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                      <img src={variableIcon.src} width={"27px"} height={"27px"} />
+                    </div>
+                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Variables</h4>
+                  </div>
+                  {showVariables &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronDown color='black' onClick={() => setShowVariables(false)} /></div>}
+                  {!showVariables &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronLeft color='black' onClick={() => setShowVariables(true)} /></div>}
+                </div>
               </div>
-              <ChevronRight className='text-primary' style={{ cursor: 'pointer' }} />
             </div>
+
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
+                    <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                      <img src={browser.src} width={"24px"} height={"24px"} />
+                    </div>
+                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
+                  </div>
+                  {showUserTemplateTools &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronDown color='black' onClick={() => setShowUserTemplateTools(false)} /></div>}
+                  {!showUserTemplateTools &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronLeft color='black' onClick={() => setShowUserTemplateTools(true)} /></div>}
+                </div>
+              </div>
+
+              {<div className="shadow-md rounded-lg" style={{ width: '90%', display: showUserTemplateTools ? 'flex' : 'none', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '10px' }}>
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
+                  <p style={{ color: 'black' }}>Template name</p>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      overflowX: 'scroll',
+                      padding: '4px',
+                      maxWidth: '50%',
+                      margin: 0,
+                      // boxSizing: 'border-box', // Ensures padding is included in the width calculation
+                    }}
+                  >
+                    {Array.from({ length: 9 }).map((_, idx) => (
+                      <div
+                        onClick={() => setSelectedIndex(idx)}
+                        key={idx}
+                        className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                        style={{
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap', // Prevent text overflow
+                          // flexShrink: 0, // Prevent child from shrinking or stretching
+                          margin: '0 5px', // Add margin instead of gap
+                        }}
+                      >
+                        Item {idx + 1}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    width: '89%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveLeft size={24} />
+                  </div>
+                  <div
+                    style={{
+                      overflowWrap: 'break-word',
+                      fontSize: '14px',
+                      wordWrap: 'break-word',
+                      maxWidth: '80%',
+                      whiteSpace: 'normal', // Ensures wrapping of long text
+                      flexGrow: 1,
+                    }}
+                  >
+                    #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
+                    #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
+
+                  </div>
+                  <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                    <MoveRight size={24} />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    gap: '10px',
+                    marginTop: '13px',
+                  }}
+                >
+                  <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                    Expand
+                  </Button>
+                  <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                    Use template
+                  </Button>
+                </div>
+
+              </div>}
+
+            </div>
+
           </div>
 
-          <div className={styles.toolsCard}>
-
-          </div>
 
         </div>
 
@@ -267,7 +669,7 @@ interface HoverStates {
 
 
 interface TextAreaComponentInterface {
-  handleInput: (event: React.FormEvent<HTMLTextAreaElement>) => void;
+  handleInput: (inputTextArea: any) => void;
   onSmileClick: (event: React.MouseEvent<HTMLDivElement>) => void;
   hoverStates: HoverStates;
 }
@@ -281,7 +683,7 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
       <textarea
         className={styles.textarea}
         placeholder="What would you like to share?"
-        onInput={handleInput}
+        onInput={() => handleInput(null)}
         ref={textareaRef}
       ></textarea>
       <div className={styles.iconRowInCreatePost}>

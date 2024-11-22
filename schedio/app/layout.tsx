@@ -113,7 +113,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        style={{ width: '100vw', overflow: 'hidden', }}
+        style={{ maxWidth: '100vw', }}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ModalStatesProvider >
