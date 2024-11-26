@@ -72,7 +72,7 @@ export const PostCommentsComponent: React.FC = () => {
 
 
     return (
-        <div className={`${styles.container} bg-accent`}>
+        <div className={`${styles.container}`}>
             <div
                 onClick={(e) => e.stopPropagation()}
                 style={{

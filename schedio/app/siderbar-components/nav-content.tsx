@@ -55,6 +55,7 @@ export function NavContent({
         {sections.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
+            tooltip={item.name}
               style={{ height: '45px'}}
               asChild >
               <a

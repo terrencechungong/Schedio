@@ -22,34 +22,34 @@ export default function AppCode({
 
     const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal,
         showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal
-     } = useModalStatesContext();
+    } = useModalStatesContext();
 
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
+        <div style={{ width: '100vw', height: '100vh', flex: '0 0 auto', maxWidth: '100vw' }}>
             <AnimatePresence>
                 {showTriggerInfoModal &&
-                <TriggerInformation/>}
+                    <TriggerInformation />}
             </AnimatePresence>
             <AnimatePresence>
                 {showAddTeamMemberModal &&
-                <AddTeamMemberModal/>}
+                    <AddTeamMemberModal />}
             </AnimatePresence>
             <AnimatePresence>
                 {showUserPermissionModal &&
-                <UserPermissionsModal/>}
+                    <UserPermissionsModal />}
             </AnimatePresence>
             <AnimatePresence>
                 {showPostNowModal &&
-                <PostNowModal />}
+                    <PostNowModal />}
             </AnimatePresence>
             <AnimatePresence>
                 {showSelectPostTimeModal &&
-                <SelectTimeToScheduleModal />}
+                    <SelectTimeToScheduleModal />}
             </AnimatePresence>
             <AnimatePresence>
                 {showAddLabelFromSchedulePost &&
-                <AddIconFromSchedulePostModal />}
+                    <AddIconFromSchedulePostModal />}
             </AnimatePresence>
             <AnimatePresence>
                 {showMediaModal &&
@@ -62,8 +62,8 @@ export default function AppCode({
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
-                    {children}
                 </SidebarInset>
+                {children}
             </SidebarProvider>
         </div>
     )
