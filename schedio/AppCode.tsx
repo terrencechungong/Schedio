@@ -10,6 +10,8 @@ import { PostNowModal } from "./app/compose/Modals/PostNowModal";
 import { UserPermissionsModal } from "./app/team/modals/UserPermissionsModal";
 import { AddTeamMemberModal } from "./app/team/modals/AddTeamMemberModal";
 import { TriggerInformation } from "./app/automation/Modals/TriggerInformation";
+import { EditMediaModal } from "./app/compose/Modals/EditMediaModal";
+import AdobeEditor from "./app/compose/Modals/AdobeEditor";
 
 
 
@@ -20,13 +22,18 @@ export default function AppCode({
     children: React.ReactNode;
 }>) {
 
-    const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal,
-        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal
+    const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal, showAdobeEditor,
+        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal, showEditMediaModal
     } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh', flex: '0 0 auto', maxWidth: '100vw' }}>
+            {showAdobeEditor && <AdobeEditor  />}
+            <AnimatePresence>
+                {showEditMediaModal &&
+                    <EditMediaModal />}
+            </AnimatePresence>
             <AnimatePresence>
                 {showTriggerInfoModal &&
                     <TriggerInformation />}

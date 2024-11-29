@@ -2,7 +2,7 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
+import { BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
@@ -22,10 +22,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import variable from '../assets/variable2.png'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '../app-sidebar';
+import { VariablesBoxDiv } from './SimpleUIComponents/ToolInnerBoxDiv';
+import { FaCircleCheck } from "react-icons/fa6";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
-  const { showMediaModal, setShowMediaModal, textareaRef, setPostCaption } = useModalStatesContext();
+  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal } = useModalStatesContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -36,11 +39,308 @@ export default function ComposePage() {
   const hoverStates = { emojiHover: useState(false), cameraHover: useState(false), wandHover: useState(false), hashtagHover: useState(false) };
   const previousNote = useRef("");
   const notesInput = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(3);
+  const [selectedTemplateIdxForGroup, setSelectedTemplateIdxForGroup] = useState(0);
   const [showHashtagGroupTool, setShowHashtagGroupTool] = useState(false);
   const [showUserTemplateTools, setShowUserTemplateTools] = useState(false);
   const [showVariables, setShowVariables] = useState(false);
   const [selectedVariable, setSelectedVariable] = useState(-1);
+  const [selectedTemplate, setSelectedTemplate] = useState(0);
+  const [selectedAudeince, setSelectedAudience] = useState(0);
+  const [selectedHashtagGroup, setSelectedHashtagGroup] = useState(-1);
+  const [postNotesSaving, setPostNotesSaving] = useState(false);
+  const [postNotes, setPostNotes] = useState("");
+  const typingTimerRef = useRef(null);
+
+  const mockData = [
+    {
+      name: "Task_Manager",
+      description: "A tool to efficiently manage and organize tasks.",
+      addedDate: "11/25/2024",
+    },
+    {
+      name: "Fitness_Tracker",
+      description: "An app to track your workouts, diet, and progress.",
+      addedDate: "11/20/2024",
+    },
+    {
+      name: "Recipe_Finder",
+      description: "Search for recipes based on available ingredients.",
+      addedDate: "11/15/2024",
+    },
+    {
+      name: "Expense_Tracker",
+      description: "Keep track of daily expenses and monthly budgets.",
+      addedDate: "11/10/2024",
+    },
+    {
+      name: "Weather_App",
+      description: "Get real-time weather updates and forecasts.",
+      addedDate: "11/05/2024",
+    },
+    {
+      name: "Language_Learning",
+      description: "Learn a new language with interactive lessons.",
+      addedDate: "11/01/2024",
+    },
+    {
+      name: "Project_Planner",
+      description: "Plan and monitor progress for team projects.",
+      addedDate: "10/28/2024",
+    },
+    {
+      name: "Habit_Tracker",
+      description: "Build and maintain positive habits daily.",
+      addedDate: "10/25/2024",
+    },
+    {
+      name: "Meditation_App",
+      description: "Guided meditations and mindfulness exercises.",
+      addedDate: "10/20/2024",
+    },
+    {
+      name: "Shopping_List",
+      description: "Organize and manage your shopping needs.",
+      addedDate: "10/15/2024",
+    }
+  ];
+  const socialMediaTemplates = [
+    {
+      name: "Job Interview Tips",
+      template: "Preparing for a job interview? Don't forget to do your research! Learn about the company's mission, values, and culture. This helps you understand if the company is the right fit for you and shows that you're genuinely interested in the position. Good luck!"
+    },
+    {
+      name: "Motivational Monday",
+      template: "Happy Monday! Remember, every new week brings new opportunities. Set your goals, stay positive, and make it happen. You've got this!"
+    },
+    {
+      name: "Self-Care Reminder",
+      template: "Feeling overwhelmed? Take a moment for yourself. Breathe, relax, and remember to prioritize your mental health. You can't pour from an empty cup!"
+    },
+    {
+      name: "Fitness Inspiration",
+      template: "No matter how slow you go, you're still lapping everyone on the couch. Stay consistent, stay motivated, and keep moving forward!"
+    },
+    {
+      name: "Customer Appreciation",
+      template: "Shoutout to our amazing customers! Your support means the world to us. We're here to serve you, and we love seeing your feedback. Thank you!"
+    },
+    {
+      name: "Productivity Hack",
+      template: "Feeling stuck? Try the Pomodoro Technique! Work for 25 minutes, then take a 5-minute break. It’s a great way to stay focused and boost productivity."
+    },
+    {
+      name: "Throwback Thursday",
+      template: "Throwing it back to [Insert Event]! What a great time reminiscing about how far we've come. Share your favorite throwback moments in the comments!"
+    },
+    {
+      name: "Event Announcement",
+      template: "Exciting news! We're hosting [Event Name] on [Date]. Mark your calendars and join us for a day full of fun, networking, and learning. See you there!"
+    },
+    {
+      name: "Inspirational Quote",
+      template: "\"Success is not final, failure is not fatal: It is the courage to continue that counts.\" - Winston Churchill. Keep pushing forward!"
+    },
+    {
+      name: "Fun Fact Friday",
+      template: "Did you know? The longest recorded flight of a chicken is 13 seconds. Sometimes, it's the little things that surprise us!"
+    }
+  ];
+  const hashtagGroups = [
+    {
+      name: "Marketing Insights",
+      hashtags: [
+        "#MarketingInsights",
+        "#AudienceEngagement",
+        "#MarketResearch",
+        "#CustomerInsights",
+        "#TailoredStrategy",
+        "#MarketingStrategy",
+        "#CustomerFeedback",
+        "#MarketAnalysis"
+      ]
+    },
+    {
+      name: "Startup Success",
+      hashtags: [
+        "#Startup",
+        "#EntrepreneurLife",
+        "#BusinessGrowth",
+        "#LeanStartup",
+        "#StartupTips",
+        "#Innovation",
+        "#StartupJourney",
+        "#Bootstrapping"
+      ]
+    },
+    {
+      name: "Fitness Motivation",
+      hashtags: [
+        "#FitnessMotivation",
+        "#HealthyLifestyle",
+        "#WorkoutGoals",
+        "#FitnessJourney",
+        "#StayActive",
+        "#FitnessTips",
+        "#Wellness",
+        "#StrengthTraining"
+      ]
+    },
+    {
+      name: "Travel Adventures",
+      hashtags: [
+        "#TravelAdventures",
+        "#Wanderlust",
+        "#TravelTips",
+        "#ExploreTheWorld",
+        "#TravelGoals",
+        "#AdventureAwaits",
+        "#DiscoverMore",
+        "#TravelCommunity"
+      ]
+    },
+    {
+      name: "Tech Innovations",
+      hashtags: [
+        "#TechInnovations",
+        "#FutureOfTech",
+        "#AI",
+        "#MachineLearning",
+        "#TechTrends",
+        "#DigitalTransformation",
+        "#ProgrammingLife",
+        "#CodeNewbie"
+      ]
+    },
+    {
+      name: "Mental Health Awareness",
+      hashtags: [
+        "#MentalHealth",
+        "#SelfCare",
+        "#Mindfulness",
+        "#EndTheStigma",
+        "#ItsOkayToNotBeOkay",
+        "#MentalHealthMatters",
+        "#Healing",
+        "#PositiveVibes"
+      ]
+    },
+    {
+      name: "Foodie Heaven",
+      hashtags: [
+        "#Foodie",
+        "#DeliciousEats",
+        "#Cooking",
+        "#FoodPhotography",
+        "#HomeChef",
+        "#FoodLover",
+        "#Yummy",
+        "#TastyTreats"
+      ]
+    },
+    {
+      name: "Education & Learning",
+      hashtags: [
+        "#Education",
+        "#Learning",
+        "#Knowledge",
+        "#StudyTips",
+        "#OnlineLearning",
+        "#LifelongLearning",
+        "#EdTech",
+        "#StudentLife"
+      ]
+    }
+  ];
+  const templateGroups = [
+    {
+      audience: "Job Seekers",
+      templates: [
+        "Preparing for a job interview? Don't forget to research the company's mission, values, and culture. This helps you understand if the company is the right fit and shows your genuine interest. Tailor your questions and responses to align with their goals. Good luck!",
+        "Looking to land your dream job? Start by crafting a standout resume. Highlight your achievements with quantifiable results, use action verbs, and tailor your resume to match the job description. A well-structured resume grabs attention!",
+        "Networking 101: Reach out to connections on LinkedIn and attend industry events. A simple introduction like, 'Hi, I admire your work in [specific field]. I'd love to connect and learn more about your expertise,' can open doors you never imagined."
+      ]
+    },
+    {
+      audience: "Entrepreneurs",
+      templates: [
+        "Starting a business is no small feat. Begin by identifying a clear problem you want to solve. Validate your idea by speaking with potential customers. Remember, feedback is gold—iterate until your solution truly meets their needs.",
+        "Every entrepreneur needs a killer pitch. Use this formula: Start with the problem, introduce your solution, explain why it’s unique, and end with a clear call to action. Keep it concise and practice until it’s second nature.",
+        "Thinking of bootstrapping your business? Focus on revenue-generating activities first. Build a lean product, test it with real users, and reinvest profits into growth. Efficiency and focus are your best allies."
+      ]
+    },
+    {
+      audience: "Fitness Enthusiasts",
+      templates: [
+        "Struggling to stay consistent? Try scheduling your workouts like appointments. Consistency is key to building momentum. Remember, even a 30-minute session makes a difference—just show up!",
+        "Your body is your temple—fuel it with care. Focus on whole, unprocessed foods, and aim for a balanced mix of proteins, carbs, and healthy fats. Meal prepping can save time and ensure you stay on track with your goals.",
+        "Overcoming plateaus: If your progress has stalled, switch things up! Try new exercises, increase weights, or adjust your rep ranges. Shocking your muscles keeps them growing and keeps you motivated."
+      ]
+    },
+    {
+      audience: "Parents",
+      templates: [
+        "Parenting can be a juggling act! Create a shared family calendar to keep track of school events, extracurriculars, and family time. This simple tool can make life much easier for everyone.",
+        "Self-care for parents: You can't pour from an empty cup. Take 15 minutes a day for yourself, whether it’s a quick walk, meditation, or reading your favorite book. A little 'me time' goes a long way!",
+        "Fun family activity idea: Host a DIY craft night! Gather supplies, pick a simple project, and let everyone’s creativity shine. It’s a great way to bond and create lasting memories."
+      ]
+    },
+    {
+      audience: "Small Business Owners",
+      templates: [
+        "Marketing on a budget? Use free tools like Canva for graphics, Mailchimp for newsletters, and Buffer for social media scheduling. Small steps can make a big impact when done consistently.",
+        "Customer retention matters! Send personalized thank-you emails, offer loyalty discounts, or host a customer appreciation day. Happy customers often become your biggest advocates.",
+        "Thinking of expanding your business? Start by evaluating your current processes. Automating repetitive tasks with software can free up time and resources to focus on growth opportunities."
+      ]
+    },
+    {
+      audience: "College Students",
+      templates: [
+        "Finals coming up? Plan your study schedule early. Break topics into manageable chunks, use the Pomodoro technique for focus, and don’t forget to take breaks. A little planning goes a long way.",
+        "Budgeting in college: Track your expenses using apps like Mint or YNAB. Set limits on discretionary spending and always look for student discounts to save money.",
+        "Struggling with procrastination? Start by setting small, achievable goals. Completing even one task gives you momentum to tackle the next. Progress, not perfection!"
+      ]
+    },
+    {
+      audience: "Travel Enthusiasts",
+      templates: [
+        "Planning your next adventure? Create a detailed itinerary with must-see attractions, local restaurants, and transportation options. Having a plan saves time and reduces stress when you arrive.",
+        "Travel hack: Save money by booking flights on weekdays and using tools like Google Flights to track price trends. Always check alternative airports for cheaper fares!",
+        "Packing tip: Roll your clothes to save space, pack a portable charger, and always keep important documents in your carry-on. Being prepared makes every trip smoother."
+      ]
+    },
+    {
+      audience: "Tech Enthusiasts",
+      templates: [
+        "Stay ahead in tech by dedicating time each week to learn a new tool or programming language. Platforms like Coursera, Udemy, and freeCodeCamp are excellent resources for upskilling.",
+        "Cybersecurity tip: Use two-factor authentication (2FA) for all your accounts and avoid reusing passwords. Protecting your data is easier than recovering from a breach!",
+        "Building your first app? Focus on functionality first, then refine the UI/UX. Launching early and gathering user feedback will help you build something people truly want."
+      ]
+    },
+    {
+      audience: "Mental Health Advocates",
+      templates: [
+        "It’s okay to ask for help. If you’re feeling overwhelmed, consider talking to a friend, family member, or a professional counselor. You're not alone.",
+        "Mindfulness tip: Spend 5 minutes a day practicing deep breathing. Focus on your breath and let go of any tension. This simple practice can help reduce stress and improve your mood.",
+        "Dealing with anxiety? Create a 'safe space' in your home where you can relax and reset. Add calming elements like soft lighting, soothing music, or a favorite book."
+      ]
+    },
+    {
+      audience: "Marketers",
+      templates: [
+        "Struggling with content ideas? Look at trending topics in your industry and create posts that provide unique insights or solutions. Tools like BuzzSumo and Google Trends can help.",
+        "Engagement tip: Ask your audience questions! Polls, quizzes, and interactive posts not only drive engagement but also give you valuable insights into your customers’ preferences.",
+        "Never underestimate the power of storytelling. Share your brand’s journey, struggles, and triumphs. Authenticity resonates with audiences and builds trust."
+      ]
+    }
+  ];
+
+
+  useEffect(() => {
+    if (!showPostInternalNotes) return;
+    if (notesInput.current) {
+      notesInput.current.innerHTML = postNotes;
+    }
+  }, [showPostInternalNotes]);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -56,6 +356,53 @@ export default function ComposePage() {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
     };
+  }, []);
+
+
+
+  const applyHashtagGroup = () => {
+    if (textareaRef.current) {
+      if (selectedHashtagGroup == -1) return;
+      // include unique only
+      textareaRef.current.value += ` ${hashtagGroups[selectedHashtagGroup].hashtags.join(" ")}`;
+      const event = new Event('input', { bubbles: true });
+      textareaRef.current.dispatchEvent(event);
+    }
+  }
+
+  const addVariableToCaption = () => {
+    if (textareaRef.current) {
+      if (selectedVariable == -1) return;
+      const varName = mockData[selectedVariable].name;
+      textareaRef.current.value += ` {{ ${varName} }} `;
+      const event = new Event('input', { bubbles: true });
+      textareaRef.current.dispatchEvent(event);
+    }
+  }
+
+  const addTemplateToCaption = (usingAi = false) => {
+    if (textareaRef.current) {
+      const temp = usingAi ? templateGroups[selectedAudeince].templates[selectedTemplateIdxForGroup] : socialMediaTemplates[selectedTemplate].template;
+      textareaRef.current.value = temp;
+      const event = new Event('input', { bubbles: true });
+      textareaRef.current.dispatchEvent(event);
+    }
+  }
+
+
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      if (cardRef.current) {
+        cardRef.current.style.height = 'auto'; // Ensure auto-height works
+      }
+    });
+
+    if (imgContainer.current) {
+      observer.observe(imgContainer.current);
+    }
+
+    return () => observer.disconnect(); // Cleanup observer on unmount
   }, []);
 
 
@@ -87,14 +434,11 @@ export default function ComposePage() {
 
   const handleInput = (inputTextArea = null) => {
     const textarea = inputTextArea == null ? textareaRef : inputTextArea;
-    console.log(textarea, inputTextArea)
     if (textarea.current) {
-      console.log("sdhsdhs")
       if (inputTextArea == null) {
         setPostCaption(textarea.current.value)
       } else {
         // width
-        console.log()
       }
       textarea.current.style.height = 'auto';
       textarea.current.style.height = `${textarea.current.scrollHeight}px`;
@@ -107,7 +451,6 @@ export default function ComposePage() {
   const handleNotesInput = (e: React.MouseEvent<HTMLDivElement>) => {
     // MAKE IT UNDEETABLE
     if (!notesInput.current) return
-    console.log("tjrerkejr", previousNote.current, notesInput.current.innerText)
     if (previousNote.current == '') {
       notesInput.current.innerHTML = `
           <div contenteditable="false" style="display:inline; font-weight: bold; color: white; background-color: blue; padding:3px; border-radius:5px; margin-right:2px">
@@ -116,15 +459,31 @@ export default function ComposePage() {
           ${notesInput.current.innerText}
         `;
       previousNote.current = "more"
+      setCursorToEnd(notesInput.current);
     }
-    setCursorToEnd(notesInput.current);
+
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+
+    // Set a new typing timeout
+    typingTimerRef.current = setTimeout(() => {
+      setPostNotesSaving(true); // Show saving status
+
+      // Simulate a save operation with a timeout
+      setTimeout(() => {
+        setPostNotesSaving(false); // Hide saving status
+        // You can add your actual saving logic here
+      }, 2000); // Simulated save duration (e.g., API call duration)
+    }, 2000);
+
   }
 
   useEffect(() => {
     const div = divRef.current;
     if (textareaRef.current && toolRef.current) {
       toolRef.current.style.maxWidth = String(Number(textareaRef.current.style.width) / 4);
-      console.log("ioerieorioeir", String(Number(textareaRef.current.style.width) / 4))
+      // console.log("ioerieorioeir", String(Number(textareaRef.current.style.width) / 4))
     }
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
@@ -170,561 +529,663 @@ export default function ComposePage() {
   }
 
   return (
-      <div className={styles.container}>
-        <div className={styles.composePostCenterDiv}>
-          {hoverStates.emojiHover[0] && (
-            <div
-              ref={moving}
-
-              style={{
-                position: 'absolute',
-                pointerEvents: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '5px 10px',
-                borderRadius: '4px',
-              }}
-            >
-              Add emojis
-            </div>
-          )}
-          {hoverStates.cameraHover[0] && (
-            <div
-              ref={moving}
-
-              style={{
-                position: 'absolute',
-                pointerEvents: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '5px 10px',
-                borderRadius: '4px',
-              }}
-            >
-              Add media
-            </div>
-          )}
-          {hoverStates.wandHover[0] && (
-            <div
-              ref={moving}
-
-              style={{
-                position: 'absolute',
-                pointerEvents: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '5px 10px',
-                borderRadius: '4px',
-              }}
-            >
-              Generate caption
-            </div>
-          )}
-          {hoverStates.hashtagHover[0] && (
-            <div
-              ref={moving}
-
-              style={{
-                position: 'absolute',
-                pointerEvents: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '5px 10px',
-                borderRadius: '4px',
-              }}
-            >
-              Hashtag is hovered over!
-            </div>
-          )}
-          <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
-            <CreatePostHeader divRef={divRef} />
-            <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
-          </div>
-
-
-          <div className={styles.toolsSection}>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom: '5px' }}>
-              <h4 style={{ padding: '0px 0px 12.5px', fontWeight: '700', margin: 0, color: '#303030', fontSize: '29px' }}>TOOLS</h4>
-              <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom: '12.5px' }}>
-                <img src={settings1.src} width={"20px"} height={"20px"} />
-              </div>
-            </div>
-
-
-            <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-
-              <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
-                <div className={`${showAiGenTemplate ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-[#E7F8E9] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={templateIcon.src} width={"27px"} height={"27px"} />
-                    </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>AI Generated Templates</h4>
-                  </div>
-
-
-                  {showAiGenTemplate &&
-
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronDown color='black' onClick={() => setShowAiGenTemplate(false)} />
-                    </div>
-
-
-                  }
-                  {!showAiGenTemplate && (
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronLeft color='black' onClick={() => setShowAiGenTemplate(true)} />
-                    </div>)}
-                </div>
-
-                {/* Categories Section */}
-                <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
-                  <AnimatePresence>
-                    {showAiGenTemplate && <motion.div
-                      key="content"
-                      initial={{ height: '0px', opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: '0px', opacity: 0 }}
-                      transition={{
-                        duration: 0.3, // Adjust the duration as needed
-                        ease: 'easeInOut',
-                      }}
-
-                      className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
-                      <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
-                        <p style={{ color: 'black' }}>Category</p>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            overflowX: 'scroll',
-                            padding: '4px',
-                            maxWidth: '50%',
-                            margin: 0,
-                            // boxSizing: 'border-box', // Ensures padding is included in the width calculation
-                          }}
-                        >
-                          {Array.from({ length: 9 }).map((_, idx) => (
-                            <div
-                              onClick={() => setSelectedIndex(idx)}
-                              key={idx}
-                              className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
-                              style={{
-                                borderRadius: '6px',
-                                fontSize: '11px',
-                                cursor: 'pointer',
-                                whiteSpace: 'nowrap', // Prevent text overflow
-                                // flexShrink: 0, // Prevent child from shrinking or stretching
-                                margin: '0 5px', // Add margin instead of gap
-                              }}
-                            >
-                              Item {idx + 1}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          width: '89%',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          alignSelf: 'center',
-                          overflow: 'hidden',
-                          flexShrink: 0,
-                        }}
-                      >
-                        <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                          <MoveLeft size={24} />
-                        </div>
-                        <div
-                          style={{
-                            overflowWrap: 'break-word',
-                            fontSize: '14px',
-                            wordWrap: 'break-word',
-                            maxWidth: '82%',
-                            whiteSpace: 'normal', // Ensures wrapping of long text
-                            flexGrow: 1,
-                          }}
-                        >
-                          Preparing for a job interview? Don't forget to do your research! Learn about the company's mission, values, and culture.
-
-                          This helps you understand if the company is the right fit for you and shows that you're genuinely interested in the position. Good luck!
-                        </div>
-                        <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                          <MoveRight size={24} />
-                        </div>
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignSelf: 'flex-end',
-                          gap: '10px',
-                          marginTop: '13px',
-                        }}
-                      >
-                        <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                          Expand
-                        </Button>
-                        <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                          Use Inspiration
-                        </Button>
-                      </div>
-
-                    </motion.div>}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-                <div className={`${showHashtagGroupTool ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-[#ffeeb6] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={hashtagIcon.src} width={"27px"} height={"27px"} />
-                    </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Hashtag Groups</h4>
-                  </div>
-
-
-                  {showHashtagGroupTool &&
-
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronDown color='black' onClick={() => setShowHashtagGroupTool(false)} />
-                    </div>
-
-
-                  }
-                  {!showHashtagGroupTool && (
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronLeft color='black' onClick={() => setShowHashtagGroupTool(true)} />
-                    </div>)}
-                </div>
-
-                <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
-                  <AnimatePresence>
-
-                    {showHashtagGroupTool && <motion.div
-                      key="content2"
-                      initial={{ height: '0px', opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: '0px', opacity: 0 }}
-                      transition={{
-                        duration: 0.3, // Adjust the duration as needed
-                        ease: 'easeInOut',
-                      }}
-
-                      className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
-                      <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignSelf: 'center', gap: '5px', justifyContent: 'center', marginBottom: '14px' }}>
-                        <p style={{ color: 'black' }}>Group name</p>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            overflowX: 'scroll',
-                            padding: '4px',
-                            maxWidth: '50%',
-                            margin: 0,
-                            // boxSizing: 'border-box', // Ensures padding is included in the width calculation
-                          }}
-                        >
-                          {Array.from({ length: 9 }).map((_, idx) => (
-                            <div
-                              onClick={() => setSelectedIndex(idx)}
-                              key={idx}
-                              className={`px-1 ${selectedIndex === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
-                              style={{
-                                borderRadius: '6px',
-                                fontSize: '11px',
-                                cursor: 'pointer',
-                                whiteSpace: 'nowrap', // Prevent text overflow
-                                // flexShrink: 0, // Prevent child from shrinking or stretching
-                                margin: '0 5px', // Add margin instead of gap
-                              }}
-                            >
-                              Item {idx + 1}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          width: '89%',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          alignSelf: 'center',
-                          overflow: 'hidden',
-                          flexShrink: 0,
-                        }}
-                      >
-                        <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                          <MoveLeft size={24} />
-                        </div>
-                        <div
-                          style={{
-                            overflowWrap: 'break-word',
-                            fontSize: '14px',
-                            wordWrap: 'break-word',
-                            maxWidth: '80%',
-                            whiteSpace: 'normal', // Ensures wrapping of long text
-                            flexGrow: 1,
-                          }}
-                        >
-                          #SocialMedia #MarketingTips #DigitalMarketing #ContentCreation
-                          #SocialMediaStrategy #BrandGrowth #OnlineMarketing #SocialMediaManager #MarketingGoals
-
-                        </div>
-                        <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                          <MoveRight size={24} />
-                        </div>
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignSelf: 'flex-end',
-                          gap: '10px',
-                          marginTop: '13px',
-                        }}
-                      >
-                        <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                          Expand
-                        </Button>
-                        <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                          Use Hashtags
-                        </Button>
-                      </div>
-
-                    </motion.div>}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-
-              <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
-                <div className={`${showPostInternalNotes ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={notepad.src} width={"27px"} height={"27px"} />
-                    </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Post Notes</h4>
-                  </div>
-
-                  {showPostInternalNotes &&
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronDown color='black' onClick={() => {
-                        console.log("dsjadskjds")
-                        setShowPostInternalNotes(false)
-                      }
-                      } />
-                    </div>
-                  }
-                  {!showPostInternalNotes &&
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronLeft color='black' onClick={() => setShowPostInternalNotes(true)} /></div>}
-                </div>
-                < div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
-                  <AnimatePresence>
-                    {showPostInternalNotes && <motion.div
-                      key="content"
-                      initial={{ height: '0px', opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: '0px', opacity: 0 }}
-                      transition={{
-                        duration: 0.3, // Adjust the duration as needed
-                        ease: 'easeInOut',
-                      }}
-                      className='rounded-t-none rounded-b-lg' style={{ maxWidth: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
-                      <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', alignItems: 'center' }}>
-                        <div style={{ height: '19px', width: '19px', borderRadius: '26px', backgroundColor: '#13b27a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Check color='white' size={16} strokeWidth={3} />
-                        </div>
-                        <p style={{ fontSize: '15px', paddingTop: '1px', color: 'black' }} className="m-0">Saved</p>
-                      </div>
-
-                      <div className={styles.textAreaWrapper}>
-                        <div
-                          contentEditable={true}
-                          ref={notesInput}
-                          className={`${styles.editableDiv} ${styles.textarea}`}
-                          onInput={(e) => {
-                            handleInput(notesInput)
-                            handleNotesInput(e)
-                          }}
-                        >
-                        </div>
-                      </div>
-                    </motion.div>}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              <div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
-                      <div className='bg-purple-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                        <img src={variable.src} width={"27px"} height={"27px"} />
-                      </div>
-                      <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Variables</h4>
-                    </div>
-                    {showVariables &&
-                      <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                        <ChevronDown color='black' onClick={() => setShowVariables(false)} /></div>}
-                    {!showVariables &&
-                      <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                        <ChevronLeft color='black' onClick={() => setShowVariables(true)} /></div>}
-                  </div>
-                </div>
-              </div>
-
-              <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
-                <div className={`${showUserTemplateTools ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={browser.src} width={"27px"} height={"27px"} />
-                    </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
-                  </div>
-
-
-                  {showUserTemplateTools &&
-
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronDown color='black' onClick={() => setShowUserTemplateTools(false)} />
-                    </div>
-
-
-                  }
-                  {!showUserTemplateTools && (
-                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
-                      <ChevronLeft color='black' onClick={() => setShowUserTemplateTools(true)} />
-                    </div>)}
-                </div>
-
-                {<div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
-                  <AnimatePresence>
-                    {/* USE AN INFO TOOL TIP HERE */}
-                    {showUserTemplateTools && <motion.div
-                      key="content2"
-                      initial={{ height: '0px', opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: '0px', opacity: 0 }}
-                      transition={{
-                        duration: 0.3, // Adjust the duration as needed
-                        ease: 'easeInOut',
-                      }}
-
-                      className='rounded-t-none rounded-b-lg' style={{ width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflowY: 'hidden', flex: '0 0 auto' }}>
-                      <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '166px', gap: '13px', overflowX: 'auto', flex: '0 0 auto', alignItems: 'center' }}>
-                        <div className={`${styles.toolBoxDashDiv} transition-transform duration-200 transform hover:scale-105 rounded-md bg-[#eff6ff] BORDER`} style={{ cursor: 'pointer', width: 'auto', padding: '0 13px 0', border: '1px solid hsl( 263.4, 70%, 50.4%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', flex: '0 0 auto' }}
-                          onClick={() => setSelectedVariable(1)}
-                        >
-                          {/* Truncate function */}
-                          <p style={{ color: '#425466' }}>Added * 10/12/120</p>
-                          <p style={{ color: '#2d3748', fontSize: '18px' }}>
-                            <span style={{ color: '#67707f' }}>{`{{ `}</span>
-                            <span style={{ fontWeight: 'bold' }}>name</span>
-                            <span style={{ color: '#67707f' }}>{` }}`}</span>
-                          </p>
-                          <p style={{ color: '#2d3748', textAlign: 'center', maxWidth: '270px' }}> The platform that the post is being published to, e.g. LinkedIn...</p>
-                        </div>
-
-                        <div className={`${styles.toolBoxDashDiv} transition-transform duration-200 transform hover:scale-105 rounded-md bg-[#eff6ff]`} style={{ cursor: 'pointer', width: 'auto', padding: '0 13px 0', border: '2px dashed lightgrey', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', flex: '0 0 auto' }}
-                          onClick={() => setSelectedVariable(1)}
-                        >
-                          <p style={{ color: '#425466' }}>Added * 10/12/120</p>
-                          <p style={{ color: '#2d3748', fontSize: '18px' }}>
-                            <span style={{ color: '#67707f' }}>{`{{ `}</span>
-                            <span style={{ fontWeight: 'bold' }}>name</span>
-                            <span style={{ color: '#67707f' }}>{` }}`}</span>
-                          </p>
-                          <p style={{ color: '#2d3748' }}> eefefeffe erfefe ...</p>
-                        </div>
-
-                        <div className={`${styles.toolBoxDashDiv} transition-transform duration-200 transform hover:scale-105 rounded-md bg-[#eff6ff]`} style={{ cursor: 'pointer', width: 'auto', padding: '0 13px 0', border: '2px dashed lightgrey', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', flex: '0 0 auto' }}
-                          onClick={() => setSelectedVariable(1)}
-                        >
-                          <p style={{ color: '#425466' }}>Added * 10/12/120</p>
-                          <p style={{ color: '#2d3748', fontSize: '18px' }}>
-                            <span style={{ color: '#67707f' }}>{`{{ `}</span>
-                            <span style={{ fontWeight: 'bold' }}>name</span>
-                            <span style={{ color: '#67707f' }}>{` }}`}</span>
-                          </p>
-                          <p style={{ color: '#2d3748' }}> eefefeffe erfefe ...</p>
-                        </div>
-
-                        <div className={`${styles.toolBoxDashDiv} transition-transform duration-200 transform hover:scale-105 rounded-md bg-[#eff6ff]`} style={{ cursor: 'pointer', width: 'auto', padding: '0 13px 0', border: '2px dashed lightgrey', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-around', flex: '0 0 auto' }}
-                          onClick={() => setSelectedVariable(1)}
-                        >
-                          <p style={{ color: '#425466' }}>Added * 10/12/120</p>
-                          <p style={{ color: '#2d3748', fontSize: '18px' }}>
-                            <span style={{ color: '#67707f' }}>{`{{ `}</span>
-                            <span style={{ fontWeight: 'bold' }}>name</span>
-                            <span style={{ color: '#67707f' }}>{` }}`}</span>
-                          </p>
-                          <p style={{ color: '#2d3748' }}> eefefeffe erfefe ...</p>
-                        </div>
-
-                        <div className='bg-gray-200 rounded-full' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', width: '55px', height: '55px', alignSelf: 'center', flex: '0 0 auto' }}>
-                          <p style={{ fontSize: '12px', width: '45px' }}>View All</p>
-                        </div>
-
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignSelf: 'flex-end',
-                          gap: '10px',
-                          marginTop: '13px',
-                        }}
-                      >
-                        <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
-                          Expand
-                        </Button>
-                        <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
-                          Use Template
-                        </Button>
-                      </div>
-
-                    </motion.div>}
-                  </AnimatePresence>
-                </div>}
-
-              </div>
-
-            </div>
-
-
-          </div>
-
+    <div className={styles.container}>
+      <div className={styles.composePostCenterDiv}>
+        {hoverStates.emojiHover[0] && (
           <div
-            onClick={(e) => e.stopPropagation()}
+            ref={moving}
+
             style={{
               position: 'absolute',
-              display: showEmoji ? 'block' : 'none',
-              top: emojiPosition?.top,
-              left: emojiPosition?.left,
-              paddingBottom: '10px',
+              pointerEvents: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '4px',
             }}
           >
-            <EmojiPicker
-              height={375}
-              previewConfig={{ showPreview: false }}
-              onEmojiClick={(e) => addEmoji(e)}
-            />
+            Add emojis
+          </div>
+        )}
+        {hoverStates.cameraHover[0] && (
+          <div
+            ref={moving}
+
+            style={{
+              position: 'absolute',
+              pointerEvents: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '4px',
+            }}
+          >
+            Add media
+          </div>
+        )}
+        {hoverStates.wandHover[0] && (
+          <div
+            ref={moving}
+
+            style={{
+              position: 'absolute',
+              pointerEvents: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '4px',
+            }}
+          >
+            Generate caption
+          </div>
+        )}
+        {hoverStates.hashtagHover[0] && (
+          <div
+            ref={moving}
+
+            style={{
+              position: 'absolute',
+              pointerEvents: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '4px',
+            }}
+          >
+            Generate hashtag
+          </div>
+        )}
+        <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
+          <CreatePostHeader divRef={divRef} />
+          <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px' }} ref={imgContainer}>
+            {photosInPost.map((photo, index) => (
+              <div
+                className={styles.photoItem}
+                onClick={() => {
+                  if (photo.beingEdited) return;
+                  setMediaBeingEditedUrl(photo.regUrl)
+                  mediaBeingEditedId.current = photo.id
+                  setShowEditMediaModal(true)
+                }}
+                style={{ width: 'auto', height: 'auto', position: 'relative', }}>
+                <div className={styles.overlay} style={{ color: 'white' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line">
+                    <path d="M12 20h9" />
+                    <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" />
+                    <path d="m15 5 3 3" />
+                  </svg>
+                </div>
+                <div style={{ height: '55px', width: `${55 * photo.naturalAspectRatio}px` }}>
+                  {!photo.beingEdited ? <img src={photo.smallUrl} style={{ width: '100%', height: '100%', borderRadius: '5px' }} /> :
+                    <div className={styles.skeleton}></div>}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <ComposePoseSidePanel />
+
+
+        <div className={styles.toolsSection}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom: '5px' }}>
+            <h4 style={{ padding: '0px 0px 12.5px', fontWeight: '700', margin: 0, color: '#303030', fontSize: '29px' }}>TOOLS</h4>
+            <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom: '12.5px' }}>
+              <img src={settings1.src} width={"20px"} height={"20px"} />
+            </div>
+          </div>
+
+
+          <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+            <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
+              <div className={`${showAiGenTemplate ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#E7F8E9] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={templateIcon.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: '6px', alignItems: 'center' }}>
+                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>AI Generated Templates</h4>
+                    {/* {showAiGenTemplate && <Info color='grey' strokeWidth={2} size={19}/>}  */}
+                  </div>
+                </div>
+
+
+                {showAiGenTemplate &&
+
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowAiGenTemplate(false)} />
+                  </div>
+
+
+                }
+                {!showAiGenTemplate && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowAiGenTemplate(true)} />
+                  </div>)}
+              </div>
+
+              {/* Categories Section */}
+              <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {showAiGenTemplate && <motion.div
+                    key="content"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+
+                    <div
+                      style={{
+                        width: '89%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveLeft
+                          onClick={() => {
+                            const prev = selectedTemplateIdxForGroup == 0 ? templateGroups[selectedAudeince].templates.length - 1 : selectedTemplateIdxForGroup - 1;
+                            setSelectedTemplateIdxForGroup(prev)
+                          }}
+
+                          size={24} />
+                      </div>
+                      <div style={{ maxWidth: '82%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '10px' }}>
+                            <p style={{ color: 'black', fontWeight: '500' }}>Audience: </p>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                overflowX: 'auto',
+                                padding: '4px',
+                                maxWidth: '100%',
+                                margin: 0,
+                              }}
+                            >
+                              {templateGroups.map((group, idx) => (
+                                <div
+                                  onClick={() => {
+                                    setSelectedTemplateIdxForGroup(0)
+                                    setSelectedAudience(idx)
+                                  }}
+                                  key={idx}
+                                  className={`px-1 ${selectedAudeince === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                                  style={{
+                                    borderRadius: '6px',
+                                    fontSize: '11px',
+                                    cursor: 'pointer',
+                                    whiteSpace: 'nowrap', // Prevent text overflow
+                                    margin: '0 5px', // Add margin instead of gap
+                                    flex: '0 0 auto'
+                                  }}
+                                >
+                                  {group.audience}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className='rounded-md'
+                          style={{
+                            padding: '6px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflowWrap: 'break-word',
+                            fontSize: '14px',
+                            wordWrap: 'break-word',
+                            width: '100%',
+                            whiteSpace: 'normal', // Ensures wrapping of long text
+                            overflowY: 'auto',
+                            flex: '0 0 auto',
+                            maxHeight: '100px',
+                            border: '2px dashed lightgrey'
+                          }}
+                        >
+                          <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '16px', margin: '1px' }}>Template</p>
+                          {templateGroups[selectedAudeince].templates[selectedTemplateIdxForGroup]}
+                        </div>
+                      </div>
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveRight
+                          onClick={() => {
+                            setSelectedTemplateIdxForGroup((selectedTemplateIdxForGroup + 1) % (templateGroups[selectedAudeince].templates.length))
+                          }}
+                          size={24} />
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                        onClick={() => addTemplateToCaption(true)}
+                      >
+                        Use Inspiration
+                      </Button>
+                    </div>
+
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className={`${showHashtagGroupTool ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#ffeeb6] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={hashtagIcon.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Hashtag Groups</h4>
+                </div>
+
+
+                {showHashtagGroupTool &&
+
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowHashtagGroupTool(false)} />
+                  </div>
+
+
+                }
+                {!showHashtagGroupTool && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowHashtagGroupTool(true)} />
+                  </div>)}
+              </div>
+
+              {<div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {/* USE AN INFO TOOL TIP HERE */}
+                  {showHashtagGroupTool && <motion.div
+                    key="content2"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflowY: 'hidden', flex: '0 0 auto' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '166px', gap: '13px', overflowX: 'auto', flex: '0 0 auto', alignItems: 'center' }}>
+
+                      {hashtagGroups.map((group, index) => (
+                        <div className={`${styles.hashtagGroupDiv} transition-transform duration-200 transform hover:scale-105 rounded-md`}
+                          style={{ border: selectedHashtagGroup == index ? '1px solid hsl(263.4, 70%, 50.4%)' : '2px dashed lightgrey' }}
+                          onClick={() => setSelectedHashtagGroup(index)}
+                        >
+                          {group.hashtags.map((hashtag, index) => (
+                            <p className={`rounded-md ${styles.hashtag}`}>{hashtag}</p>
+                          ))}
+                        </div>
+
+                      ))}
+
+                      <div className='bg-gray-200 rounded-full' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', width: '55px', height: '55px', alignSelf: 'center', flex: '0 0 auto' }}>
+                        <p style={{ fontSize: '12px', width: '45px' }}>View All</p>
+                      </div>
+
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          applyHashtagGroup();
+                        }}
+                        className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                        Use Hashtags
+                      </Button>
+                    </div>
+
+                  </motion.div>}
+                </AnimatePresence>
+              </div>}
+            </div>
+
+
+            <div className={`${'rounded-lg'} shadow-md`} style={{ width: '100%', display: 'flex', flexDirection: 'column', }}>
+              <div className={`${showPostInternalNotes ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={notepad.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Post Notes</h4>
+                </div>
+
+                {showPostInternalNotes &&
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => {
+                      setPostNotes(notesInput.current.innerHTML)
+                      setShowPostInternalNotes(false)
+                    }} />
+                  </div>
+                }
+                {!showPostInternalNotes &&
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => {
+                      setShowPostInternalNotes(true)
+                    }} /></div>}
+              </div>
+              < div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {showPostInternalNotes && <motion.div
+                    key="content"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+                    className='rounded-t-none rounded-b-lg' style={{ maxWidth: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+                    {!postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
+                      <FaCircleCheck size={16} color='#13b27a' />
+                      <p style={{ fontSize: '12px', paddingTop: '1px', color: 'black' }} className="m-0">Saved</p>
+                    </div>}
+                    {postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
+                      <ClipLoader color='hsl(262.1, 83.3%, 57.8%)' size={17} />
+                      <p style={{ fontSize: '12px', paddingTop: '1px', color: 'black' }} className="m-0">Saving...</p>
+                    </div>}
+                    <div className={styles.textAreaWrapper}>
+                      <div
+                        contentEditable={true}
+                        ref={notesInput}
+                        className={`${styles.editableDiv} ${styles.textarea}`}
+                        onInput={(e) => {
+                          handleInput(notesInput)
+                          handleNotesInput(e)
+                        }}
+                      >
+                      </div>
+                    </div>
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <div className='rounded-lg' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
+                    <div className='bg-purple-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                      <img src={variable.src} width={"27px"} height={"27px"} />
+                    </div>
+                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Variables</h4>
+                  </div>
+                  {showVariables &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronDown color='black' onClick={() => setShowVariables(false)} /></div>}
+                  {!showVariables &&
+                    <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                      <ChevronLeft color='black' onClick={() => setShowVariables(true)} /></div>}
+                </div>
+              </div>
+
+
+
+              {<div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {/* USE AN INFO TOOL TIP HERE */}
+                  {showVariables && <motion.div
+                    key="content2"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflowY: 'hidden', flex: '0 0 auto' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '166px', gap: '13px', overflowX: 'auto', flex: '0 0 auto', alignItems: 'center' }}>
+                      {mockData.map((variable, index) => (
+                        <VariablesBoxDiv variable={variable} isSelected={index == selectedVariable} setVar={() => setSelectedVariable(index)} />
+                      ))}
+
+                      <div className='bg-gray-200 rounded-full' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', width: '55px', height: '55px', alignSelf: 'center', flex: '0 0 auto' }}>
+                        <p style={{ fontSize: '12px', width: '45px' }}>View All</p>
+                      </div>
+
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                        onClick={() => addVariableToCaption()}
+                      >
+                        Use Variable
+                      </Button>
+                    </div>
+
+                  </motion.div>}
+                </AnimatePresence>
+              </div>}
+            </div>
+
+
+            <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+              <div className={`${showUserTemplateTools ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                  <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={browser.src} width={"27px"} height={"27px"} />
+                  </div>
+                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
+                </div>
+
+
+                {showUserTemplateTools &&
+
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronDown color='black' onClick={() => setShowUserTemplateTools(false)} />
+                  </div>
+
+
+                }
+                {!showUserTemplateTools && (
+                  <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
+                    <ChevronLeft color='black' onClick={() => setShowUserTemplateTools(true)} />
+                  </div>)}
+              </div>
+
+              <div className='rounded-b-lg' style={{ backgroundColor: 'white' }}>
+                <AnimatePresence>
+                  {showUserTemplateTools && <motion.div
+                    key="content3"
+                    initial={{ height: '0px', opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: '0px', opacity: 0 }}
+                    transition={{
+                      duration: 0.3, // Adjust the duration as needed
+                      ease: 'easeInOut',
+                    }}
+
+                    className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
+
+                    <div
+                      style={{
+                        width: '89%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveLeft
+                          onClick={() => {
+                            const prev = selectedTemplate == 0 ? socialMediaTemplates.length - 1 : selectedTemplate - 1;
+                            setSelectedTemplate(prev)
+                          }}
+                          size={24} />
+                      </div>
+                      <div style={{ maxWidth: '82%', display: 'flex', flexDirection: 'column', flexGrow: 1, }}>
+
+
+
+                        {/* CHANGE THE SCROLL POSITION */}
+
+
+
+
+                        <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '10px', maxWidth: '100%', flex: '0 0 auto' }}>
+                          <p style={{ color: 'black', fontWeight: '500', flex: '0 0 auto' }}>Template Name: </p>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              overflowX: 'auto',
+                              padding: '4px',
+                              // flexGrow: 1,
+                              // width:'100%',
+                              maxWidth: '68%',
+                              flex: '0 0 auto',
+                              margin: 0,
+                            }}
+                          >
+                            {socialMediaTemplates.map((value, idx) => (
+                              <div
+                                onClick={() => setSelectedTemplate(idx)}
+                                key={idx}
+                                className={`px-1 ${selectedTemplate === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                                style={{
+                                  borderRadius: '6px',
+                                  fontSize: '11px',
+                                  cursor: 'pointer',
+                                  whiteSpace: 'nowrap', // Prevent text overflow
+                                  margin: '0 5px', // Add margin instead of gap
+                                  flex: '0 0 auto'
+                                }}
+                              >
+                                {value.name}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div
+                          className='rounded-md'
+                          style={{
+                            padding: '6px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            overflowWrap: 'break-word',
+                            fontSize: '14px',
+                            wordWrap: 'break-word',
+                            width: '100%',
+                            whiteSpace: 'normal', // Ensures wrapping of long text
+                            overflowY: 'auto',
+                            flex: '0 0 auto',
+                            maxHeight: '100px',
+                            border: '2px dashed lightgrey'
+                          }}
+                        >
+                          <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '16px', margin: '1px' }}>Template</p>
+                          {socialMediaTemplates[selectedTemplate].template}
+                        </div>
+                      </div>
+                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                        <MoveRight
+                          onClick={() => setSelectedTemplate((selectedTemplate + 1) % (socialMediaTemplates.length))}
+                          size={24} />
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignSelf: 'flex-end',
+                        gap: '10px',
+                        marginTop: '13px',
+                      }}
+                    >
+                      <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
+                        Expand
+                      </Button>
+                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                        onClick={() => addTemplateToCaption()}
+                      >
+                        Use Template
+                      </Button>
+                    </div>
+
+                  </motion.div>}
+                </AnimatePresence>
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'absolute',
+            display: showEmoji ? 'block' : 'none',
+            top: emojiPosition?.top,
+            left: emojiPosition?.left,
+            paddingBottom: '10px',
+          }}
+        >
+          <EmojiPicker
+            height={375}
+            previewConfig={{ showPreview: false }}
+            onEmojiClick={(e) => addEmoji(e)}
+          />
+        </div>
       </div>
+      <ComposePoseSidePanel />
+    </div>
   );
 }
 
@@ -744,7 +1205,19 @@ interface TextAreaComponentInterface {
 
 const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, onSmileClick, hoverStates }) => {
   const { setShowMediaModal, textareaRef, setShowAiGenCaption } = useModalStatesContext();
+  const [hashtagsGenerating, setHashtagsGenerating] = useState(false);
 
+  const generateHashtags = () => {
+    setHashtagsGenerating(true);
+
+    setTimeout(() => {
+      setHashtagsGenerating(false);
+      if (textareaRef.current) {
+        // adding hashtags
+        textareaRef.current.value += '#UnpopularOpinions #FascinatingBrains #WiredForConnection #SeekingAcceptance #ConformityDebate'
+      }
+    }, 1000);
+  }
 
   return (
     <div className={styles.textAreaWrapper}>
@@ -781,8 +1254,18 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
         <div
           onMouseEnter={() => hoverStates.hashtagHover[1](true)}
           onMouseLeave={() => hoverStates.hashtagHover[1](false)}
-          className={styles.createPostIcon}>
-          <Hash size={20} strokeWidth={1.5} />
+          className={styles.createPostIcon}
+          onClick={() => {
+            if (hashtagsGenerating) return;
+            generateHashtags();
+          }}
+        >
+          {hashtagsGenerating && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '19px' }}>
+              <ClipLoader size={15} color='black' />
+            </div>
+          )}
+          {!hashtagsGenerating && <Hash size={20} strokeWidth={1.5} />}
         </div>
       </div>
     </div>

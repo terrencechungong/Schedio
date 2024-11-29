@@ -1,41 +1,63 @@
 import { ImageUp, Search, X } from 'lucide-react';
 import styles from '../ScssModules/photostabcontent.module.scss'
-import { createGifOverlay, createImageOverlay } from '../abstraction/GifTabAbstraction';
+import { createGifOverlay, createImageOverlay, createImageOverlayUnsplash } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
+import { useModalStatesContext } from '@/app/layout';
+import { generateRandom4Digit } from '@/app/utilFunctions';
 
 export const AddMediaPhotosTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState('');
+    var useResults = false;
+    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId, setPhotosInPost } = useModalStatesContext();
+
+    const photoOnClick = (photoObj: {naturalAspectRatio: number, smallUrl: string, regUrl: string, fileType:string}) => {
+        setPhotosInPost((prev) => [...prev, {...photoObj, beingEdited:false}])
+        setShowMediaModal(false)
+    }
 
     function httpGetAsync(): void {
-        var query = searchInput.current ? searchInput.current.value : "";
-        var apikey = "AIzaSyAv_DKYQt5k6AlPgDKAx2370Za3iaQ2cwA";
-        var clientkey = "Schedio";
-        var limit = 8;
-        var keyword = query.trim() == "" ? "random" : query;
+        var accessKey = 'wtjgXEDZos65Wa2CVTrmIJImM_wxjzy_hb5sYIoVXac';
+        var url;
+        if (!searchInput.current) {
+            url = `https://api.unsplash.com/photos?page=1&client_id=${accessKey}`;
+        } else if ((/^[\s]*$/.test(searchInput.current.value))) {
+            url = `https://api.unsplash.com/photos?page=1&client_id=${accessKey}`;
+        } else {
+            url = `https://api.unsplash.com/search/photos?page=1&query=${searchInput.current.value}&client_id=${accessKey}`;
+            useResults = true;
+        }
+
+        // var apikey = "AIzaSyAv_DKYQt5k6AlPgDKAx2370Za3iaQ2cwA";
+        // var clientkey = "Schedio";
+        // var limit = 8;
+        // var keyword = query.trim() == "" ? "random" : query;
         //create skeletons
         // create the request object
-        fetch(`https://tenor.googleapis.com/v2/search?q=${keyword}&key=${apikey}&client_key=${clientkey}&limit=${limit}`)
+        fetch(url)
             .then(response => response.json())
             .then(data => {
-                const gifs = data.results;
+                console.log("data", data)
+                const photos = useResults ? data.results : data;
+                console.log(photos)
                 const containerOne = document.getElementsByClassName(styles.rowOne)[0];
                 const containerTwo = document.getElementsByClassName(styles.rowTwo)[0];
-
-                gifs.forEach((gif: { media_formats: { gif: { url: string; }; }; title: string; }, index: number) => {
+                containerOne.innerHTML = '';
+                containerTwo.innerHTML = '';
+                photos.forEach((photo: { urls: { regular: string; }; slug: string; }, index: number) => {
 
                     const overlay = document.createElement('div');
                     overlay.className = styles.overlay;
-                    createImageOverlay(overlay);
+                    createImageOverlayUnsplash(overlay, photo, photoOnClick);
                     const gifDiv = document.createElement('div');
                     gifDiv.className = styles.photoItem;
                     const img = document.createElement('img');
                     img.style.width = '100%';
                     img.style.height = 'auto';
                     img.style.borderRadius = '7px'
-                    img.src = gif.media_formats.gif.url; 
-                    img.alt = gif.title; 
-                    img.id = gif.media_formats.gif.url;
+                    img.src = photo.urls.regular;
+                    img.alt = photo.slug;
+                    img.id = photo.slug;
                     gifDiv.appendChild(img);
                     gifDiv.appendChild(overlay)
 
@@ -44,12 +66,14 @@ export const AddMediaPhotosTabContent: React.FC = () => {
                         return
                     }
                     containerTwo.appendChild(gifDiv);
-                }); 
+                }
+                )
+
             }) // handle better
             .catch(error => console.error('Error fetching GIFs:', error));
     }
 
-    
+
     useEffect(() => {
         // Set up a timeout to call handleCall after 2 seconds
         if (!searchInput.current || !/\S/.test(inputValue) || !/\S/.test(searchInput.current.value)) {

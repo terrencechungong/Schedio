@@ -139,17 +139,17 @@ export const AddIconFromSchedulePostModal: React.FC = () => {
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Button
                                 onClick={() => setScreenStage(0)}
-                                className="bg-accent hover:bg-gray-200 text-black p-5">
+                                className="bg-accent hover:bg-gray-200 text-black p-5 shadow-none">
                                 Go back
                             </Button>
 
                             <div style={{ display: 'flex', flexDirection: 'row', gap: '7px' }}>
-                                <Button className="bg-white hover:bg-red-100 text-red-700 p-5">
+                                <Button className="bg-white hover:bg-red-100 text-red-700 p-5 shadow-none">
                                     Delete
                                 </Button>
                                 <Button
                                     onClick={() => setScreenStage(0)}
-                                    className="bg-[#5cc98d] hover:bg-[#48a071] text-white p-5">
+                                    className="bg-[#5cc98d] hover:bg-[#48a071] text-white p-5 shadow-none">
                                     Save
                                 </Button>
                             </div>

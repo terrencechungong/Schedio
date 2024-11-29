@@ -6,9 +6,16 @@ import { motion } from "framer-motion";
 import { SearchAudienceDropDown } from '../SimpleUIComponents/SearchAudienceDropDown';
 import { SelectAiCaptionTone } from "./SelectAiCaptionTone";
 import { Button } from "@/components/ui/button"
+import ClipLoader from "react-spinners/ClipLoader";
+import { useRef, useState } from 'react';
 
 export const AiGenGaption: React.FC = () => {
     const { showMediaModal, setShowAiGenCaption } = useModalStatesContext();
+    const [disabled, setDisabled] = useState(true);
+    const [audienceValue, setAudienceValue] = useState("");
+    const [aiCaptionValue, setAiCaptionValue] = useState("");
+    const [captionGenerating, setCaptionGenerating] = useState(false);
+
 
     const containerStyle: React.CSSProperties = {
         position: 'absolute',
@@ -20,6 +27,33 @@ export const AiGenGaption: React.FC = () => {
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 20
+    };
+    const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+
+    const handleInput = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (textAreaRef.current) {
+            console.log('value', textAreaRef.current.value)
+            if (/^[\s]*$/.test(textAreaRef.current.value)) {
+                setDisabled(true);
+            } else {
+                if ((/^[\s]*$/.test(aiCaptionValue)) || (/^[\s]*$/.test(audienceValue))) {
+                    setDisabled(true);
+                } else {
+                    setDisabled(false);
+                }
+            }
+        }
+    }
+
+    const handleSubmit = () => {
+        if ((/^[\s]*$/.test(aiCaptionValue)) && (/^[\s]*$/.test(audienceValue))) return;
+        setDisabled(true);
+        setCaptionGenerating(true);
+
+        setTimeout(() => {
+            setCaptionGenerating(false);
+            setDisabled(false);
+        }, 1000);
     }
 
     return (
@@ -38,12 +72,14 @@ export const AiGenGaption: React.FC = () => {
                 </div>
 
                 <div className={styles.selectAudienceAndTome}>
-                    <SearchAudienceDropDown />
-                    <SelectAiCaptionTone />
+                    <SearchAudienceDropDown value={audienceValue} setValue={setAudienceValue} /><span style={{color:'red'}}>*</span>
+                    <SelectAiCaptionTone value={aiCaptionValue} setValue={setAiCaptionValue} /><span style={{color:'red'}}>*</span>
                 </div>
 
                 <div className={styles.captionTextArea}>
                     <textarea
+                        onInput={(e) => handleInput(e)}
+                        ref={textAreaRef}
                         placeholder='Describe your topic (e.g., Tips for managing stress)'
                         className='bg-accent w-full h-full rounded-[4px] p-2 focus:outline-none focus:ring-1 focus:ring-primary' style={{ resize: 'none', fontSize: '14px' }} />
                 </div>
@@ -51,10 +87,14 @@ export const AiGenGaption: React.FC = () => {
                 <div className={styles.genCaption}>
                     <Button color="primary"
                         className='rounded-[4px]'
-                        // disabled
-                        style={{ alignSelf: 'flex-end' }}>
-                            {/* <Loader2 className="animate-spin" /> */}
-                            Generate Caption</Button>
+                        disabled={disabled}
+                        onClick={() => {
+                            console.log("sdjskjd")
+                            handleSubmit()
+                        }}
+                        style={{ alignSelf: 'flex-end', alignItems: 'center' }}>
+                        {captionGenerating && <ClipLoader color='white' size={17} />}
+                        Generate Caption</Button>
                 </div>
 
 

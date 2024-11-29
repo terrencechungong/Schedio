@@ -8,14 +8,19 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
-export function SelectAiCaptionTone() {
+interface SelectAiCaptionInterface {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const SelectAiCaptionTone: React.FC<SelectAiCaptionInterface> = ({value, setValue}) => {
   return (
-    <Select>
-      <SelectTrigger 
-      style={{ boxShadow: 'none' }}
-      className="w-[133px] h-[30px] rounded-[0px] shadow-none border-t-0 border-l-0 border-r-0">
+    <Select onValueChange={(value) => setValue(value)}>
+      <SelectTrigger
+        style={{ boxShadow: 'none' }}
+        className="w-[133px] h-[30px] rounded-[0px] shadow-none border-t-0 border-l-0 border-r-0">
         <SelectValue placeholder="Tone" />
       </SelectTrigger>
       <SelectContent style={{ boxShadow: 'none' }} className="shadow-none max-h-[300px]">

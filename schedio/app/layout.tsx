@@ -1,23 +1,9 @@
 "use client";
 
-import { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject } from "react";
+import { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject, MutableRefObject } from "react";
 import localFont from "next/font/local";
 import "./globals.scss";
-import { AppSidebar } from "./app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+
 import { usePathname } from 'next/navigation'; // Use usePathname for current route
 import AppCode from "@/AppCode";
 
@@ -31,6 +17,15 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+
+interface PhotoInPost {
+  id: string;
+  fileType: string;
+  beingEdited: boolean;
+  smallUrl: string;
+  regUrl: string;
+  naturalAspectRatio: number;
+}
 
 interface ModalStatesContextType {
   showMediaModal: boolean;
@@ -52,6 +47,16 @@ interface ModalStatesContextType {
   setShowAddTeamMemberModal: React.Dispatch<React.SetStateAction<boolean>>;
   showTriggerInfoModal: boolean;
   setShowTriggerInfoModal: React.Dispatch<React.SetStateAction<boolean>>;
+  imgContainer: RefObject<HTMLDivElement>;
+  showEditMediaModal: boolean;
+  setShowEditMediaModal: React.Dispatch<React.SetStateAction<boolean>>;
+  mediaBeingEditedUrl: string;
+  setMediaBeingEditedUrl: React.Dispatch<React.SetStateAction<string>>;
+  showAdobeEditor: boolean;
+  setShowAdobeEditor: React.Dispatch<React.SetStateAction<boolean>>;
+  mediaBeingEditedId: MutableRefObject<string>;
+  photosInPost: PhotoInPost[];
+  setPhotosInPost: React.Dispatch<React.SetStateAction<PhotoInPost[]>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -65,8 +70,15 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showTriggerInfoModal, setShowTriggerInfoModal] = useState<boolean>(false);
   const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
+  const [showAdobeEditor, setShowAdobeEditor] = useState<boolean>(false);
+  const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
   const [postCaption, setPostCaption] = useState<string>("");
+  const [photosInPost, setPhotosInPost] = useState<PhotoInPost[]>([]);
+  const [mediaBeingEditedUrl, setMediaBeingEditedUrl] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const imgContainer = useRef<HTMLDivElement | null>(null);
+  const mediaBeingEditedId = useRef<string>("");
+
   return (
     <ModalStatesContext.Provider value={{
       showMediaModal,
@@ -87,7 +99,17 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showAddTeamMemberModal,
       setShowAddTeamMemberModal,
       showTriggerInfoModal,
-      setShowTriggerInfoModal
+      setShowTriggerInfoModal,
+      imgContainer,
+      showEditMediaModal,
+      setShowEditMediaModal,
+      mediaBeingEditedUrl,
+      setMediaBeingEditedUrl,
+      showAdobeEditor,
+      setShowAdobeEditor,
+      mediaBeingEditedId,
+      photosInPost,
+      setPhotosInPost
     }}>
       {children}
     </ModalStatesContext.Provider>

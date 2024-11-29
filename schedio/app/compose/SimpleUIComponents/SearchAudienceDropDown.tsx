@@ -36,9 +36,14 @@ const audiences = [
     { value: "travel_enthusiasts", name: "Travel Enthusiasts" }
   ];
 
-export const SearchAudienceDropDown: React.FC = () => {
+
+ interface SearchAudienceDropDownInput {
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>
+ } 
+
+export const SearchAudienceDropDown: React.FC<SearchAudienceDropDownInput> = ({value, setValue}) => {
     const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("");
     const [typedValue, setTypedValue] = React.useState("");
 
     const handleValueChange = (value: string) => (setTypedValue(value))
