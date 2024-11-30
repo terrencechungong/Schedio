@@ -598,7 +598,7 @@ export default function ComposePage() {
         <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
           <CreatePostHeader divRef={divRef} />
           <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px' }} ref={imgContainer}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth:'100%', overflowX:'auto' }} ref={imgContainer}>
             {photosInPost.map((photo, index) => (
               <div
                 className={styles.photoItem}

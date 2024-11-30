@@ -9,14 +9,15 @@ import { FaLinkedin } from "react-icons/fa";
 import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
 import { useModalStatesContext } from '@/app/layout';
 import React from 'react';
+import { SelectAccountForPost } from './SelectAccountForPost';
 
 export const SchedulePostComponent: React.FC = () => {
     const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext()
     const [isOpen, setIsOpen] = React.useState(false);
-    
+
     return (
         <div className={styles.container}
-        onClick={() => setIsOpen(false)}
+            onClick={() => setIsOpen(false)}
         >
             <div className={styles.schedulePostHeader}>
                 <Button
@@ -35,13 +36,17 @@ export const SchedulePostComponent: React.FC = () => {
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 <div className={styles.socialAccounts}>
-                    <SocialBadgeAndName color={'#0a66c2'} />
-                    <SocialBadgeAndName color={'#0a66c2'} />
+                    <SelectAccountForPost platformName="LinkedIn" />
+                    <SelectAccountForPost platformName="Facebook" />
+                    <SelectAccountForPost platformName="Instagram" />
+
                 </div>
                 <p>PUBLISH REEL/SHORT</p>
                 <div className={styles.socialAccounts}>
-                    <SocialBadgeAndName color={'#FF0000'} />
-                    <SocialBadgeAndName color={'#FF0000'} />
+                    <SelectAccountForPost platformName="Youtube" />
+                    <SelectAccountForPost platformName="TikTok" />
+                    <SelectAccountForPost platformName="Instagram" />
+
                 </div>
                 <div
                     style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}
