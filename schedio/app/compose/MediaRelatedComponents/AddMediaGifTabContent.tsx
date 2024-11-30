@@ -2,10 +2,24 @@ import { ImageUp, Search, X } from 'lucide-react';
 import styles from '../ScssModules/giftabcontent.module.scss'
 import { createGifOverlay } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
+import { useModalStatesContext } from '@/app/layout';
+import { fetchDimensions } from '@/app/utilFunctions';
 
 export const AddMediaGifTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState('');
+    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId, setPhotosInPost } = useModalStatesContext();
+
+    const photoOnClick = async (photoObj) => {
+        setPhotosInPost((prev) => [...prev, {...photoObj}])
+        setShowMediaModal(false);
+        const {width, height} = await fetchDimensions(photoObj.regUrl);
+        setPhotosInPost((prev) => prev.map((photo) => {
+            if (photo.id != photoObj.id) return photo;
+            return {...photo, naturalAspectRatio: width/height, beingEdited:false}
+        }))
+    }
+
 
     function httpGetAsync(): void {
         var query = searchInput.current ? searchInput.current.value : "";
@@ -24,10 +38,10 @@ export const AddMediaGifTabContent: React.FC = () => {
                 containerOne.innerHTML = '';
                 containerTwo.innerHTML = '';
                 gifs.forEach((gif: { media_formats: { gif: { url: string; }; }; title: string; }, index: number) => {
-
+                    console.log(gif)
                     const overlay = document.createElement('div');
                     overlay.className = styles.overlay;
-                    createGifOverlay(overlay);
+                    createGifOverlay(overlay, gif.media_formats.gif.url, photoOnClick);
                     const gifDiv = document.createElement('div');
                     gifDiv.className = styles.gifItem;
                     const img = document.createElement('img');

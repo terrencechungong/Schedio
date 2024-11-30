@@ -21,6 +21,7 @@ const geistMono = localFont({
 interface PhotoInPost {
   id: string;
   fileType: string;
+  isGif: boolean;
   beingEdited: boolean;
   smallUrl: string;
   regUrl: string;
@@ -54,9 +55,10 @@ interface ModalStatesContextType {
   setMediaBeingEditedUrl: React.Dispatch<React.SetStateAction<string>>;
   showAdobeEditor: boolean;
   setShowAdobeEditor: React.Dispatch<React.SetStateAction<boolean>>;
-  mediaBeingEditedId: MutableRefObject<string>;
   photosInPost: PhotoInPost[];
   setPhotosInPost: React.Dispatch<React.SetStateAction<PhotoInPost[]>>;
+  mediaBeingEditedId: MutableRefObject<string>;
+  mediaIsGif: MutableRefObject<boolean>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -77,6 +79,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [mediaBeingEditedUrl, setMediaBeingEditedUrl] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const imgContainer = useRef<HTMLDivElement | null>(null);
+  const mediaIsGif = useRef(false);
   const mediaBeingEditedId = useRef<string>("");
 
   return (
@@ -109,7 +112,8 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setShowAdobeEditor,
       mediaBeingEditedId,
       photosInPost,
-      setPhotosInPost
+      setPhotosInPost,
+      mediaIsGif
     }}>
       {children}
     </ModalStatesContext.Provider>

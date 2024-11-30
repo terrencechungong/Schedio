@@ -28,7 +28,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
-  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal } = useModalStatesContext();
+  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif } = useModalStatesContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -605,6 +605,7 @@ export default function ComposePage() {
                 onClick={() => {
                   if (photo.beingEdited) return;
                   setMediaBeingEditedUrl(photo.regUrl)
+                  mediaIsGif.current = photo.isGif
                   mediaBeingEditedId.current = photo.id
                   setShowEditMediaModal(true)
                 }}

@@ -11,7 +11,7 @@ import Cropper from 'react-easy-crop';
 import ImageCropper from './ImageCropper';
 
 export const EditMediaModal = () => {
-    const { setShowEditMediaModal, mediaBeingEditedUrl, setShowAdobeEditor, setPhotosInPost, mediaBeingEditedId } = useModalStatesContext();
+    const { setShowEditMediaModal, mediaBeingEditedUrl, setShowAdobeEditor, setPhotosInPost, photosInPost, mediaBeingEditedId, mediaIsGif } = useModalStatesContext();
     const [cropping, setCropping] = useState(false);
     const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerStyle: React.CSSProperties = {
@@ -58,12 +58,6 @@ export const EditMediaModal = () => {
             return null;
         }
     };
-
-    // (async () => {
-    //     const url = "https://images.unsplash.com/photo-1234567890abcdef";
-    //     const fileType = await fetchFileType(url);
-    //     console.log('File Type:', fileType); // e.g., 'jpeg'
-    // })();
 
 
     const saveToCloudinary = async (blob) => {
@@ -123,8 +117,8 @@ export const EditMediaModal = () => {
                         <ImageCropper previewCanvasRef={previewCanvasRef} />
                     )}
                 </div>
-                <Input className='p-2 shadow-none' placeholder='Alt-text' />
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: '10px' }}>
+                {!mediaIsGif.current && <Input className='p-2 shadow-none' placeholder='Alt-text' />}
+                <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: mediaIsGif.current ? '0px' :'10px' }}>
                     <Button
                         onClick={() => {
                             setPhotosInPost((prev) => prev.filter((photo) => photo.id !== mediaBeingEditedId.current))
@@ -133,7 +127,7 @@ export const EditMediaModal = () => {
                         className="p-5 bg-white hover:bg-red-100 text-red-700 shadow-none">
                         Remove
                     </Button>
-                    {!cropping && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
+                    {(!cropping && !mediaIsGif.current) && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
                         <Button
                             onClick={() => setShowAdobeEditor(true)}
                             className="p-5 bg-white text-black bg-gray-300 hover:bg-gray-400 shadow-none">Edit with <img src={adobeIcon.src} style={{ width: '20px', height: '20px' }} /></Button>
@@ -142,7 +136,7 @@ export const EditMediaModal = () => {
                             className="p-5 bg-white hover:bg-blue-100 text-blue-700 shadow-none">
                             Crop <Crop /></Button>
                     </div>}
-                    {cropping && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
+                    {(cropping && !mediaIsGif.current) && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
                         <Button
                             onClick={() => setCropping(false)}
                             className="p-5 bg-white text-black bg-gray-300 hover:bg-gray-400 shadow-none">Discard Crop</Button>

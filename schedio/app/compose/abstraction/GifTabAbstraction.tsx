@@ -3,7 +3,7 @@ import { EllipsisVertical } from 'lucide-react';
 import { generateRandom4Digit } from '@/app/utilFunctions';
 
 
-export const createGifOverlay = (overlay: HTMLDivElement) => {
+export const createGifOverlay = (overlay: HTMLDivElement, url: string, photoOnClick) => {
     const useGifDiv = document.createElement('div');
     useGifDiv.style.width = '80%';
     useGifDiv.style.height = '100px';
@@ -27,7 +27,12 @@ export const createGifOverlay = (overlay: HTMLDivElement) => {
     useGifTextDiv.style.fontSize = '14px';
     useGifTextDiv.style.fontWeight = '600';
     useGifTextDiv.innerText = 'Use gif';
-
+    
+    useGifTextDiv.onclick = () => {
+        const id = `${url}-${generateRandom4Digit()}`;
+        const photoObj = { naturalAspectRatio:1, smallUrl: url, regUrl: url, fileType:'gif', id, isGif: true, beingEdited:true };
+        photoOnClick(photoObj);
+    }
 
     const fromTenerText = document.createElement('p');
     fromTenerText.innerText = 'GIF from Tenor';
@@ -108,7 +113,7 @@ export const createImageOverlayUnsplash = (overlay: HTMLDivElement, photo, photo
         const naturalAspectRatio = photo.width / photo.height;
         const fileType = photo.urls.regular.split('&fm=')[1].split('&')[0];
         const id = `${photo.urls.regular}-${generateRandom4Digit()}`
-        const photoObj = { naturalAspectRatio, smallUrl: photo.urls.small, regUrl: photo.urls.regular, fileType, id };
+        const photoObj = { naturalAspectRatio, smallUrl: photo.urls.small, regUrl: photo.urls.regular, fileType, id, isGif: false };
         photoOnClick(photoObj);
     }
 
