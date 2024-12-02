@@ -1,6 +1,7 @@
 /* Container to fill the entire viewport height */
 .container {
     height: 100%;
+    width: 100%;
     /* Makes the outer container take up the full viewport height */
     display: flex;
     flex-direction: column;
@@ -22,13 +23,14 @@
     width: 100%;
     border-collapse: collapse;
     background-color: white;
+    color: #ffeeb6b8;
 }
 
 /* Sticky Header (Days of the Week) */
 .calendarTable thead th {
     position: sticky;
     top: 0;
-    background-color: #F5F5F5;
+    background-color: #F7FAFC;
     z-index: 2;
     padding: 8px;
     font-weight: bold;
@@ -43,7 +45,7 @@
 .timeCell {
     position: sticky;
     left: 0;
-    background-color: #F5F5F5;
+    background-color: #F7FAFC;
     width: 80px;
     padding: 8px;
     text-align: right;
@@ -58,11 +60,11 @@
     position: sticky;
     top: 0;
     left: 0;
-    background-color: #F5F5F5;
+    background-color: #F7FAFC;
     z-index: 2;
-    border-bottom: 1px solid #F5F5F5;
+    border-bottom: 1px solid #F7FAFC;
     border-right: 1px solid #e0e0e0;
-    border-left: 1px solid #F5F5F5;
+    border-left: 1px solid #F7FAFC;
 }
 
 /* Table Body Cell Styling */
@@ -70,7 +72,7 @@
     height: 60px;
     border: 1px solid #e0e0e0;
     text-align: center;
-    border-left: 1px solid #F5F5F5;
+    border-left: 1px solid #F7FAFC;
 }
 
 

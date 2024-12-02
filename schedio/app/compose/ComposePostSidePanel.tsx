@@ -15,32 +15,32 @@ export const ComposePoseSidePanel: React.FC = () => {
 
             {/* FIX THE TABS IN MODALS TO BE THE SAME */}
             <Tabs defaultValue="preview" className={`w-full ${styles.composePostSidePanelHeader} `} >
-                <TabsList className="flex border-b border-gray-200 rounded-none bg-transparent border-b-2 pl-4 pr-4 w-full">
+                <TabsList style={{position:'sticky', top:'0', width:'100%', zIndex:10}} className="flex border-b border-gray-200 rounded-none bg-white border-b-2 w-full">
                     <TabsTrigger
                         value="preview"
-                        className={`flex-1 px-4 py-2 text-center border-b-2 border-transparent data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
+                        className={`flex-1 px-4 py-2 text-center border-b-2 data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
                         style={{ boxShadow: 'none' }}
                     >
                         Preview
                     </TabsTrigger>
                     <TabsTrigger
                         value="schedule"
-                        className={`flex-1 px-4 py-2 text-center border-b-2 border-transparent data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
-                        style={{ boxShadow: 'none' }}
+                        className={`flex-1 px-4 py-2 text-center border-b-2 data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
+                        style={{ boxShadow: 'none', backgroundColor:'white' }}
                     >
                         Schedule
                     </TabsTrigger>
                     <TabsTrigger
                         value="conversation"
-                        className={`flex-1 px-4 py-2 text-center border-b-2 border-transparent data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
-                        style={{ boxShadow: 'none' }}
+                        className={`flex-1 px-4 py-2 text-center border-b-2 data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
+                        style={{ boxShadow: 'none', backgroundColor:'white' }}
                     >
                         Conversation
                     </TabsTrigger>
                     <TabsTrigger
                         value="tools"
-                        className={`flex-1 px-4 py-2 text-center border-b-2 border-transparent data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
-                        style={{ boxShadow: 'none' }}
+                        className={`flex-1 px-4 py-2 text-center border-b-2 data-[state=active]:border-primary rounded-none bg-transparent shadow-none`}
+                        style={{ boxShadow: 'none', backgroundColor:'white' }}
                     >
                         Tools
                     </TabsTrigger>

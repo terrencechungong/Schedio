@@ -89,7 +89,7 @@ export default function SchedulePage() {
     const purpleText = { margin: 0, padding: 0, color: '#7C3AED' };
 
     return (
-        <div style={{ height: '100vh', backgroundColor: '#F5F5F5' }}>
+        <div style={{ height: '100vh', backgroundColor: '#F7FAFC', width:'100%' }}>
             <div style={{ position: 'absolute', top: 0, left: '4px' }}>
                 <SidebarTrigger className="-ml-1 scale-125" />
             </div>

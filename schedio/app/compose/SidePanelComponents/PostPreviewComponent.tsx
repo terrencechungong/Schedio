@@ -73,8 +73,8 @@ export const PostPreviewComponent: React.FC = () => {
                             <div
                                 key={photosInPost[0].regUrl}
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
+                                    minWidth: '100%',
+                                    minHeight: '100%',
                                     overflow: 'hidden', // Hides overflow of individual images
                                 }}
                             >
@@ -83,6 +83,7 @@ export const PostPreviewComponent: React.FC = () => {
                                     alt="Photo"
                                     style={{
                                         height: '100%',
+                                        minWidth: '100%',
                                         width: 'auto',
                                         objectFit: 'cover', // Ensures the image covers its container
                                         position: 'relative',
@@ -112,6 +113,7 @@ export const PostPreviewComponent: React.FC = () => {
                                             alt="Photo"
                                             style={{
                                                 height: '100%',
+                                                minWidth: '100%',
                                                 width: 'auto',
                                                 objectFit: 'cover', // Ensures the image covers its container
                                                 position: 'relative',
@@ -137,8 +139,8 @@ export const PostPreviewComponent: React.FC = () => {
                                 <div
                                     key={photosInPost[0].regUrl}
                                     style={{
-                                        width: '100%',
-                                        height: '100%',
+                                        minWidth: '100%',
+                                        minHeight: '100%',
                                         overflow: 'hidden', // Hides overflow of individual images
                                     }}
                                 >
@@ -147,6 +149,7 @@ export const PostPreviewComponent: React.FC = () => {
                                         alt="Photo"
                                         style={{
                                             height: '100%',
+                                            minWidth: '100%',
                                             width: 'auto',
                                             objectFit: 'cover', // Ensures the image covers its container
                                             position: 'relative',
@@ -160,6 +163,7 @@ export const PostPreviewComponent: React.FC = () => {
                                             key={photo.regUrl}
                                             style={{
                                                 width: '100%',
+                                                minWidth: '100%',
                                                 height: '100%',
                                                 overflow: 'hidden', // Hides overflow of individual images
                                             }}
@@ -169,6 +173,7 @@ export const PostPreviewComponent: React.FC = () => {
                                                 alt="Photo"
                                                 style={{
                                                     height: '100%',
+                                                    minWidth: '100%',
                                                     width: 'auto',
                                                     objectFit: 'cover', // Ensures the image covers its container
                                                     position: 'relative',
@@ -186,15 +191,15 @@ export const PostPreviewComponent: React.FC = () => {
                                 width: '100%',
                                 height: '425px',
                                 display: 'grid',
-                                gridTemplateRows: '2fr 1fr', // Top row takes 2/3 height, bottom row takes 1/3
+                                gridTemplateRows: '1fr 1fr', // Top row takes 2/3 height, bottom row takes 1/3
                                 // gap: '5px', // Optional: adds spacing between images
                                 overflow: 'hidden',
                             }}
                         >
-                            {/* Top Row: Full-Width Image */}
                             <div
                                 style={{
                                     width: '100%',
+                                    minWidth: '100%',
                                     height: '100%',
                                     overflow: 'hidden',
                                 }}
@@ -203,29 +208,28 @@ export const PostPreviewComponent: React.FC = () => {
                                     src={photosInPost[0].regUrl}
                                     alt="Photo"
                                     style={{
-                                        width: '100%',
+                                        minWidth: '100%',
+                                        width: 'auto',
                                         height: '100%',
                                         objectFit: 'cover', // Ensures the image covers its container
                                     }}
                                 />
                             </div>
-
-                            {/* Bottom Row: Four Images in 2x2 Grid */}
                             <div
                                 style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: '1fr 1fr', // Two columns
-                                    gridTemplateRows: '1fr 1fr', // Two rows
-                                    gap: '5px', // Optional: adds spacing between images
                                     width: '100%',
                                     height: '100%',
+                                    display: 'grid',
+                                    gridTemplateColumns: '1fr 1fr', // Two columns
+                                    gridTemplateRows: '1fr 1fr',
+                                    overflow: 'hidden',
                                 }}
                             >
                                 {photosInPost.slice(1).map((photo) => (
                                     <div
-                                        key={photo.regUrl}
                                         style={{
                                             width: '100%',
+                                            minWidth: '100%',
                                             height: '100%',
                                             overflow: 'hidden',
                                         }}
@@ -234,9 +238,10 @@ export const PostPreviewComponent: React.FC = () => {
                                             src={photo.regUrl}
                                             alt="Photo"
                                             style={{
-                                                width: '100%',
+                                                minWidth: '100%',
+                                                width: 'auto',
                                                 height: '100%',
-                                                objectFit: 'cover', // Ensures each image fills its cell
+                                                objectFit: 'cover', // Ensures the image covers its container
                                             }}
                                         />
                                     </div>
@@ -246,9 +251,106 @@ export const PostPreviewComponent: React.FC = () => {
                     )}
 
                     {photosInPost.length > 5 &&
-                        photosInPost.map((photo) => {
-                            return <img key={photo.regUrl} src={photo.regUrl} alt="Photo" />;
-                        })}
+                        (
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '425px',
+                                    display: 'grid',
+                                    gridTemplateRows: '1fr 1fr', // Top row takes 2/3 height, bottom row takes 1/3
+                                    // gap: '5px', // Optional: adds spacing between images
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        minWidth: '100%',
+                                        height: '100%',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <img
+                                        src={photosInPost[0].regUrl}
+                                        alt="Photo"
+                                        style={{
+                                            minWidth: '100%',
+                                            width: 'auto',
+                                            height: '100%',
+                                            objectFit: 'cover', // Ensures the image covers its container
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'grid',
+                                        gridTemplateColumns: '1fr 1fr', // Two columns
+                                        gridTemplateRows: '1fr 1fr',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    {photosInPost.slice(1, 5).map((photo, index) => {
+                                        console.log(index, photosInPost.length)
+                                        if (index != 3) {
+                                            return (
+                                                <div
+                                                    style={{
+                                                        width: '100%',
+                                                        minWidth: '100%',
+                                                        height: '100%',
+                                                        overflow: 'hidden',
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={photo.regUrl}
+                                                        alt="Photo"
+                                                        style={{
+                                                            minWidth: '100%',
+                                                            width: 'auto',
+                                                            height: '100%',
+                                                            objectFit: 'cover', // Ensures the image covers its container
+                                                        }}
+                                                    />
+                                                </div>
+                                            )
+                                        } else {
+                                            console.log("fourth")
+                                            return (
+                                                <div
+                                                style={{
+                                                    width: '100%',
+                                                    minWidth: '100%',
+                                                    height: '100%',
+                                                    overflow: 'hidden',
+                                                    position:'relative'
+                                                }}
+                                            >
+                                                  <div style={{width:'100%', height:'100%', backgroundColor:'rgb(0,0,0,0.4)', 
+                                                        display:'flex', alignItems:'center', justifyContent:'center', position:'absolute'
+                                                    }}>
+                                                        <p style={{fontWeight:'700', fontSize:'20px', color:'white'}}>{`+${photosInPost.length - 5}`}</p>
+                                                    </div>
+                                                <img
+                                                    src={photo.regUrl}
+                                                    alt="Photo"
+                                                    style={{
+                                                        minWidth: '100%',
+                                                        width: 'auto',
+                                                        height: '100%',
+                                                        objectFit: 'cover', // Ensures the image covers its container
+                                                    }}
+                                                />
+                                            </div>
+                                                  
+                                                 
+                                            )
+                                        }
+                                    })}
+                                </div>
+                            </div>
+                        )}
                 </div>
 
                 <div className={styles.genericPostPreviewFooter}>

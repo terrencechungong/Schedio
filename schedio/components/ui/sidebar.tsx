@@ -298,7 +298,7 @@ const SidebarRail = React.forwardRef<
       aria-label="Toggle Sidebar"
       tabIndex={-1}
       onClick={() => {
-        if (window.innerWidth >= 1280) {
+        if (window.innerWidth >= 1270) {
           toggleSidebar();
         }
       }}

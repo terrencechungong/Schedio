@@ -20,7 +20,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({platformName}) =>
     const platformColors = {
         'LinkedIn': '#0a66c2',
         'Youtube': '#FF0000',
-        'Facebook': '#405de6',
+        'Facebook': '#0866ff',
         'Instagram': '#833ab4',
         'Threads': '#89CFF0',
         'TikTok': '#000000',
@@ -28,7 +28,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({platformName}) =>
     const platformIcons = {
         'LinkedIn':  <FaLinkedin color='#0a66c2' /> ,
         'Youtube': <FaYoutube color='#FF0000' />,
-        'Facebook': <FaFacebook color='#405de6' />,
+        'Facebook': <FaFacebook color='#0866ff' />,
         'Instagram': <Instagram color='#833ab4' />,
         'Threads': <SiThreads color='#89CFF0' />,
         'TikTok': <FaTiktok color='#000000' />,

@@ -12,14 +12,14 @@ import { GetInspirationHeader, PostTemplatesHeader, UseHashtagsHeader, UseVariab
 import { Button } from '@/components/ui/button';
 import { MoveRight } from 'lucide-react';
 import templateIcon from '../assets/interface.png'
-import hashtagIcon from '../assets/hashtag.png'
-import notepad from '../assets/notepad.png';
+import hashtagIcon from '../assets/hashchc.png'
+import notepad from '../assets/check-list.png';
 import variableIcon from '../assets/independent-variable.png'
-import browser from '../assets/browser.png';
+import browser from '../assets/savedtemps.png';
 import settings from '../assets/settings.png';
 import settings1 from '../assets/settings (1).png';
 import { AnimatePresence, motion } from 'framer-motion';
-import variable from '../assets/variable2.png'
+import variable from '../assets/algorithm.png'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '../app-sidebar';
 import { VariablesBoxDiv } from './SimpleUIComponents/ToolInnerBoxDiv';
@@ -598,7 +598,7 @@ export default function ComposePage() {
         <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
           <CreatePostHeader divRef={divRef} />
           <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth:'100%', overflowX:'auto' }} ref={imgContainer}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
             {photosInPost.map((photo, index) => (
               <div
                 className={styles.photoItem}
@@ -628,11 +628,8 @@ export default function ComposePage() {
 
 
         <div className={styles.toolsSection}>
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center', marginBottom: '5px' }}>
-            <h4 style={{ padding: '0px 0px 12.5px', fontWeight: '700', margin: 0, color: '#303030', fontSize: '29px' }}>TOOLS</h4>
-            <div className='bg-transparent' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '21px', minHeight: '21px', paddingBottom: '12.5px' }}>
-              <img src={settings1.src} width={"20px"} height={"20px"} />
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+            <h4 style={{ padding: '0px 0px 10.5px', fontWeight: '500', margin: 0, color: '#303030', fontSize: '25px' }}>Tools</h4>
           </div>
 
 
@@ -645,7 +642,7 @@ export default function ComposePage() {
                     <img src={templateIcon.src} width={"27px"} height={"27px"} />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', gap: '6px', alignItems: 'center' }}>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>AI Generated Templates</h4>
+                    <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>AI Generated Templates</h4>
                     {/* {showAiGenTemplate && <Info color='grey' strokeWidth={2} size={19}/>}  */}
                   </div>
                 </div>
@@ -796,10 +793,10 @@ export default function ComposePage() {
             <div className='rounded-lg shadow-md' style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
               <div className={`${showHashtagGroupTool ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
-                  <div className='bg-[#ffeeb6] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={hashtagIcon.src} width={"27px"} height={"27px"} />
+                  <div className='bg-[#b2ebf778] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                    <img src={hashtagIcon.src} width={"30px"} height={"30px"} />
                   </div>
-                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Hashtag Groups</h4>
+                  <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Saved Hashtag Groups</h4>
                 </div>
 
 
@@ -882,9 +879,9 @@ export default function ComposePage() {
               <div className={`${showPostInternalNotes ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={notepad.src} width={"27px"} height={"27px"} />
+                    <img src={notepad.src} width={"29px"} height={"29px"} />
                   </div>
-                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Post Notes</h4>
+                  <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Post Notes</h4>
                 </div>
 
                 {showPostInternalNotes &&
@@ -942,11 +939,11 @@ export default function ComposePage() {
 
               <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <div className='rounded-lg' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', flexShrink: 1, alignItems: 'center' }}>
-                    <div className='bg-purple-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
+                    <div className='bg-[#ffeeb6b8] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
                       <img src={variable.src} width={"27px"} height={"27px"} />
                     </div>
-                    <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Variables</h4>
+                    <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Variables</h4>
                   </div>
                   {showVariables &&
                     <div className='rounded-md p-1  flex items-center justify-center hover:bg-gray-100 cursor-pointer transition duration-200'>
@@ -1015,7 +1012,7 @@ export default function ComposePage() {
                   <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
                     <img src={browser.src} width={"27px"} height={"27px"} />
                   </div>
-                  <h4 style={{ fontWeight: '600', fontSize: '18px', margin: 0 }}>Saved Templates</h4>
+                  <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Saved Templates</h4>
                 </div>
 
 

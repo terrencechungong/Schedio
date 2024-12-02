@@ -14,12 +14,6 @@ import {
     CalendarDays,
     Users,
     Settings, 
-    Settings2,
-    BookOpen,
-    Bot,
-    SquareTerminal,
-    Frame,
-    PieChart
 } from "lucide-react"
 
 import { NavMain } from "./siderbar-components/nav-main"
@@ -138,10 +132,10 @@ export function AppSidebar() {
             if (d) {
                 d.innerText = `${currentWidth}`;
             }
-          if (currentWidth < 1280) {
+          if (currentWidth < 1270) {
             // Retracting below 1280px
             setOpen(false);
-          } else if (currentWidth >= 1280 && previousWidth.current < 1280) {
+          } else if (currentWidth >= 1270 && previousWidth.current < 1270) {
             // Expanding above 1280px
             setOpen(true);
           }

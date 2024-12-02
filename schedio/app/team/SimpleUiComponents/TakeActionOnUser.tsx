@@ -10,14 +10,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Ellipsis, UserMinus } from "lucide-react"
+import { UserMinus, EllipsisVertical } from "lucide-react"
 
 
 export function TakeActionOnUser() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Ellipsis
+                <EllipsisVertical
+                size={18}
                     style={{ cursor: 'pointer' }}
                 />
             </DropdownMenuTrigger>
