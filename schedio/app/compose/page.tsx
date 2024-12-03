@@ -370,6 +370,15 @@ export default function ComposePage() {
     }
   }
 
+  const addHashtag = (hashtag: string) => {
+    if (textareaRef.current) {
+      // include unique only
+      textareaRef.current.value += ` ${hashtag}`
+      const event = new Event('input', { bubbles: true });
+      textareaRef.current.dispatchEvent(event);
+    }
+  }
+
   const addVariableToCaption = () => {
     if (textareaRef.current) {
       if (selectedVariable == -1) return;
@@ -677,92 +686,88 @@ export default function ComposePage() {
 
                     className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
 
-                    <div
-                      style={{
-                        width: '89%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        overflow: 'hidden',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                        <MoveLeft
-                          onClick={() => {
-                            const prev = selectedTemplateIdxForGroup == 0 ? templateGroups[selectedAudeince].templates.length - 1 : selectedTemplateIdxForGroup - 1;
-                            setSelectedTemplateIdxForGroup(prev)
-                          }}
+                    <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
 
-                          size={24} />
-                      </div>
-                      <div style={{ maxWidth: '82%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
 
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '10px' }}>
-                            <p style={{ color: 'black', fontWeight: '500' }}>Audience: </p>
-                            <div
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                overflowX: 'auto',
-                                padding: '4px',
-                                maxWidth: '100%',
-                                margin: 0,
-                              }}
-                            >
-                              {templateGroups.map((group, idx) => (
-                                <div
-                                  onClick={() => {
-                                    setSelectedTemplateIdxForGroup(0)
-                                    setSelectedAudience(idx)
-                                  }}
-                                  key={idx}
-                                  className={`px-1 ${selectedAudeince === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
-                                  style={{
-                                    borderRadius: '6px',
-                                    fontSize: '11px',
-                                    cursor: 'pointer',
-                                    whiteSpace: 'nowrap', // Prevent text overflow
-                                    margin: '0 5px', // Add margin instead of gap
-                                    flex: '0 0 auto'
-                                  }}
-                                >
-                                  {group.audience}
-                                </div>
-                              ))}
+                      <div style={{ width: '100%', height: 'auto', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'center' }}>
+                        <div style={{ marginTop: '38px' }} className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                          <ChevronLeft
+                            onClick={() => {
+                              const prev = selectedTemplateIdxForGroup == 0 ? templateGroups[selectedAudeince].templates.length - 1 : selectedTemplateIdxForGroup - 1;
+                              setSelectedTemplateIdxForGroup(prev)
+                            }}
+                            size={24} />
+                        </div>
+                        <div style={{ width: '80%', display: 'flex', flexDirection: 'column' }}>
+                          <div style={{
+                            display: 'flex', flexDirection: 'column', flex: '0 0 auto'
+                          }}>
+                            <div style={{
+                              width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '6px', flex: '0 0 auto'
+                            }}>
+                              <p style={{ color: '#454d5a', fontWeight: '400', fontSize: '14px', alignSelf: 'flex-start', marginTop: '1px' }}>Audience: </p>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  overflowX: 'auto',
+                                  padding: '4px 0 4px',
+                                  flexGrow: 1,
+                                  margin: 0,
+                                }}
+                              >
+                                {templateGroups.map((group, idx) => (
+                                  <div
+                                    onClick={() => {
+                                      setSelectedTemplateIdxForGroup(0)
+                                      setSelectedAudience(idx)
+                                    }}
+                                    key={idx}
+                                    className={`px-1 ${selectedAudeince === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                                    style={{
+                                      borderRadius: '6px',
+                                      fontSize: '11px',
+                                      cursor: 'pointer',
+                                      whiteSpace: 'nowrap', // Prevent text overflow
+                                      margin: '0 5px', // Add margin instead of gap
+                                      flex: '0 0 auto'
+                                    }}
+                                  >
+                                    {group.audience}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </div>
+                          <div
+                            className='rounded-md'
+                            style={{
+                              padding: '6px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              overflowWrap: 'break-word',
+                              fontSize: '14px',
+                              wordWrap: 'break-word',
+                              width: '100%',
+                              whiteSpace: 'normal', // Ensures wrapping of long text
+                              overflowY: 'auto',
+                              flex: '0 0 auto',
+                              height: '100px',
+                              maxHeight: '100px',
+                              border: '2px dashed lightgrey'
+                            }}
+                          >
+                            <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '12px', margin: '1px' }}>Template</p>
+                            {templateGroups[selectedAudeince].templates[selectedTemplateIdxForGroup]}
+                          </div>
                         </div>
-                        <div
-                          className='rounded-md'
-                          style={{
-                            padding: '6px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            overflowWrap: 'break-word',
-                            fontSize: '14px',
-                            wordWrap: 'break-word',
-                            width: '100%',
-                            whiteSpace: 'normal', // Ensures wrapping of long text
-                            overflowY: 'auto',
-                            flex: '0 0 auto',
-                            maxHeight: '100px',
-                            border: '2px dashed lightgrey'
-                          }}
-                        >
-                          <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '16px', margin: '1px' }}>Template</p>
-                          {templateGroups[selectedAudeince].templates[selectedTemplateIdxForGroup]}
+                        <div style={{ marginTop: '38px' }} className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                          <ChevronRight
+                            onClick={() => {
+                              setSelectedTemplateIdxForGroup((selectedTemplateIdxForGroup + 1) % (templateGroups[selectedAudeince].templates.length))
+                            }}
+                            size={24} />
                         </div>
-                      </div>
-                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                        <MoveRight
-                          onClick={() => {
-                            setSelectedTemplateIdxForGroup((selectedTemplateIdxForGroup + 1) % (templateGroups[selectedAudeince].templates.length))
-                          }}
-                          size={24} />
                       </div>
                     </div>
 
@@ -770,7 +775,7 @@ export default function ComposePage() {
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        alignSelf: 'flex-end',
+                        alignSelf: 'center',
                         gap: '10px',
                         marginTop: '13px',
                       }}
@@ -778,13 +783,12 @@ export default function ComposePage() {
                       <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
                         Expand
                       </Button>
-                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                      <Button className="text-white shadow-none bg-primary"
                         onClick={() => addTemplateToCaption(true)}
                       >
                         Use Inspiration
                       </Button>
                     </div>
-
                   </motion.div>}
                 </AnimatePresence>
               </div>
@@ -831,13 +835,27 @@ export default function ComposePage() {
                     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '166px', gap: '13px', overflowX: 'auto', flex: '0 0 auto', alignItems: 'center' }}>
 
                       {hashtagGroups.map((group, index) => (
-                        <div className={`${styles.hashtagGroupDiv} transition-transform duration-200 transform hover:scale-105 rounded-md`}
-                          style={{ border: selectedHashtagGroup == index ? '1px solid hsl(263.4, 70%, 50.4%)' : '2px dashed lightgrey' }}
+                        <div
                           onClick={() => setSelectedHashtagGroup(index)}
+                          className='rounded-md' style={{ cursor: 'pointer', border: selectedHashtagGroup == index ? '2px solid hsl(263.4, 70%, 50.4%)' : '2px dashed lightgrey', height: '140px', minWidth: '350px' }}
                         >
-                          {group.hashtags.map((hashtag, index) => (
-                            <p className={`rounded-md ${styles.hashtag}`}>{hashtag}</p>
-                          ))}
+                          <div className={`${styles.hashtagGroupDiv}`} >
+                            {group.hashtags.map((hashtag, index) => (
+                              <p
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  addHashtag(hashtag)
+                                }}
+                                className={` transition-color duration-200 color hover:bg-gray-300 rounded-md bg-gray-200 text-gray-600 ${styles.hashtag}`}>{hashtag}</p>
+                              // <p
+                              //   onClick={(e) => {
+                              //     e.stopPropagation()
+                              //     addHashtag(hashtag)
+                              //   }}
+                              //   className={` transition-color duration-200 color rounded-md bg-purple-100 text-gray-500 hover:bg-purple-400 hover:text-white ${styles.hashtag}`}>{hashtag}</p>
+
+                            ))}
+                          </div>
                         </div>
 
                       ))}
@@ -852,7 +870,7 @@ export default function ComposePage() {
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        alignSelf: 'flex-end',
+                        alignSelf: 'center',
                         gap: '10px',
                         marginTop: '13px',
                       }}
@@ -864,7 +882,7 @@ export default function ComposePage() {
                         onClick={() => {
                           applyHashtagGroup();
                         }}
-                        className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]">
+                        className="text-white  shadow-none bg-primary">
                         Use Hashtags
                       </Button>
                     </div>
@@ -910,13 +928,13 @@ export default function ComposePage() {
                       ease: 'easeInOut',
                     }}
                     className='rounded-t-none rounded-b-lg' style={{ maxWidth: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
-                    {!postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
-                      <FaCircleCheck size={16} color='#13b27a' />
-                      <p style={{ fontSize: '12px', paddingTop: '1px', color: 'black' }} className="m-0">Saved</p>
+                    {!postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
+                      <FaCircleCheck size={15} color='#6bd3a4' />
+                      <p style={{ fontSize: '12px', paddingTop: '1px', color: '#454d5a' }} className="m-0">Saved</p>
                     </div>}
                     {postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
                       <ClipLoader color='hsl(262.1, 83.3%, 57.8%)' size={17} />
-                      <p style={{ fontSize: '12px', paddingTop: '1px', color: 'black' }} className="m-0">Saving...</p>
+                      <p style={{ fontSize: '12px', paddingTop: '1px', color: '#454d5a' }} className="m-0">Saving...</p>
                     </div>}
                     <div className={styles.textAreaWrapper}>
                       <div
@@ -971,13 +989,77 @@ export default function ComposePage() {
 
                     className='rounded-t-none rounded-b-lg' style={{ width: '100%', maxWidth: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflowY: 'hidden', flex: '0 0 auto' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', maxWidth: '100%', height: '166px', gap: '13px', overflowX: 'auto', flex: '0 0 auto', alignItems: 'center' }}>
-                      {mockData.map((variable, index) => (
-                        <VariablesBoxDiv variable={variable} isSelected={index == selectedVariable} setVar={() => setSelectedVariable(index)} />
-                      ))}
 
-                      <div className='bg-gray-200 rounded-full' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', width: '55px', height: '55px', alignSelf: 'center', flex: '0 0 auto' }}>
+                      {mockData.map((value, index) => (
+
+                        <div
+                          style={{
+                            height: '117px',
+                            width: '300px',
+                            borderBottom: selectedVariable == index ? '1px solid hsl(263.4, 70%, 50.4%)' : '1px solid lightgray',
+                            borderRadius: '0 0 0 0',
+                            padding: '10px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: '5px',
+                            flex:'0 0 auto',
+                            cursor:'pointer'
+                            // backgroundColor: 'white',
+                          }}
+                          onClick={() => setSelectedVariable(index)}
+                          className='bg-white hover:bg-[#F8F8F8] transition-color color duration-200 transition-transform duration-200 transform hover:scale-105'
+                        >
+                          {/* Variable Name */}
+                          <div
+                            style={{
+                              fontWeight: '600',
+                              fontSize: '16px',
+                              color: '#333',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {`{${value.name}}`}
+                          </div>
+
+                          {/* Variable Value */}
+                          <div
+                            style={{
+                              fontWeight: '500',
+                              fontSize: '14px',
+                              color: '#007BFF',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            "this-is-the0val"
+                          </div>
+
+                          {/* Variable Description */}
+                          <div
+                            style={{
+                              fontWeight: '400',
+                              fontSize: '12px',
+                              color: '#555',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2, // Ensures description wraps to two lines
+                              WebkitBoxOrient: 'vertical',
+                              textAlign: 'center'
+                            }}
+                          >
+                            {value.description}
+                          </div>
+                        </div>
+                      ))}
+                      {/* <div className='bg-gray-200 rounded-full' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', width: '55px', height: '55px', alignSelf: 'center', flex: '0 0 auto' }}>
                         <p style={{ fontSize: '12px', width: '45px' }}>View All</p>
-                      </div>
+                      </div> */}
 
                     </div>
 
@@ -985,7 +1067,7 @@ export default function ComposePage() {
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        alignSelf: 'flex-end',
+                        alignSelf: 'center',
                         gap: '10px',
                         marginTop: '13px',
                       }}
@@ -993,7 +1075,7 @@ export default function ComposePage() {
                       <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
                         Expand
                       </Button>
-                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                      <Button className="text-white shadow-none bg-primary"
                         onClick={() => addVariableToCaption()}
                       >
                         Use Variable
@@ -1044,94 +1126,83 @@ export default function ComposePage() {
 
                     className='rounded-t-none rounded-b-lg' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignSelf: 'center', backgroundColor: 'white', padding: '0px 10px 10px', overflow: 'hidden' }}>
 
-                    <div
-                      style={{
-                        width: '89%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        overflow: 'hidden',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                        <MoveLeft
-                          onClick={() => {
-                            const prev = selectedTemplate == 0 ? socialMediaTemplates.length - 1 : selectedTemplate - 1;
-                            setSelectedTemplate(prev)
-                          }}
-                          size={24} />
-                      </div>
-                      <div style={{ maxWidth: '82%', display: 'flex', flexDirection: 'column', flexGrow: 1, }}>
+                    <div style={{ maxWidth: '100%', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
 
 
-
-                        {/* CHANGE THE SCROLL POSITION */}
-
-
-
-
-                        <div style={{ width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '10px', maxWidth: '100%', flex: '0 0 auto' }}>
-                          <p style={{ color: 'black', fontWeight: '500', flex: '0 0 auto' }}>Template Name: </p>
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              overflowX: 'auto',
-                              padding: '4px',
-                              // flexGrow: 1,
-                              // width:'100%',
-                              maxWidth: '68%',
-                              flex: '0 0 auto',
-                              margin: 0,
+                      <div style={{ width: '100%', height: 'auto', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', alignSelf: 'center' }}>
+                        <div style={{ marginTop: '38px' }} className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                          <ChevronLeft
+                            onClick={() => {
+                              const prev = selectedTemplate == 0 ? socialMediaTemplates.length - 1 : selectedTemplate - 1;
+                              setSelectedTemplate(prev)
                             }}
-                          >
-                            {socialMediaTemplates.map((value, idx) => (
+                            size={24} />
+                        </div>
+                        <div style={{ width: '80%', display: 'flex', flexDirection: 'column' }}>
+                          <div style={{
+                            display: 'flex', flexDirection: 'column', flex: '0 0 auto'
+                          }}>
+                            <div style={{
+                              width: '100%', display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', marginBottom: '6px', flex: '0 0 auto'
+                            }}>
+                              <p style={{ color: '#454d5a', fontWeight: '400', fontSize: '14px', alignSelf: 'flex-start', whiteSpace: 'nowrap', marginTop: '1px' }}>Template Name: </p>
                               <div
-                                onClick={() => setSelectedTemplate(idx)}
-                                key={idx}
-                                className={`px-1 ${selectedTemplate === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
                                 style={{
-                                  borderRadius: '6px',
-                                  fontSize: '11px',
-                                  cursor: 'pointer',
-                                  whiteSpace: 'nowrap', // Prevent text overflow
-                                  margin: '0 5px', // Add margin instead of gap
-                                  flex: '0 0 auto'
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  overflowX: 'auto',
+                                  padding: '4px 0 4px',
+                                  flexGrow: 1,
+                                  margin: 0,
                                 }}
                               >
-                                {value.name}
+                                {socialMediaTemplates.map((value, idx) => (
+                                  <div
+                                    onClick={() => setSelectedTemplate(idx)}
+                                    key={idx}
+                                    className={`px-1 ${selectedTemplate === idx ? 'bg-primary text-white' : 'bg-accent text-gray'} transition-transform duration-200 transform hover:scale-110`}
+                                    style={{
+                                      borderRadius: '6px',
+                                      fontSize: '11px',
+                                      cursor: 'pointer',
+                                      whiteSpace: 'nowrap', // Prevent text overflow
+                                      margin: '0 5px', // Add margin instead of gap
+                                      flex: '0 0 auto'
+                                    }}
+                                  >
+                                    {value.name}
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            </div>
+                          </div>
+                          <div
+                            className='rounded-md'
+                            style={{
+                              padding: '6px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              overflowWrap: 'break-word',
+                              fontSize: '14px',
+                              wordWrap: 'break-word',
+                              width: '100%',
+                              whiteSpace: 'normal', // Ensures wrapping of long text
+                              overflowY: 'auto',
+                              flex: '0 0 auto',
+                              height: '100px',
+                              maxHeight: '100px',
+                              border: '2px dashed lightgrey'
+                            }}
+                          >
+                            <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '12px', margin: '1px' }}>Template</p>
+                            {socialMediaTemplates[selectedTemplate].template}
                           </div>
                         </div>
-                        <div
-                          className='rounded-md'
-                          style={{
-                            padding: '6px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            overflowWrap: 'break-word',
-                            fontSize: '14px',
-                            wordWrap: 'break-word',
-                            width: '100%',
-                            whiteSpace: 'normal', // Ensures wrapping of long text
-                            overflowY: 'auto',
-                            flex: '0 0 auto',
-                            maxHeight: '100px',
-                            border: '2px dashed lightgrey'
-                          }}
-                        >
-                          <p className='rounded-md' style={{ padding: '1px 8px 1px', backgroundColor: '#edf2f7', alignSelf: 'flex-start', color: '#383838', fontSize: '16px', margin: '1px' }}>Template</p>
-                          {socialMediaTemplates[selectedTemplate].template}
+                        <div style={{ marginTop: '38px' }} className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
+                          <ChevronRight
+                            onClick={() => setSelectedTemplate((selectedTemplate + 1) % (socialMediaTemplates.length))}
+                            size={24} />
                         </div>
-                      </div>
-                      <div className='rounded-md p-1 bg-white flex items-center justify-center hover:brightness-90 cursor-pointer transition duration-200'>
-                        <MoveRight
-                          onClick={() => setSelectedTemplate((selectedTemplate + 1) % (socialMediaTemplates.length))}
-                          size={24} />
                       </div>
                     </div>
 
@@ -1139,7 +1210,7 @@ export default function ComposePage() {
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        alignSelf: 'flex-end',
+                        alignSelf: 'center',
                         gap: '10px',
                         marginTop: '13px',
                       }}
@@ -1147,7 +1218,7 @@ export default function ComposePage() {
                       <Button className="text-black bg-accent shadow-none hover:bg-gray-200">
                         Expand
                       </Button>
-                      <Button className="text-primary hover:bg-[#d9c6ed] shadow-none bg-[#E9D5FF]"
+                      <Button className="text-white shadow-none bg-primary"
                         onClick={() => addTemplateToCaption()}
                       >
                         Use Template
