@@ -7,17 +7,18 @@ import { Instagram } from 'lucide-react'
 import { FaPinterest, FaTiktok } from 'react-icons/fa'
 import { FaFacebook } from "react-icons/fa";
 import { SiGooglemybusiness, SiThreads } from "react-icons/si";
-import { useState } from "react";
+import { useEffect, use, useState } from "react";
 import { useModalStatesContext } from "@/app/layout";
 
 
 interface PlatFormInput {
     platformName: string;
+    contentTypeIsShort: boolean;
 }
 
-export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName }) => {
+export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, contentTypeIsShort }) => {
     // X, Threads, facebook, ig, tiktok
-    const { setCheckedProfile, checkedProfile } = useModalStatesContext();
+    const { setCheckedProfile, checkedProfile, postTypeIsShort, setPostTypeIsShort } = useModalStatesContext();
     const [accounts, setAccounts] = useState([{ id: 0, name: 'Terrence Chungong', checked: false }, { id: 1, name: 'Agha Igwacho', checked: false }]);
     const platformColors = {
         'LinkedIn': '#0a66c2',
@@ -35,10 +36,52 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName }) 
         'Threads': <SiThreads color='#89CFF0' />,
         'TikTok': <FaTiktok color='#000000' />,
     };
+
     type PlatformName = 'LinkedIn' | 'Youtube' | 'Facebook' | 'Instagram' | 'Threads' | 'TikTok';
 
     const color = platformColors[platformName as PlatformName];
     const icon = platformIcons[platformName as PlatformName];
+
+    // disabled depends on whats selected
+    const [disabled, setDisabled] = useState(false);
+    // Check over logic and simplify account data flow.
+
+    useEffect(() => {
+        // { id: account.id, name: account.name, platform: platformName, unique: false, active: true, isShortForm:contentTypeIsShort }
+        // this will change to bell accounts but this will do for now since checked accounts is everything that has been checked.
+        // good enough to be interactive without backend
+        // its not being deactivated
+        const normalPostSelected = checkedProfile.some(profile => profile.active && !profile.isShortForm);
+        const shortFormSelected = checkedProfile.some(profile => profile.active && profile.isShortForm);
+        console.log(normalPostSelected, shortFormSelected)
+        console.log(checkedProfile)
+        if (contentTypeIsShort && normalPostSelected) {
+            setDisabled(true);
+        } else if (!contentTypeIsShort && shortFormSelected) {
+            setDisabled(true);
+        } else if (contentTypeIsShort && !normalPostSelected) {
+            setDisabled(false)
+        } else if (!contentTypeIsShort && !shortFormSelected) {
+            setDisabled(false)
+        }
+        // its not disabled by default so unselectig will undisable
+
+    }, [checkedProfile]);
+
+    // if everything unselected and in short form then change the state to normal form
+    // if this is the first selected (indicated by mode in normal form and not disabled which is given, put in short form)
+
+    //IT WORKS I JUST NEED TO USE PROPER ACCOUNTS AND ACCOUNT IDS
+    const toggleGlobalPostType = (activating: boolean) => {
+        if (activating && contentTypeIsShort && !postTypeIsShort) {
+            setPostTypeIsShort(true)
+            return
+        } 
+        const shortFormSelectedCount = checkedProfile.filter(profile => profile.active && profile.isShortForm).length;
+        if (!activating && shortFormSelectedCount == 0 && contentTypeIsShort) {
+            setPostTypeIsShort(false)
+        }
+    }
 
 
     return (
@@ -49,23 +92,27 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName }) 
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '17px' }}>
                 {/* change to hashmap */}
-                {accounts.map((account) => <AccountRow checkColor={color} checked={account.checked} name={account.name}
+                {accounts.map((account) => <AccountRow disabled={disabled} checkColor={color} checked={account.checked} name={account.name}
                     setChecked={(val: boolean) => {
-                        // console.log("CHECKKKK", checkedProfile)
-                        setAccounts((prev) => prev.map((p) => {
-                            if (p.id == account.id) return { ...p, checked: val };
-                            return p;
-                        }));
-                        if (checkedProfile.some(profile => profile.id === account.id)) {
-                            // console.log("dksjdksdjskd", checkedProfile)
-                            setCheckedProfile((prev) =>
-                                prev.map((p) => {
-                                    if (p.id == account.id) return { ...p, active: val };
-                                    return p;
-                                }))
-                        } else {
-                            // console.log("CHECKKKK after", checkedProfile)
-                            setCheckedProfile((prev) => [...prev, { id: account.id, name: account.name, platform: platformName, unique: false, active: true }]);
+                        if (!disabled) {
+                            // console.log("CHECKKKK", checkedProfile)
+                            setAccounts((prev) => prev.map((p) => {
+                                if (p.id == account.id) return { ...p, checked: val };
+                                return p;
+                            }));
+                            if (checkedProfile.some(profile => profile.id === account.id)) {
+                                // console.log("dksjdksdjskd", checkedProfile)
+                                console.log("VALL", val)
+                                setCheckedProfile((prev) =>
+                                    prev.map((p) => {
+                                        if (p.id == account.id) return { ...p, active: val };
+                                        return p;
+                                    }))
+                            } else {
+                                // console.log("CHECKKKK after", checkedProfile)
+                                setCheckedProfile((prev) => [...prev, { id: account.id, name: account.name, platform: platformName, unique: false, active: true, isShortForm: contentTypeIsShort }]);
+                            }
+                            toggleGlobalPostType(val)
                         }
                     }} />)}
             </div>
@@ -79,16 +126,18 @@ interface AccountRowInput {
     checkColor: string;
     checked: boolean;
     name: string;
-    setChecked: (val: boolean) => void
+    setChecked: (val: boolean) => void;
+    disabled: boolean;
 }
-const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setChecked }) => {
+const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setChecked, disabled }) => {
 
     return (
         <div
             onClick={() => setChecked(!checked)}
-            className='hover:bg-gray-200 p-2 rounded-md cursor-pointer transition-colors duration-200 ease-in-out' style={{ display: 'flex', flexDirection: 'row', gap: '9px', alignItems: 'center' }}>
+            className={`${!disabled && 'hover:bg-gray-200'} p-2 rounded-md ${!disabled ? 'cursor-pointer': 'cursor-not-allowed'} transition-colors duration-200 ease-in-out`} style={{ display: 'flex', flexDirection: 'row', gap: '9px', alignItems: 'center' }}>
             <Checkbox
                 id="terms"
+                disabled={disabled}
                 checked={checked}
                 className={`border-[${checkColor}] data-[state=checked]:bg-[${checkColor}] data-[state=checked]:text-white shadow-none w-4 h-4`}
             />

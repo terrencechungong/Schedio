@@ -34,6 +34,7 @@ interface CheckedProfile {
   platform: string;
   unique: boolean;
   active: boolean;
+  isShortForm: boolean;
 }
 
 interface PostVariationData {
@@ -78,7 +79,9 @@ interface ModalStatesContextType {
   postVariations: { [key: string]: PostVariationData };
   setPostVariations: React.Dispatch<React.SetStateAction<{ [key: string]: PostVariationData }>>;
   showDeletionConfirmationModal: boolean;
-  setShowDeletionConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>
+  setShowDeletionConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
+  postTypeIsShort: boolean;
+  setPostTypeIsShort: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -102,6 +105,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const imgContainer = useRef<HTMLDivElement | null>(null);
   const mediaIsGif = useRef(false);
   const mediaBeingEditedId = useRef<string>("");
+  const [postTypeIsShort, setPostTypeIsShort] = useState(false);
   const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
   const [postVariations, setPostVariations] = useState<{ [key: string]: PostVariationData }>({
     "GenericTemplate": {
@@ -159,7 +163,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       postVariations,
       setPostVariations,
       showDeletionConfirmationModal,
-      setShowDeletionConfirmationModal
+      setShowDeletionConfirmationModal,
+      postTypeIsShort,
+      setPostTypeIsShort
     }}>
       {children}
     </ModalStatesContext.Provider>

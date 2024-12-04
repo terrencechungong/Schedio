@@ -36,16 +36,16 @@ export const SchedulePostComponent: React.FC = () => {
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost platformName="LinkedIn" />
-                    <SelectAccountForPost platformName="Facebook" />
-                    <SelectAccountForPost platformName="Instagram" />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName="LinkedIn" />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName="Facebook" />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName="Instagram" />
 
                 </div>
                 <p>PUBLISH REEL/SHORT</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost platformName="Youtube" />
-                    <SelectAccountForPost platformName="TikTok" />
-                    <SelectAccountForPost platformName="Instagram" />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName="Youtube" />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName="TikTok" />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName="Instagram" />
 
                 </div>
                 <div
