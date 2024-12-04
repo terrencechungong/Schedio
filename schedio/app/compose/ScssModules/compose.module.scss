@@ -86,7 +86,7 @@
     width: 100%;
     min-height: 320px;
     height: 320px;
-    max-height: 100%;
+    // max-height: 00;
     height: auto;
     flex-shrink: 0; /* Prevent shrinking when content overflows */
     overflow: visible;    // border-radius: 5px;
@@ -121,6 +121,7 @@
     font-size: 13px;
     padding: 10px;
     background-color: #f1f3f4;
+    position: relative;
 }
 
 
@@ -279,6 +280,26 @@
     /* Remove placeholder when focused or content is present */
 }
 
+
+
+.createPostPlaceholder::before {
+    content: "What would you like to share?";
+    position: absolute;
+    left: 8px;
+    /* Adjust for padding */
+    top: 8px;
+    /* Adjust for padding */
+    color: #aaa;
+    /* Placeholder text color */
+    pointer-events: none;
+    /* Ignore clicks on placeholder */
+}
+
+.createPostPlaceholder:focus::before,
+.createPostPlaceholder:not(:empty)::before {
+    content: "";
+    /* Remove placeholder when focused or content is present */
+}
 .hashtagGroupDiv {
     font-size: 10px;
     height: auto;

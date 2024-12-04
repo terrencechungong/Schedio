@@ -2,7 +2,7 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, MoveLeft, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
+import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
@@ -25,10 +25,17 @@ import { AppSidebar } from '../app-sidebar';
 import { VariablesBoxDiv } from './SimpleUIComponents/ToolInnerBoxDiv';
 import { FaCircleCheck } from "react-icons/fa6";
 import ClipLoader from "react-spinners/ClipLoader";
+import { FaFacebook, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa';
+import { SiThreads } from 'react-icons/si';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
-  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif } = useModalStatesContext();
+  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
+    checkedProfile, setCheckedProfile, setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal
+  } = useModalStatesContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -50,6 +57,9 @@ export default function ComposePage() {
   const [postNotesSaving, setPostNotesSaving] = useState(false);
   const [postNotes, setPostNotes] = useState("");
   const typingTimerRef = useRef(null);
+  const [showPlus, setShowPlus] = useState(false);
+  const [isPopoverHidden, setIsPopoverHidden] = useState(false);
+  const [deleteVersionPopoverHidden, setDeleteVersionPopoverHidden] = useState(true);
 
   const mockData = [
     {
@@ -334,6 +344,20 @@ export default function ComposePage() {
     }
   ];
 
+  useEffect(() => {
+    const handleScreenClick = () => {
+      setDeleteVersionPopoverHidden(true);
+      console.log("sdssdjkdsjkjskksjjsjjjdsjjjj")
+    };
+
+    // Add event listener on mount
+    document.addEventListener("click", handleScreenClick);
+
+    // Clean up event listener on unmount
+    return () => {
+      document.removeEventListener("click", handleScreenClick);
+    };
+  }, []);
 
   useEffect(() => {
     if (!showPostInternalNotes) return;
@@ -414,7 +438,6 @@ export default function ComposePage() {
     return () => observer.disconnect(); // Cleanup observer on unmount
   }, []);
 
-
   const setCursorToEnd = (element) => {
     // Focus the contentEditable element
     element.focus();
@@ -422,13 +445,26 @@ export default function ComposePage() {
     // Create a range
     const range = document.createRange();
 
-    // Get the last child node
-    const lastChild = element.lastChild;
+    // Check if the element has any child nodes
+    if (element.childNodes.length > 0) {
+      // Get the last child node
+      let lastChild = element.lastChild;
 
-    // Set the range to the end of the content
-    if (lastChild) {
-      range.setStart(lastChild, lastChild.textContent?.length || 0);
-      range.setEnd(lastChild, lastChild.textContent?.length || 0);
+      // If the last child is a text node, set the range at its end
+      if (lastChild.nodeType === Node.TEXT_NODE) {
+        range.setStart(lastChild, lastChild.textContent?.length || 0);
+        range.setEnd(lastChild, lastChild.textContent?.length || 0);
+      } else {
+        // If the last child is not a text node (e.g., <br>), set the range at the end of the element
+        range.setStartAfter(lastChild);
+        range.setEndAfter(lastChild);
+      }
+    } else {
+      // If there are no child nodes, create an empty text node to set the cursor
+      const textNode = document.createTextNode('');
+      element.appendChild(textNode);
+      range.setStart(textNode, 0);
+      range.setEnd(textNode, 0);
     }
 
     // Get the selection object
@@ -441,11 +477,22 @@ export default function ComposePage() {
   };
 
 
+
   const handleInput = (inputTextArea = null) => {
     const textarea = inputTextArea == null ? textareaRef : inputTextArea;
     if (textarea.current) {
       if (inputTextArea == null) {
-        setPostCaption(textarea.current.value)
+        const text = textarea.current.innerText;
+        // add link previews
+        const highlightedText = text.replace(/(^|\s)#(\w+)\b/g, '$1<span style="color: #3b82f6;">#$2</span>');
+        const urlRegex = /(^|\s)((https?:\/\/|www\.)?[A-Za-z0-9-]{1,63}(?<!-)\.[A-Za-z]{2,6}(\/[^\s]*)?)/gi;
+        const lastHightlited = highlightedText.replace(urlRegex, '$1<span style="color: #3b82f6;">$2</span>')
+        textarea.current.innerHTML = lastHightlited;
+        setPostCaption(lastHightlited);
+        // Move the cursor to the end after setting innerHTML
+        if (text != '') {
+          setCursorToEnd(textarea.current);
+        }
       } else {
         // width
       }
@@ -486,7 +533,14 @@ export default function ComposePage() {
       }, 2000); // Simulated save duration (e.g., API call duration)
     }, 2000);
 
-  }
+  };
+
+  useEffect(() => {
+    const unique = checkedProfile.reduce((acc, profile) => {
+      return profile.unique ? acc + 1 : acc;
+    }, 0);
+    setShowPlus(checkedProfile.length > unique);
+  }, [checkedProfile]);
 
   useEffect(() => {
     const div = divRef.current;
@@ -536,6 +590,16 @@ export default function ComposePage() {
       textareaRef.current.dispatchEvent(event);
     }
   }
+
+
+  const platformIcons = {
+    'LinkedIn': <FaLinkedin color='#0a66c2' size={17} />,
+    'Youtube': <FaYoutube color='#FF0000' size={17} />,
+    'Facebook': <FaFacebook color='#0866ff' size={17} />,
+    'Instagram': <Instagram color='#833ab4' size={17} />,
+    'Threads': <SiThreads color='#89CFF0' size={17} />,
+    'TikTok': <FaTiktok color='#000000' size={17} />,
+  };
 
   return (
     <div className={styles.container}>
@@ -604,37 +668,138 @@ export default function ComposePage() {
             Generate hashtag
           </div>
         )}
-        <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
-          <CreatePostHeader divRef={divRef} />
-          <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
-            {photosInPost.map((photo, index) => (
-              <div
-                className={styles.photoItem}
+        <div style={{ width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            {checkedProfile.length > 1 &&
+              <div className='text-gray-600' style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer', fontSize: '12px',
+                borderBottom: postVariationKey == "GenericTemplate" ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
+              }}
                 onClick={() => {
-                  if (photo.beingEdited) return;
-                  setMediaBeingEditedUrl(photo.regUrl)
-                  mediaIsGif.current = photo.isGif
-                  mediaBeingEditedId.current = photo.id
-                  setShowEditMediaModal(true)
+                  if (textareaRef.current) textareaRef.current.innerHTML = postVariations["GenericTemplate"].postCaption
+                  setPostVariationKey("GenericTemplate")
                 }}
-                style={{ width: 'auto', height: 'auto', position: 'relative', }}>
-                <div className={styles.overlay} style={{ color: 'white' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line">
-                    <path d="M12 20h9" />
-                    <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" />
-                    <path d="m15 5 3 3" />
-                  </svg>
-                </div>
-                <div style={{ height: '55px', width: `${55 * photo.naturalAspectRatio}px` }}>
-                  {!photo.beingEdited ? <img src={photo.smallUrl} style={{ width: '100%', height: '100%', borderRadius: '5px' }} /> :
-                    <div className={styles.skeleton}></div>}
-                </div>
+              >
+                Generic Template
               </div>
-            ))}
+            }
+            {checkedProfile
+              .filter((profile, index) => profile.unique && profile.active)
+              .map((profile) => {
+                const key = `${profile.platform}-${profile.name}-${profile.id}`;
+
+                return (
+
+                  <Popover>
+                    <PopoverTrigger asChild >
+                      <div
+                        onClick={(e) => {
+
+                          if (postVariationKey == key) {
+                            e.nativeEvent.stopImmediatePropagation()
+                          e.stopPropagation()
+                          console.log("CLICKKKD")
+                              setDeleteVersionPopoverHidden(false)
+                          } else {
+                            if (textareaRef.current) textareaRef.current.innerHTML = postVariations[key].postCaption
+                            setPostVariationKey(key)
+                            setDeleteVersionPopoverHidden(true)
+                          }
+                          
+                        }}
+                        style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer',
+                          borderBottom: postVariationKey == key ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
+                        }}>
+                        {platformIcons[profile.platform]}
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" className="w-39 shadow-md !p-3 rounded-lg border-[0.5px] alig" hidden={(postVariationKey != key || deleteVersionPopoverHidden)}>
+                      <Button 
+                      onClick={() => setShowDeletionConfirmationModal(true)}
+                      className='text-red-700 shadow-none bg-white hover:bg-[#ffecec9e] transition transition-duration-200 color transition-color'>Delete Version</Button>
+                    </PopoverContent>
+                  </Popover>
+                )
+              })}
+            {(showPlus && checkedProfile.length > 1) && <Popover>
+              <PopoverTrigger asChild>
+                <div
+                  onClick={() => setIsPopoverHidden(false)}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer' }}>
+                  <Plus size={15} strokeWidth={2} color='black' />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 shadow-none !p-3 rounded-lg border-[0.5px] border-gray-100" hidden={isPopoverHidden}>
+                <div style={{ padding: '0px', display: 'flex', flexDirection: 'column', marginBottom: '9px' }}>
+                  <p style={{ fontWeight: '500', fontSize: '14px' }}>Modify post for</p>
+                </div>
+                <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
+                  {checkedProfile
+                    .filter((profile, index) => !profile.unique && profile.active)
+                    .map((profile) => (
+                      <div
+                        onClick={() => {
+                          // if alrdy in setPostVariations set key and if not add it and set properties
+                          const key = `${profile.platform}-${profile.name}-${profile.id}`;
+                          if (!Object.keys(postVariations).some(postVar => postVar == key)) {
+                            setPostVariations((prev) => ({
+                              ...prev, [key]: {
+                                postCaption: postVariations[postVariationKey].postCaption,
+                                postMedia: photosInPost
+                              }
+                            }))
+                          }
+                          setCheckedProfile((prev) => prev.map((p) => {
+                            if (p.id == profile.id) {
+                              return { ...p, unique: true }
+                            }
+                            return p;
+                          }))
+                          setPostVariationKey(key);
+                          setIsPopoverHidden(true);
+                        }}
+                        className='bg-gray-100 rounded-sm pr-3 !py-1 px-1' style={{ display: 'flex', gap: '3px', alignItems: 'center', fontSize: '12px', cursor: 'pointer', color: '#2d3748' }}>
+                        {platformIcons[profile.platform]} {` ${profile.name}`}
+                      </div>
+                    ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            }
+          </div>
+          <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
+            {/* If theyhange for a specific platform it no longer inherits from generic */}
+            <CreatePostHeader divRef={divRef} />
+            <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
+              {photosInPost.map((photo, index) => (
+                <div
+                  className={styles.photoItem}
+                  onClick={() => {
+                    if (photo.beingEdited) return;
+                    setMediaBeingEditedUrl(photo.regUrl)
+                    mediaIsGif.current = photo.isGif
+                    mediaBeingEditedId.current = photo.id
+                    setShowEditMediaModal(true)
+                  }}
+                  style={{ width: 'auto', height: 'auto', position: 'relative', }}>
+                  <div className={styles.overlay} style={{ color: 'white' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line">
+                      <path d="M12 20h9" />
+                      <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" />
+                      <path d="m15 5 3 3" />
+                    </svg>
+                  </div>
+                  <div style={{ height: '55px', width: `${55 * photo.naturalAspectRatio}px` }}>
+                    {!photo.beingEdited ? <img src={photo.smallUrl} style={{ width: '100%', height: '100%', borderRadius: '5px' }} /> :
+                      <div className={styles.skeleton}></div>}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
 
         <div className={styles.toolsSection}>
           <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
@@ -939,6 +1104,7 @@ export default function ComposePage() {
                     <div className={styles.textAreaWrapper}>
                       <div
                         contentEditable={true}
+                        spellCheck={false}
                         ref={notesInput}
                         className={`${styles.editableDiv} ${styles.textarea}`}
                         onInput={(e) => {
@@ -1004,8 +1170,8 @@ export default function ComposePage() {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             gap: '5px',
-                            flex:'0 0 auto',
-                            cursor:'pointer'
+                            flex: '0 0 auto',
+                            cursor: 'pointer'
                             // backgroundColor: 'white',
                           }}
                           onClick={() => setSelectedVariable(index)}
@@ -1290,12 +1456,13 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
 
   return (
     <div className={styles.textAreaWrapper}>
-      <textarea
-        className={styles.textarea}
-        placeholder="What would you like to share?"
+      <div
+        className={`${styles.textarea} ${styles.createPostPlaceholder}`}
         onInput={() => handleInput(null)}
         ref={textareaRef}
-      ></textarea>
+        spellCheck={false}
+        contentEditable={true}
+      ></div>
       <div className={styles.iconRowInCreatePost}>
         <div
           className={styles.createPostIcon}>

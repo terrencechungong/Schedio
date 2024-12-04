@@ -5,7 +5,7 @@ import styles from '../ScssModules/postpreview.module.scss'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export const PostPreviewComponent: React.FC = () => {
-    const { postCaption, photosInPost } = useModalStatesContext();
+    const { postVariations, photosInPost, postVariationKey } = useModalStatesContext();
 
     return (
         <div className={styles.container}>
@@ -17,7 +17,11 @@ export const PostPreviewComponent: React.FC = () => {
                     <p style={{ fontSize: '14px' }}>Post Preview</p>
                 </div>
                 <div className={styles.genericPostPreviewCaption}>
-                    <p style={{ fontSize: '13px', margin: 0, padding: 0, }}>{postCaption}</p>
+                    <div
+                        dangerouslySetInnerHTML={{ __html: postVariations[postVariationKey].postCaption }}
+                    >
+
+                    </div>
                 </div>
 
                 <div style={{ width: '100%' }}>
@@ -319,32 +323,33 @@ export const PostPreviewComponent: React.FC = () => {
                                             console.log("fourth")
                                             return (
                                                 <div
-                                                style={{
-                                                    width: '100%',
-                                                    minWidth: '100%',
-                                                    height: '100%',
-                                                    overflow: 'hidden',
-                                                    position:'relative'
-                                                }}
-                                            >
-                                                  <div style={{width:'100%', height:'100%', backgroundColor:'rgb(0,0,0,0.4)', 
-                                                        display:'flex', alignItems:'center', justifyContent:'center', position:'absolute'
-                                                    }}>
-                                                        <p style={{fontWeight:'700', fontSize:'20px', color:'white'}}>{`+${photosInPost.length - 5}`}</p>
-                                                    </div>
-                                                <img
-                                                    src={photo.regUrl}
-                                                    alt="Photo"
                                                     style={{
+                                                        width: '100%',
                                                         minWidth: '100%',
-                                                        width: 'auto',
                                                         height: '100%',
-                                                        objectFit: 'cover', // Ensures the image covers its container
+                                                        overflow: 'hidden',
+                                                        position: 'relative'
                                                     }}
-                                                />
-                                            </div>
-                                                  
-                                                 
+                                                >
+                                                    <div style={{
+                                                        width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0.4)',
+                                                        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute'
+                                                    }}>
+                                                        <p style={{ fontWeight: '700', fontSize: '20px', color: 'white' }}>{`+${photosInPost.length - 5}`}</p>
+                                                    </div>
+                                                    <img
+                                                        src={photo.regUrl}
+                                                        alt="Photo"
+                                                        style={{
+                                                            minWidth: '100%',
+                                                            width: 'auto',
+                                                            height: '100%',
+                                                            objectFit: 'cover', // Ensures the image covers its container
+                                                        }}
+                                                    />
+                                                </div>
+
+
                                             )
                                         }
                                     })}

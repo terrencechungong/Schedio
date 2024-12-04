@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject, MutableRefObject } from "react";
+import React, { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject, MutableRefObject } from "react";
 import localFont from "next/font/local";
 import "./globals.scss";
 
@@ -28,12 +28,24 @@ interface PhotoInPost {
   naturalAspectRatio: number;
 }
 
+interface CheckedProfile {
+  id: number;
+  name: string;
+  platform: string;
+  unique: boolean;
+  active: boolean;
+}
+
+interface PostVariationData {
+  postCaption: string;
+  postMedia: PhotoInPost[]
+}
+
 interface ModalStatesContextType {
   showMediaModal: boolean;
   setShowMediaModal: React.Dispatch<React.SetStateAction<boolean>>;
   textareaRef: RefObject<HTMLTextAreaElement>;
-  setPostCaption: React.Dispatch<React.SetStateAction<string>>;
-  postCaption: string;
+  setPostCaption: (postCaption: string) => void;
   showAiGenCaption: boolean;
   setShowAiGenCaption: React.Dispatch<React.SetStateAction<boolean>>;
   showAddLabelFromSchedulePost: boolean;
@@ -59,11 +71,20 @@ interface ModalStatesContextType {
   setPhotosInPost: React.Dispatch<React.SetStateAction<PhotoInPost[]>>;
   mediaBeingEditedId: MutableRefObject<string>;
   mediaIsGif: MutableRefObject<boolean>;
+  checkedProfile: CheckedProfile[];
+  setCheckedProfile: React.Dispatch<React.SetStateAction<CheckedProfile[]>>;
+  postVariationKey: string;
+  setPostVariationKey: React.Dispatch<React.SetStateAction<string>>;
+  postVariations: { [key: string]: PostVariationData };
+  setPostVariations: React.Dispatch<React.SetStateAction<{ [key: string]: PostVariationData }>>;
+  showDeletionConfirmationModal: boolean;
+  setShowDeletionConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [checkedProfile, setCheckedProfile] = useState<CheckedProfile[]>([]);
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
   const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState(false)
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
@@ -73,21 +94,38 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
   const [showAdobeEditor, setShowAdobeEditor] = useState<boolean>(false);
+  const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState<boolean>(false);
   const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
-  const [postCaption, setPostCaption] = useState<string>("");
   const [photosInPost, setPhotosInPost] = useState<PhotoInPost[]>([]);
   const [mediaBeingEditedUrl, setMediaBeingEditedUrl] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const imgContainer = useRef<HTMLDivElement | null>(null);
   const mediaIsGif = useRef(false);
   const mediaBeingEditedId = useRef<string>("");
+  const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
+  const [postVariations, setPostVariations] = useState<{ [key: string]: PostVariationData }>({
+    "GenericTemplate": {
+      postCaption: "",
+      postMedia: [],
+    }
+  })
+
+  // setPostCaption is a function that sets the selected key
+  const setPostCaption = (postCaption: string) => {
+    setPostVariations((prev) => ({
+      ...prev,
+      [postVariationKey]: {
+        ...prev[postVariationKey],
+        postCaption,
+      },
+    }));
+  }
 
   return (
     <ModalStatesContext.Provider value={{
       showMediaModal,
       setShowMediaModal,
       textareaRef,
-      postCaption,
       setPostCaption,
       showAiGenCaption,
       setShowAiGenCaption,
@@ -113,7 +151,15 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       mediaBeingEditedId,
       photosInPost,
       setPhotosInPost,
-      mediaIsGif
+      mediaIsGif,
+      checkedProfile,
+      setCheckedProfile,
+      postVariationKey,
+      setPostVariationKey,
+      postVariations,
+      setPostVariations,
+      showDeletionConfirmationModal,
+      setShowDeletionConfirmationModal
     }}>
       {children}
     </ModalStatesContext.Provider>

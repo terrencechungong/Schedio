@@ -4,18 +4,20 @@ import { FaYoutube } from "react-icons/fa";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Instagram } from 'lucide-react'
-import {  FaPinterest, FaTiktok } from 'react-icons/fa'
+import { FaPinterest, FaTiktok } from 'react-icons/fa'
 import { FaFacebook } from "react-icons/fa";
 import { SiGooglemybusiness, SiThreads } from "react-icons/si";
 import { useState } from "react";
+import { useModalStatesContext } from "@/app/layout";
 
 
 interface PlatFormInput {
     platformName: string;
 }
 
-export const SelectAccountForPost: React.FC<PlatFormInput> = ({platformName}) => {
+export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName }) => {
     // X, Threads, facebook, ig, tiktok
+    const { setCheckedProfile, checkedProfile } = useModalStatesContext();
     const [accounts, setAccounts] = useState([{ id: 0, name: 'Terrence Chungong', checked: false }, { id: 1, name: 'Agha Igwacho', checked: false }]);
     const platformColors = {
         'LinkedIn': '#0a66c2',
@@ -26,7 +28,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({platformName}) =>
         'TikTok': '#000000',
     };
     const platformIcons = {
-        'LinkedIn':  <FaLinkedin color='#0a66c2' /> ,
+        'LinkedIn': <FaLinkedin color='#0a66c2' />,
         'Youtube': <FaYoutube color='#FF0000' />,
         'Facebook': <FaFacebook color='#0866ff' />,
         'Instagram': <Instagram color='#833ab4' />,
@@ -46,11 +48,26 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({platformName}) =>
                 <p style={{ color: 'black' }}>{platformName}</p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '17px' }}>
+                {/* change to hashmap */}
                 {accounts.map((account) => <AccountRow checkColor={color} checked={account.checked} name={account.name}
-                    setChecked={(val: boolean) => setAccounts((prev) => prev.map((p) => {
-                        if (p.id == account.id) return { ...p, checked: val };
-                        return p;
-                    }))} />)}
+                    setChecked={(val: boolean) => {
+                        // console.log("CHECKKKK", checkedProfile)
+                        setAccounts((prev) => prev.map((p) => {
+                            if (p.id == account.id) return { ...p, checked: val };
+                            return p;
+                        }));
+                        if (checkedProfile.some(profile => profile.id === account.id)) {
+                            // console.log("dksjdksdjskd", checkedProfile)
+                            setCheckedProfile((prev) =>
+                                prev.map((p) => {
+                                    if (p.id == account.id) return { ...p, active: val };
+                                    return p;
+                                }))
+                        } else {
+                            // console.log("CHECKKKK after", checkedProfile)
+                            setCheckedProfile((prev) => [...prev, { id: account.id, name: account.name, platform: platformName, unique: false, active: true }]);
+                        }
+                    }} />)}
             </div>
         </div>
 
@@ -80,7 +97,7 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setC
                 <AvatarFallback style={{ width: '22px', height: '22px' }}>CN</AvatarFallback>
             </Avatar>
 
-            <p style={{ fontWeight: '400', fontSize: '12.5px', color:'black' }}>
+            <p style={{ fontWeight: '400', fontSize: '12.5px', color: 'black' }}>
                 {name}
             </p>
         </div>

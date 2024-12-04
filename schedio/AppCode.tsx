@@ -12,6 +12,7 @@ import { AddTeamMemberModal } from "./app/team/modals/AddTeamMemberModal";
 import { TriggerInformation } from "./app/automation/Modals/TriggerInformation";
 import { EditMediaModal } from "./app/compose/Modals/EditMediaModal";
 import AdobeEditor from "./app/compose/Modals/AdobeEditor";
+import { DeleteVersionConfirmationModal } from "./app/compose/Modals/DeleteVersionConfirmationModal";
 
 
 
@@ -23,12 +24,17 @@ export default function AppCode({
 }>) {
 
     const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal, showAdobeEditor,
-        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal, showEditMediaModal
+        showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal, showEditMediaModal,
+        showDeletionConfirmationModal
     } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh', flex: '0 0 auto', maxWidth: '100vw' }}>
+            <AnimatePresence>
+            {showDeletionConfirmationModal &&
+                <DeleteVersionConfirmationModal/>}
+            </AnimatePresence>
             {showAdobeEditor && <AdobeEditor  />}
             <AnimatePresence>
                 {showEditMediaModal &&
