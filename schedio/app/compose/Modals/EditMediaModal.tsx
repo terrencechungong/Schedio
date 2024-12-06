@@ -130,7 +130,7 @@ export const EditMediaModal = () => {
                     {(!cropping && !mediaIsGif.current) && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
                         <Button
                             onClick={() => setShowAdobeEditor(true)}
-                            className="p-5 bg-white text-black bg-gray-300 hover:bg-gray-400 shadow-none">Edit with <img src={adobeIcon.src} style={{ width: '20px', height: '20px' }} /></Button>
+                            className="p-5 text-black bg-gray-300 hover:bg-gray-400 shadow-none">Edit with <img src={adobeIcon.src} style={{ width: '20px', height: '20px' }} /></Button>
                         <Button
                             onClick={() => setCropping(true)}
                             className="p-5 bg-white hover:bg-blue-100 text-blue-700 shadow-none">
@@ -139,7 +139,7 @@ export const EditMediaModal = () => {
                     {(cropping && !mediaIsGif.current) && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
                         <Button
                             onClick={() => setCropping(false)}
-                            className="p-5 bg-white text-black bg-gray-300 hover:bg-gray-400 shadow-none">Discard Crop</Button>
+                            className="p-5 text-black bg-gray-300 hover:bg-gray-400 shadow-none">Discard Crop</Button>
                         <Button
                             onClick={() => getCroppedPhotoBlob(previewCanvasRef.current, saveToCloudinary)}
                             className="p-5 bg-[#5cc98d] hover:bg-[#48a071] text-white shadow-none">
@@ -151,3 +151,6 @@ export const EditMediaModal = () => {
 
     )
 }
+
+
+//remove bg white

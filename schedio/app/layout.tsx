@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject, MutableRefObject } from "react";
 import localFont from "next/font/local";
 import "./globals.scss";
+import { Toaster } from "@/components/ui/toaster"
 
 import { usePathname } from 'next/navigation'; // Use usePathname for current route
 import AppCode from "@/AppCode";
@@ -26,6 +27,21 @@ interface PhotoInPost {
   smallUrl: string;
   regUrl: string;
   naturalAspectRatio: number;
+}
+
+export interface VideoInPostThumbnail {
+  url: string;
+  naturalAspectRatio: number;
+  fileType: string;
+}
+
+interface VideoInPost {
+  fileType: string;
+  beingEdited: boolean;
+  url: string;
+  naturalAspectRatio: number;
+  defined: boolean;
+  thumbnail: VideoInPostThumbnail | null;
 }
 
 interface CheckedProfile {
@@ -82,6 +98,12 @@ interface ModalStatesContextType {
   setShowDeletionConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
   postTypeIsShort: boolean;
   setPostTypeIsShort: React.Dispatch<React.SetStateAction<boolean>>;
+  showAddShortVideoModal: boolean;
+  setShowAddShortVideoModal: React.Dispatch<React.SetStateAction<boolean>>;
+  shortVideoForPostData: VideoInPost;
+  setShortVideoForPostData: React.Dispatch<React.SetStateAction<VideoInPost>>;
+  showEditVideoModal: boolean;
+  setShowEditVideoModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -89,14 +111,24 @@ export const ModalStatesContext = createContext<ModalStatesContextType | undefin
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [checkedProfile, setCheckedProfile] = useState<CheckedProfile[]>([]);
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
+  const [showEditVideoModal, setShowEditVideoModal] = useState(false)
   const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState(false)
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
+  const [shortVideoForPostData, setShortVideoForPostData] = useState<VideoInPost>({
+    fileType: "",
+    beingEdited: false,
+    url: "",
+    naturalAspectRatio: 0,
+    defined: false,
+    thumbnail: null
+  });
   const [showAiGenCaption, setShowAiGenCaption] = useState<boolean>(false);
   const [showSelectPostTimeModal, setShowSelectPostTimeModal] = useState<boolean>(false);
   const [showTriggerInfoModal, setShowTriggerInfoModal] = useState<boolean>(false);
   const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
   const [showAdobeEditor, setShowAdobeEditor] = useState<boolean>(false);
+  const [showAddShortVideoModal, setShowAddShortVideoModal] = useState(false);
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState<boolean>(false);
   const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
   const [photosInPost, setPhotosInPost] = useState<PhotoInPost[]>([]);
@@ -164,8 +196,14 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setPostVariations,
       showDeletionConfirmationModal,
       setShowDeletionConfirmationModal,
+      showEditVideoModal,
+      setShowEditVideoModal,
       postTypeIsShort,
-      setPostTypeIsShort
+      setPostTypeIsShort,
+      showAddShortVideoModal,
+      setShowAddShortVideoModal,
+      shortVideoForPostData,
+      setShortVideoForPostData
     }}>
       {children}
     </ModalStatesContext.Provider>
@@ -199,6 +237,7 @@ export default function RootLayout({
             {children}
           </AppCode>
         </ModalStatesProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ import { AddMediaPhotosTabContent } from "../MediaRelatedComponents/AddMediaPhot
 import { motion } from 'framer-motion';
 
 export const AddMediaModal: React.FC = () => {
-    const { showMediaModal, setShowMediaModal } = useModalStatesContext();
+    const { setShowMediaModal } = useModalStatesContext();
     const containerStyle: React.CSSProperties = {
         position: 'absolute',
         width: '100vw',

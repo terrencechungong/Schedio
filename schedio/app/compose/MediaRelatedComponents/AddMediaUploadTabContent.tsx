@@ -41,10 +41,6 @@ export const AddMediaUploadTabContent: React.FC = () => {
                     isGif: false,
                 };
 
-                console.log('Width:', width);
-                console.log('Height:', height);
-                console.log('File Type:', fileType);
-                console.log(url)
                 setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: true }]);
                 setShowMediaModal(false);
                 URL.revokeObjectURL(url);
@@ -62,8 +58,6 @@ export const AddMediaUploadTabContent: React.FC = () => {
                 );
 
                 const data = await uploadResponse.json();
-                console.log(data)
-                console.log('Uploaded image URL:', data.secure_url);
                 setPhotosInPost((prev) => prev.map((post, idx) => {
                     if (post.id != id) return post;
                     return { ...post, beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url }
@@ -71,7 +65,6 @@ export const AddMediaUploadTabContent: React.FC = () => {
             };
 
             img.onerror = () => {
-                console.error('Error loading image');
                 URL.revokeObjectURL(url);
             };
 
@@ -82,7 +75,7 @@ export const AddMediaUploadTabContent: React.FC = () => {
     };
 
 
-
+    // MUST CONFIRM THE FILE TYPR AND USE TOAST
     async function handleImageUrl() {
         if (!inputRef.current) return;
         const url = inputRef.current.value;
@@ -147,12 +140,6 @@ export const AddMediaUploadTabContent: React.FC = () => {
                 id,
                 isGif: fileType.toLowerCase().includes('gif'),
             };
-
-            console.log('Width:', width);
-            console.log('Height:', height);
-            console.log('File Type:', fileType);
-            console.log('URL:', url);
-
             // Proceed with your function
             setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: false }]);
             setShowMediaModal(false);
@@ -172,7 +159,7 @@ export const AddMediaUploadTabContent: React.FC = () => {
                 <FcAddImage style={{ width: '105px', height: '105px' }} />
                 <div style={{ textAlign: 'center' }}>
                     <p >Drag and drop your media, or click to upload files</p>
-                    <i style={{ color: 'rgb(120, 120, 120)', fontSize: '14pxs' }}>image/jpeg, image/png, image/gif, video/mp4, video/quicktime</i>
+                    <i style={{ color: 'rgb(120, 120, 120)', fontSize: '14px' }}>image/jpeg, image/png, image/gif, video/mp4, video/quicktime</i>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', width: '66%' }}>
                     <hr style={{ flex: 1, border: 'none', borderTop: '1px solid rgb(160, 160, 160)' }} />

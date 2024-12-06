@@ -1,7 +1,7 @@
 "use client"
 import { CircleUser, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-react';
 import { useModalStatesContext } from '@/app/layout';
-import styles from '../ScssModules/postpreview.module.scss'
+import styles from '../ScssModules/postpreview.module.scss';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export const PostPreviewComponent: React.FC = () => {

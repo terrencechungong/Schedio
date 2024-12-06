@@ -1,0 +1,13 @@
+.xIcon {
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 6px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    &:hover {
+        background-color: #F2F2F2;
+    }
+}

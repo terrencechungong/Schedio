@@ -78,7 +78,8 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
             return
         } 
         const shortFormSelectedCount = checkedProfile.filter(profile => profile.active && profile.isShortForm).length;
-        if (!activating && shortFormSelectedCount == 0 && contentTypeIsShort) {
+        console.log(!activating, shortFormSelectedCount, contentTypeIsShort)
+        if (!activating && shortFormSelectedCount < 2 && contentTypeIsShort) {
             setPostTypeIsShort(false)
         }
     }

@@ -2,39 +2,30 @@
 // subtract 10 min
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, WandSparkles, Wrench, X } from 'lucide-react';
+import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, Video, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
 import { ModalStatesContext, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanel } from './ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
-import lightbulb from '@/app/assets/light-bulb-with-removebg-preview (2).png'
-import { GetInspirationHeader, PostTemplatesHeader, UseHashtagsHeader, UseVariablesHeader, VariablesHeader } from './SimpleUIComponents/ToolCardHeader';
 import { Button } from '@/components/ui/button';
-import { MoveRight } from 'lucide-react';
+import Tooltip from '@mui/material/Tooltip';
 import templateIcon from '../assets/interface.png'
 import hashtagIcon from '../assets/hashchc.png'
 import notepad from '../assets/check-list.png';
-import variableIcon from '../assets/independent-variable.png'
 import browser from '../assets/savedtemps.png';
-import settings from '../assets/settings.png';
-import settings1 from '../assets/settings (1).png';
 import { AnimatePresence, motion } from 'framer-motion';
 import variable from '../assets/algorithm.png'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '../app-sidebar';
-import { VariablesBoxDiv } from './SimpleUIComponents/ToolInnerBoxDiv';
 import { FaCircleCheck } from "react-icons/fa6";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FaFacebook, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { SiThreads } from 'react-icons/si';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
   const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
-    checkedProfile, setCheckedProfile, setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal
+    checkedProfile, setCheckedProfile, setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
+    postTypeIsShort, setShowEditVideoModal
   } = useModalStatesContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
@@ -43,7 +34,6 @@ export default function ComposePage() {
   const toolRef = useRef<HTMLDivElement | null>(null)
   const [showAiGenTemplate, setShowAiGenTemplate] = useState(false);
   const [showPostInternalNotes, setShowPostInternalNotes] = useState(false);
-  const hoverStates = { emojiHover: useState(false), cameraHover: useState(false), wandHover: useState(false), hashtagHover: useState(false) };
   const previousNote = useRef("");
   const notesInput = useRef(null);
   const [selectedTemplateIdxForGroup, setSelectedTemplateIdxForGroup] = useState(0);
@@ -60,6 +50,7 @@ export default function ComposePage() {
   const [showPlus, setShowPlus] = useState(false);
   const [isPopoverHidden, setIsPopoverHidden] = useState(false);
   const [deleteVersionPopoverHidden, setDeleteVersionPopoverHidden] = useState(true);
+  const [showGenericTemplate, setShowGenericTemplate] = useState(false);
 
   const mockData = [
     {
@@ -537,9 +528,14 @@ export default function ComposePage() {
 
   useEffect(() => {
     const unique = checkedProfile.reduce((acc, profile) => {
-      return profile.unique ? acc + 1 : acc;
+      return profile.unique && profile.active ? acc + 1 : acc;
     }, 0);
-    setShowPlus(checkedProfile.length > unique);
+    const active = checkedProfile.reduce((acc, profile) => {
+      return profile.active ? acc + 1 : acc;
+    }, 0);
+    setShowPlus(active > 1 && (active - unique > 1));
+    setShowGenericTemplate(active > 1);
+    // IF YOU CANT SHOW GENERIC SWITCH TO GENERIC (NO) AND HIDE THE OTHER PLATFORMS
   }, [checkedProfile]);
 
   useEffect(() => {
@@ -604,73 +600,9 @@ export default function ComposePage() {
   return (
     <div className={styles.container}>
       <div className={styles.composePostCenterDiv}>
-        {hoverStates.emojiHover[0] && (
-          <div
-            ref={moving}
-
-            style={{
-              position: 'absolute',
-              pointerEvents: 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '4px',
-            }}
-          >
-            Add emojis
-          </div>
-        )}
-        {hoverStates.cameraHover[0] && (
-          <div
-            ref={moving}
-
-            style={{
-              position: 'absolute',
-              pointerEvents: 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '4px',
-            }}
-          >
-            Add media
-          </div>
-        )}
-        {hoverStates.wandHover[0] && (
-          <div
-            ref={moving}
-
-            style={{
-              position: 'absolute',
-              pointerEvents: 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '4px',
-            }}
-          >
-            Generate caption
-          </div>
-        )}
-        {hoverStates.hashtagHover[0] && (
-          <div
-            ref={moving}
-
-            style={{
-              position: 'absolute',
-              pointerEvents: 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '4px',
-            }}
-          >
-            Generate hashtag
-          </div>
-        )}
         <div style={{ width: '100%' }}>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            {checkedProfile.length > 1 &&
+            {showGenericTemplate &&
               <div className='text-gray-600' style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer', fontSize: '12px',
                 borderBottom: postVariationKey == "GenericTemplate" ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
@@ -683,7 +615,7 @@ export default function ComposePage() {
                 Generic Template
               </div>
             }
-            {checkedProfile
+            {showGenericTemplate && checkedProfile
               .filter((profile, index) => profile.unique && profile.active)
               .map((profile) => {
                 const key = `${profile.platform}-${profile.name}-${profile.id}`;
@@ -697,15 +629,15 @@ export default function ComposePage() {
 
                           if (postVariationKey == key) {
                             e.nativeEvent.stopImmediatePropagation()
-                          e.stopPropagation()
-                          console.log("CLICKKKD")
-                              setDeleteVersionPopoverHidden(false)
+                            e.stopPropagation()
+                            console.log("CLICKKKD")
+                            setDeleteVersionPopoverHidden(false)
                           } else {
                             if (textareaRef.current) textareaRef.current.innerHTML = postVariations[key].postCaption
                             setPostVariationKey(key)
                             setDeleteVersionPopoverHidden(true)
                           }
-                          
+
                         }}
                         style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer',
@@ -715,14 +647,14 @@ export default function ComposePage() {
                       </div>
                     </PopoverTrigger>
                     <PopoverContent align="start" className="w-39 shadow-md !p-3 rounded-lg border-[0.5px] alig" hidden={(postVariationKey != key || deleteVersionPopoverHidden)}>
-                      <Button 
-                      onClick={() => setShowDeletionConfirmationModal(true)}
-                      className='text-red-700 shadow-none bg-white hover:bg-[#ffecec9e] transition transition-duration-200 color transition-color'>Delete Version</Button>
+                      <Button
+                        onClick={() => setShowDeletionConfirmationModal(true)}
+                        className='text-red-700 shadow-none bg-white hover:bg-[#ffecec9e] transition transition-duration-200 color transition-color'>Delete Version</Button>
                     </PopoverContent>
                   </Popover>
                 )
               })}
-            {(showPlus && checkedProfile.length > 1) && <Popover>
+            {showPlus && <Popover>
               <PopoverTrigger asChild>
                 <div
                   onClick={() => setIsPopoverHidden(false)}
@@ -771,9 +703,9 @@ export default function ComposePage() {
           <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
             {/* If theyhange for a specific platform it no longer inherits from generic */}
             <CreatePostHeader divRef={divRef} />
-            <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} hoverStates={hoverStates} />
+            <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
-              {photosInPost.map((photo, index) => (
+              {!postTypeIsShort ? photosInPost.map((photo, index) => (
                 <div
                   className={styles.photoItem}
                   onClick={() => {
@@ -796,7 +728,27 @@ export default function ComposePage() {
                       <div className={styles.skeleton}></div>}
                   </div>
                 </div>
-              ))}
+              )) :
+                (shortVideoForPostData.defined && <div
+                  className={styles.photoItem}
+                  style={{ width: 'auto', height: 'auto', position: 'relative', }}>
+                  <div className={styles.overlay} style={{ color: 'white' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line">
+                      <path d="M12 20h9" />
+                      <path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z" />
+                      <path d="m15 5 3 3" />
+                    </svg>
+                  </div>
+                  <div style={{ height: '55px', width: `${55 * shortVideoForPostData.naturalAspectRatio}px` }}
+                  onClick={() => {
+                    setMediaBeingEditedUrl(shortVideoForPostData.url)
+                    setShowEditVideoModal(true)
+                  }}
+                  >
+                    {!shortVideoForPostData.beingEdited ? <video src={shortVideoForPostData.url} style={{ width: '100%', height: '100%', borderRadius: '5px' }} /> :
+                      <div className={styles.skeleton}></div>}
+                  </div>
+                </div>)}
             </div>
           </div>
         </div>
@@ -1424,22 +1376,13 @@ export default function ComposePage() {
   );
 }
 
-interface HoverStates {
-  emojiHover: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  cameraHover: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  wandHover: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  hashtagHover: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-}
-
-
 interface TextAreaComponentInterface {
   handleInput: (inputTextArea: any) => void;
   onSmileClick: (event: React.MouseEvent<HTMLDivElement>) => void;
-  hoverStates: HoverStates;
 }
 
-const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, onSmileClick, hoverStates }) => {
-  const { setShowMediaModal, textareaRef, setShowAiGenCaption } = useModalStatesContext();
+const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, onSmileClick }) => {
+  const { setShowMediaModal, textareaRef, setShowAiGenCaption, postTypeIsShort, setShowAddShortVideoModal } = useModalStatesContext();
   const [hashtagsGenerating, setHashtagsGenerating] = useState(false);
 
   const generateHashtags = () => {
@@ -1468,28 +1411,37 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
           className={styles.createPostIcon}>
           <EllipsisVertical size={20} strokeWidth={1.5} />
         </div>
+        <Tooltip title="Add emoji" placement="top" arrow followCursor>
+          <div
+            className={styles.createPostIcon} onClick={(e) => onSmileClick(e)}>
+            <SmilePlus size={20} strokeWidth={1.5} />
+          </div>
+        </Tooltip>
+        {postTypeIsShort ?
+          (<Tooltip title="Select Short Video" placement="top" arrow followCursor>
+            <div
+              onClick={() => setShowAddShortVideoModal(true)}
+              className={styles.createPostIcon} >
+              <Video size={20} strokeWidth={1.5} />
+            </div>
+          </Tooltip>)
+          :
+          (<Tooltip title="Upload Media" placement="top" arrow followCursor>
+            <div
+              onClick={() => setShowMediaModal(true)}
+              className={styles.createPostIcon} >
+              <Camera size={20} strokeWidth={1.5} />
+            </div>
+          </Tooltip>)
+        }
+        <Tooltip title="AI Generated Caption" placement="top" arrow followCursor>
+          <div
+            className={styles.createPostIcon} onClick={() => setShowAiGenCaption(true)}>
+            <WandSparkles size={20} strokeWidth={1.5} />
+          </div>
+        </Tooltip>
+        <Tooltip title="AI Generated hashtags" placement="top" arrow followCursor>
         <div
-          onMouseEnter={() => hoverStates.emojiHover[1](true)}
-          onMouseLeave={() => hoverStates.emojiHover[1](false)}
-          className={styles.createPostIcon} onClick={(e) => onSmileClick(e)}>
-          <SmilePlus size={20} strokeWidth={1.5} />
-        </div>
-        <div
-          onMouseEnter={() => hoverStates.cameraHover[1](true)}
-          onMouseLeave={() => hoverStates.cameraHover[1](false)}
-          onClick={() => setShowMediaModal(true)}
-          className={styles.createPostIcon} >
-          <Camera size={20} strokeWidth={1.5} />
-        </div>
-        <div
-          onMouseEnter={() => hoverStates.wandHover[1](true)}
-          onMouseLeave={() => hoverStates.wandHover[1](false)}
-          className={styles.createPostIcon} onClick={() => setShowAiGenCaption(true)}>
-          <WandSparkles size={20} strokeWidth={1.5} />
-        </div>
-        <div
-          onMouseEnter={() => hoverStates.hashtagHover[1](true)}
-          onMouseLeave={() => hoverStates.hashtagHover[1](false)}
           className={styles.createPostIcon}
           onClick={() => {
             if (hashtagsGenerating) return;
@@ -1503,6 +1455,7 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
           )}
           {!hashtagsGenerating && <Hash size={20} strokeWidth={1.5} />}
         </div>
+        </Tooltip>
       </div>
     </div>
   )
