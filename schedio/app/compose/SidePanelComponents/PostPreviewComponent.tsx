@@ -3,13 +3,14 @@ import { CircleUser, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-rea
 import { useModalStatesContext } from '@/app/layout';
 import styles from '../ScssModules/postpreview.module.scss';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { PreviewForShorts } from './PreviewForShorts';
 
 export const PostPreviewComponent: React.FC = () => {
-    const { postVariations, photosInPost, postVariationKey } = useModalStatesContext();
+    const { postVariations, photosInPost, postVariationKey, postTypeIsShort } = useModalStatesContext();
 
     return (
         <div className={styles.container}>
-            <div className={styles.genericPostPreviewContainer}>
+            {!postTypeIsShort ? <div className={styles.genericPostPreviewContainer}>
                 <div className={styles.genericPostPreviewHeader}>
                     <Avatar>
                         <AvatarFallback style={{ backgroundColor: '#7d4ecd', color: 'white' }}>GP</AvatarFallback>
@@ -363,9 +364,11 @@ export const PostPreviewComponent: React.FC = () => {
                     <MessageSquareText size={16} />
                     <MoveUpRight size={16} />
                 </div>
-            </div>
-
-
+            </div> :
+                <div className={styles.shortPostPreviewContainer}>
+                    <PreviewForShorts />
+                </div>
+            }
         </div>
     )
 }

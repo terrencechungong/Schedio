@@ -9,19 +9,21 @@ import React from 'react';
 import { useEditVideoModalContext } from './EditVideoModalContext';
 import { ToastAction } from '@/components/ui/toast';
 import { Skeleton } from '@/components/ui/skeleton';
+import ImageCropper from '../ImageCropper';
 
 
 export const UploadThumbnailStepTwo = () => {
     const { setShowEditVideoModal, setShortVideoForPostData } = useModalStatesContext();
     const { setScreenPhase, thumbnailToBeSetNext, setThumbnailToBeSetNext } = useEditVideoModalContext();
-
+    const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
     const { toast } = useToast();
 
     const saveThumbnail = () => {
-        setShortVideoForPostData((prev) => ({ ...prev, thumbnail:thumbnailToBeSetNext }));
+        setShortVideoForPostData((prev) => ({ ...prev, thumbnail: thumbnailToBeSetNext }));
         toast({
-            description: "✅ Thumbnail successfully updated.",
+            description: "Thumbnail successfully updated ✅",
             duration: 5000,
+            className: 'w-[340px]'
         });
         setScreenPhase(0); // go back to main page
     }
@@ -29,11 +31,16 @@ export const UploadThumbnailStepTwo = () => {
     const discardThumbnail = () => {
         setScreenPhase(0); // go back to main page
         toast({
-            title: 'Thumbnail Discarded',
-            action: <ToastAction
-                onClick={() => setScreenPhase(1)}
-                altText="Undo">Undo</ToastAction>,
-            duration: 5000
+            description: (
+                <div className="flex items-center justify-between !p-0 !m-0" style={{ gap: '25px' }}>
+                    <span>Thumbnail discarded 🗑️</span>
+                    <ToastAction
+                        onClick={() => setScreenPhase(1)}
+                        altText="Undo">Undo</ToastAction>
+                </div>
+            ),
+            duration: 5000,
+            className: 'w-[315px] !p-3'
         })
     }
 
@@ -44,18 +51,18 @@ export const UploadThumbnailStepTwo = () => {
         </div>
         <div style={{ width: '100%', height: 'auto', marginBottom: '10px' }}>
             {/* CROP IMAGE HERRR */}
-            {thumbnailToBeSetNext.url != '' ? <img src={thumbnailToBeSetNext.url} style={{ width: '100%', height: '100%' }} /> :
-                 <Skeleton className="w-full" style={{height:'515px'}}/>
+            {thumbnailToBeSetNext.url != '' ? <ImageCropper forThumbnail={true} previewCanvasRef={previewCanvasRef} initialDimensions={9/16}/> :
+                <Skeleton className="w-full" style={{ height: '515px' }} />
             }
         </div>
-        <div style={{ width: '100%', alignItems:'center', display:'flex', justifyContent:'center', gap:'9px' }}>
+        <div style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'center', gap: '9px' }}>
             <Button
                 onClick={() => discardThumbnail()}
-                className="p-5 bg-accent text-black bg-gray-300 hover:bg-gray-400 shadow-none">Discard Thumbnail <Trash2 /></Button>
+                className="p-5 bg-accent text-black bg-gray-300 hover:bg-gray-400 shadow-none">Discard Thumbnail</Button>
             <Button
                 onClick={() => saveThumbnail()}
                 className="p-5 bg-[#5cc98d] hover:bg-[#48a071] text-white shadow-none">
-                Save Thumbnail <Check /></Button>
+                Save Thumbnail</Button>
         </div>
     </>
     )

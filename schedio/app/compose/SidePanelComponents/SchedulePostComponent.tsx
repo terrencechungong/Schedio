@@ -39,14 +39,12 @@ export const SchedulePostComponent: React.FC = () => {
                     <SelectAccountForPost contentTypeIsShort={false} platformName="LinkedIn" />
                     <SelectAccountForPost contentTypeIsShort={false} platformName="Facebook" />
                     <SelectAccountForPost contentTypeIsShort={false} platformName="Instagram" />
-
                 </div>
                 <p>PUBLISH REEL/SHORT</p>
                 <div className={styles.socialAccounts}>
                     <SelectAccountForPost contentTypeIsShort={true} platformName="Youtube" />
                     <SelectAccountForPost contentTypeIsShort={true} platformName="TikTok" />
                     <SelectAccountForPost contentTypeIsShort={true} platformName="Instagram" />
-
                 </div>
                 <div
                     style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}

@@ -9,6 +9,7 @@ import { FaFacebook } from "react-icons/fa";
 import { SiGooglemybusiness, SiThreads } from "react-icons/si";
 import { useEffect, use, useState } from "react";
 import { useModalStatesContext } from "@/app/layout";
+import Tooltip from '@mui/material/Tooltip';
 
 
 interface PlatFormInput {
@@ -53,8 +54,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
         // its not being deactivated
         const normalPostSelected = checkedProfile.some(profile => profile.active && !profile.isShortForm);
         const shortFormSelected = checkedProfile.some(profile => profile.active && profile.isShortForm);
-        console.log(normalPostSelected, shortFormSelected)
-        console.log(checkedProfile)
+
         if (contentTypeIsShort && normalPostSelected) {
             setDisabled(true);
         } else if (!contentTypeIsShort && shortFormSelected) {
@@ -76,11 +76,30 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
         if (activating && contentTypeIsShort && !postTypeIsShort) {
             setPostTypeIsShort(true)
             return
-        } 
+        }
         const shortFormSelectedCount = checkedProfile.filter(profile => profile.active && profile.isShortForm).length;
         console.log(!activating, shortFormSelectedCount, contentTypeIsShort)
         if (!activating && shortFormSelectedCount < 2 && contentTypeIsShort) {
             setPostTypeIsShort(false)
+        }
+    }
+
+    const setCheckedHandler = (val: boolean, account) => {
+        if (!disabled) {
+            setAccounts((prev) => prev.map((p) => {
+                if (p.id == account.id) return { ...p, checked: val };
+                return p;
+            }));
+            if (checkedProfile.some(profile => profile.id === account.id)) {
+                setCheckedProfile((prev) =>
+                    prev.map((p) => {
+                        if (p.id == account.id) return { ...p, active: val };
+                        return p;
+                    }))
+            } else {
+                setCheckedProfile((prev) => [...prev, { id: account.id, name: account.name, platform: platformName, unique: false, active: true, isShortForm: contentTypeIsShort }]);
+            }
+            toggleGlobalPostType(val)
         }
     }
 
@@ -93,29 +112,12 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '17px' }}>
                 {/* change to hashmap */}
-                {accounts.map((account) => <AccountRow disabled={disabled} checkColor={color} checked={account.checked} name={account.name}
-                    setChecked={(val: boolean) => {
-                        if (!disabled) {
-                            // console.log("CHECKKKK", checkedProfile)
-                            setAccounts((prev) => prev.map((p) => {
-                                if (p.id == account.id) return { ...p, checked: val };
-                                return p;
-                            }));
-                            if (checkedProfile.some(profile => profile.id === account.id)) {
-                                // console.log("dksjdksdjskd", checkedProfile)
-                                console.log("VALL", val)
-                                setCheckedProfile((prev) =>
-                                    prev.map((p) => {
-                                        if (p.id == account.id) return { ...p, active: val };
-                                        return p;
-                                    }))
-                            } else {
-                                // console.log("CHECKKKK after", checkedProfile)
-                                setCheckedProfile((prev) => [...prev, { id: account.id, name: account.name, platform: platformName, unique: false, active: true, isShortForm: contentTypeIsShort }]);
-                            }
-                            toggleGlobalPostType(val)
-                        }
-                    }} />)}
+                {accounts.map((account) => <AccountRow disabled={disabled}
+                    contentTypeIsShort={contentTypeIsShort}
+                    checkColor={color}
+                    checked={account.checked}
+                    name={account.name}
+                    setChecked={(val: boolean) => setCheckedHandler(val, account)} />)}
             </div>
         </div>
 
@@ -124,18 +126,27 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
 
 
 interface AccountRowInput {
+    contentTypeIsShort: boolean;
     checkColor: string;
     checked: boolean;
     name: string;
     setChecked: (val: boolean) => void;
     disabled: boolean;
 }
-const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setChecked, disabled }) => {
-
-    return (
+const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setChecked, disabled, contentTypeIsShort }) => {
+    // const platformIcons = {
+    //     'LinkedIn': <FaLinkedin color='#0a66c2' />,
+    //     'Youtube': <FaYoutube color='#FF0000' />,
+    //     'Facebook': <FaFacebook color='#0866ff' />,
+    //     'Instagram': <Instagram color='#833ab4' />,
+    //     'Threads': <SiThreads color='#89CFF0' />,
+    //     'TikTok': <FaTiktok color='#000000' />,
+    // };
+    const toolTipMessage = `Cannot use in combination with ${contentTypeIsShort ? 'a normal post' : 'a short or reel' }`
+    const accountRow = (
         <div
             onClick={() => setChecked(!checked)}
-            className={`${!disabled && 'hover:bg-gray-200'} p-2 rounded-md ${!disabled ? 'cursor-pointer': 'cursor-not-allowed'} transition-colors duration-200 ease-in-out`} style={{ display: 'flex', flexDirection: 'row', gap: '9px', alignItems: 'center' }}>
+            className={`${!disabled && 'hover:bg-gray-200'} p-2 rounded-md ${!disabled ? 'cursor-pointer' : 'cursor-not-allowed'} transition-colors duration-200 ease-in-out`} style={{ display: 'flex', flexDirection: 'row', gap: '9px', alignItems: 'center' }}>
             <Checkbox
                 id="terms"
                 disabled={disabled}
@@ -151,5 +162,10 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, checked, name, setC
                 {name}
             </p>
         </div>
-    )
+    );
+
+    return disabled ? <Tooltip title={toolTipMessage} placement="top" arrow followCursor>
+        {accountRow}
+    </Tooltip> : accountRow
+
 }

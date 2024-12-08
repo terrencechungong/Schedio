@@ -7,12 +7,14 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { DropdownMenuDemo } from '../SimpleUIComponents/SelectAspectRatio';
 
 interface ImageCropperInput {
-    previewCanvasRef: MutableRefObject<HTMLCanvasElement>
+    previewCanvasRef: MutableRefObject<HTMLCanvasElement>;
+    initialDimensions: number;
+    forThumbnail?: boolean;
 }
 
-const ImageCropper: React.FC<ImageCropperInput> = ({ previewCanvasRef }) => {
+const ImageCropper: React.FC<ImageCropperInput> = ({ previewCanvasRef, initialDimensions, forThumbnail }) => {
     const { mediaBeingEditedUrl } = useModalStatesContext();
-    const [dimensions, setDimensions] = useState(16 / 9);
+    const [dimensions, setDimensions] = useState(initialDimensions);
     const original = useRef<number | null>(null);
     const [crop, setCrop] = useState<Crop>({
         unit: '%',
@@ -83,9 +85,9 @@ const ImageCropper: React.FC<ImageCropperInput> = ({ previewCanvasRef }) => {
 
     return (
         <div style={{ position: 'relative', width: '100%' }}>
-            <div style={{ position: 'absolute', top: '2px', left: '2px', zIndex: 30 }}>
+            {!forThumbnail && <div style={{ position: 'absolute', top: '2px', left: '2px', zIndex: 30 }}>
                 <DropdownMenuDemo setDimensions={setDimensions} original={original.current} />
-            </div>
+            </div>}
             <ReactCrop
                 style={{ width: '100%' }}
                 crop={crop}
@@ -95,7 +97,7 @@ const ImageCropper: React.FC<ImageCropperInput> = ({ previewCanvasRef }) => {
                 keepSelection={true} // Optional: Keep the crop area visible after interaction
             >
                 <img
-                style={{ width: '100%' }}
+                    style={{ width: '100%' }}
                     crossOrigin="anonymous"
                     src={mediaBeingEditedUrl}
                     ref={imageRef}

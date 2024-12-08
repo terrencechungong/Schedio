@@ -33,6 +33,8 @@ export interface VideoInPostThumbnail {
   url: string;
   naturalAspectRatio: number;
   fileType: string;
+  thumbnailIsFromVideo?: boolean;
+  tumbnailTimestamp?: number;
 }
 
 interface VideoInPost {

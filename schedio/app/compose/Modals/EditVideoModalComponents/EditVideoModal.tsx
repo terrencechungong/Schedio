@@ -5,6 +5,8 @@ import { EditVideoMainPage } from './EditVideoMainPage';
 import { useEditVideoModalContext } from './EditVideoModalContext';
 import { EditVideoModalContextProvider } from './EditVideoModalContext'
 import { UploadThumbnailStepTwo } from './UploadThumbnailStepTwo';
+import { ViewThumbnail } from './ViewThumbnail';
+import { ChooseThumbnailFromVideo } from './ChooseThumbnailFromVideo';
 
 export const EditVideoModalWrapper = () => {
 
@@ -46,6 +48,8 @@ const EditVideoModal = () => {
                 className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
                 {screenPhase == 0 && <EditVideoMainPage />}
                 {screenPhase == 1 && <UploadThumbnailStepTwo />}
+                {screenPhase == 3 && <ViewThumbnail/>}
+                {screenPhase == 2 && <ChooseThumbnailFromVideo/>}
             </motion.div>
         </div>
     )

@@ -338,7 +338,6 @@ export default function ComposePage() {
   useEffect(() => {
     const handleScreenClick = () => {
       setDeleteVersionPopoverHidden(true);
-      console.log("sdssdjkdsjkjskksjjsjjjdsjjjj")
     };
 
     // Add event listener on mount
@@ -379,7 +378,7 @@ export default function ComposePage() {
     if (textareaRef.current) {
       if (selectedHashtagGroup == -1) return;
       // include unique only
-      textareaRef.current.value += ` ${hashtagGroups[selectedHashtagGroup].hashtags.join(" ")}`;
+      textareaRef.current.innerText += ` ${hashtagGroups[selectedHashtagGroup].hashtags.join(" ")}`;
       const event = new Event('input', { bubbles: true });
       textareaRef.current.dispatchEvent(event);
     }
@@ -388,7 +387,7 @@ export default function ComposePage() {
   const addHashtag = (hashtag: string) => {
     if (textareaRef.current) {
       // include unique only
-      textareaRef.current.value += ` ${hashtag}`
+      textareaRef.current.innerText += ` ${hashtag}`
       const event = new Event('input', { bubbles: true });
       textareaRef.current.dispatchEvent(event);
     }
@@ -398,7 +397,7 @@ export default function ComposePage() {
     if (textareaRef.current) {
       if (selectedVariable == -1) return;
       const varName = mockData[selectedVariable].name;
-      textareaRef.current.value += ` {{ ${varName} }} `;
+      textareaRef.current.innerText += ` {{ ${varName} }} `;
       const event = new Event('input', { bubbles: true });
       textareaRef.current.dispatchEvent(event);
     }
@@ -407,7 +406,7 @@ export default function ComposePage() {
   const addTemplateToCaption = (usingAi = false) => {
     if (textareaRef.current) {
       const temp = usingAi ? templateGroups[selectedAudeince].templates[selectedTemplateIdxForGroup] : socialMediaTemplates[selectedTemplate].template;
-      textareaRef.current.value = temp;
+      textareaRef.current.innerText = temp;
       const event = new Event('input', { bubbles: true });
       textareaRef.current.dispatchEvent(event);
     }
@@ -581,7 +580,7 @@ export default function ComposePage() {
 
   const addEmoji = (emoji: EmojiClickData) => {
     if (textareaRef.current) {
-      textareaRef.current.value += emoji.emoji;
+      textareaRef.current.innerText += emoji.emoji;
       const event = new Event('input', { bubbles: true });
       textareaRef.current.dispatchEvent(event);
     }
@@ -1392,7 +1391,7 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
       setHashtagsGenerating(false);
       if (textareaRef.current) {
         // adding hashtags
-        textareaRef.current.value += '#UnpopularOpinions #FascinatingBrains #WiredForConnection #SeekingAcceptance #ConformityDebate'
+        textareaRef.current.innerText += '#UnpopularOpinions #FascinatingBrains #WiredForConnection #SeekingAcceptance #ConformityDebate'
       }
     }, 1000);
   }

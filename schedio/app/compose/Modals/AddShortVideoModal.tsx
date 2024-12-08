@@ -1,6 +1,8 @@
 import { useModalStatesContext } from "@/app/layout";
 import { motion } from "framer-motion";
 import videoIcon from '../../assets/online-video_12670011.png'
+import videoCutIcon from '../../assets/video-editing-app.png'
+import videoEdit from '../../assets/Untitled design (1).png'
 import { X } from "lucide-react";
 import styles from '../ScssModules/addshortvideomodal.module.scss'
 import { useRef } from "react";
@@ -57,7 +59,9 @@ export const AddShortVideoModal = () => {
                     const thumbnail = {
                         url: thumbnailUrl,
                         naturalAspectRatio,
-                        fileType: 'image/png'
+                        fileType: 'image/png',
+                        thumbnailIsFromVideo: true,
+                        tumbnailTimestamp: 0.0
                     }
         
                     // Update state with the thumbnail URL and other metadata
@@ -102,7 +106,7 @@ export const AddShortVideoModal = () => {
                         if (inputFileRef) inputFileRef.current.click()
                     }}
                 >
-                    <img src={videoIcon.src} style={{ width: '105px', height: '105px' }} />
+                    <img src={videoEdit.src} style={{ width: '105px', height: '105px' }} />
                     <div style={{ alignSelf: 'center', textAlign: 'center' }}>
                         <p >Drag and drop, or click to upload your video</p>
                         <i style={{ color: 'rgb(120, 120, 120)', fontSize: '14px' }}>video/mp4, video/quicktime, video/mov</i>

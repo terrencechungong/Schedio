@@ -114,7 +114,7 @@ export const EditMediaModal = () => {
                 <div style={{ width: '100%', height: 'auto', marginBottom: '10px' }}>
                     {!cropping && <img src={mediaBeingEditedUrl} style={{ width: '100%', height: '100%' }} />}
                     {cropping && (
-                        <ImageCropper previewCanvasRef={previewCanvasRef} />
+                        <ImageCropper previewCanvasRef={previewCanvasRef} initialDimensions={16/9}/>
                     )}
                 </div>
                 {!mediaIsGif.current && <Input className='p-2 shadow-none' placeholder='Alt-text' />}
