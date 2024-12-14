@@ -366,7 +366,13 @@ export const PostPreviewComponent: React.FC = () => {
                 </div>
             </div> :
                 <div className={styles.shortPostPreviewContainer}>
-                    <PreviewForShorts />
+                    <div style={{position:'relative'}}>
+                        <PreviewForShorts />
+                    </div>
+                    {/* <div style={{position:'relative'}}>
+                        ssdfsfdsdf
+                        <PreviewForShorts />
+                    </div> */}
                 </div>
             }
         </div>

@@ -27,7 +27,11 @@
 
 
 .shortPostPreviewContainer {
+    display: flex;
+    flex-direction: column;
     width: 70%;
+    height: auto;
+    position: relative;
     // display: flex;
     // margin-bottom: 100px;
     // flex-direction: column;
