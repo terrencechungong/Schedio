@@ -4,9 +4,35 @@ import { useModalStatesContext } from '@/app/layout';
 import styles from '../ScssModules/postpreview.module.scss';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PreviewForShorts } from './PreviewForShorts';
+import { FaTiktok, FaYoutube } from "react-icons/fa";
+import Tooltip from '@mui/material/Tooltip';
+import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+
+type PlatformVisibility = {
+    [key: string]: boolean;
+}
 
 export const PostPreviewComponent: React.FC = () => {
-    const { postVariations, photosInPost, postVariationKey, postTypeIsShort } = useModalStatesContext();
+    const { postVariations, photosInPost, postVariationKey, postTypeIsShort, checkedProfile } = useModalStatesContext();
+    const [platformVisibility, setPlatformVisibility] = useState<PlatformVisibility>({
+        TikTok: true,
+        Youtube: true,
+    });
+    const [checkedPlatforms, setCheckedPlatforms] = useState<string[]>([]);
+
+    useEffect(() => {
+        const platformsWithDubs: string[] = checkedProfile.reduce((acc: string[], profile) => {
+            if (profile.active) acc.push(profile.platform);
+            return acc;
+        }, [] as string[]);
+        setCheckedPlatforms(Array.from(new Set(platformsWithDubs)));
+    }, [checkedProfile]);
+
+    const platformIcons: { [key: string]: JSX.Element } = {
+        'TikTok': <FaTiktok color='#000000' size={18} />,
+        'Youtube': <FaYoutube color='#FF0000' size={20} />,
+    };
 
     return (
         <div className={styles.container}>
@@ -366,16 +392,25 @@ export const PostPreviewComponent: React.FC = () => {
                 </div>
             </div> :
                 <div className={styles.shortPostPreviewContainer}>
-                    <div style={{position:'relative'}}>
-                        <PreviewForShorts />
-                    </div>
-                    {/* <div style={{position:'relative'}}>
-                        ssdfsfdsdf
-                        <PreviewForShorts />
-                    </div> */}
+                    {checkedPlatforms.map((platform) => (
+                        <div key={platform} className={styles.phoneAndTitleContainer}>
+                            <Tooltip title="Click to hide preview" placement="left" arrow>
+                                <div
+                                    onClick={() => setPlatformVisibility(prevState => ({...prevState, [platform]: !prevState[platform]}) )}
+                                    style={{ alignItems: 'center', gap: '4px', marginBottom: '4px' }}
+                                    className='flex flex-row cursor-pointer hover:bg-gray-300 px-2 rounded-sm'>
+                                    {platformIcons[platform]}
+                                    {platform} Preview
+                                </div>
+                            </Tooltip>
+                            <AnimatePresence>
+                                {platformVisibility[platform] && <PreviewForShorts platform={platform} />}
+                            </AnimatePresence>
+                        </div>
+                    ))}
                 </div>
             }
-        </div>
+        </div >
     )
 }
 

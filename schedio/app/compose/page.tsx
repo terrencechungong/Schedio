@@ -20,6 +20,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { FaFacebook, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { SiThreads } from 'react-icons/si';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
@@ -51,6 +52,24 @@ export default function ComposePage() {
   const [isPopoverHidden, setIsPopoverHidden] = useState(false);
   const [deleteVersionPopoverHidden, setDeleteVersionPopoverHidden] = useState(true);
   const [showGenericTemplate, setShowGenericTemplate] = useState(false);
+  const [showYoutubeTitlePrompt, setShowYoutubeTitlePrompt] = useState(postTypeIsShort &&
+    (
+      (postVariationKey == 'GenericTemplate' && checkedProfile.some(profile => profile.platform == 'Youtube' && !profile.unique && profile.active)) ||
+      postVariationKey.split('-')[0] === 'Youtube'
+    ));
+  const [youtubeTitleIsEmpty, setYoutubeTitleIsEmpty] = useState(true);
+
+  useEffect(() => {
+    setShowYoutubeTitlePrompt(postTypeIsShort &&
+      (
+        (postVariationKey == 'GenericTemplate' && checkedProfile.some(profile => profile.platform == 'Youtube' && !profile.unique && profile.active)) ||
+        postVariationKey.split('-')[0] === 'Youtube'
+      ))
+  }, [checkedProfile, postVariationKey]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setYoutubeTitleIsEmpty(e.target.value.trim() === "");
+  };
 
   const mockData = [
     {
@@ -702,6 +721,23 @@ export default function ComposePage() {
           <div className={`rounded-lg ${styles.createPostCard}`} ref={cardRef}>
             {/* If theyhange for a specific platform it no longer inherits from generic */}
             <CreatePostHeader divRef={divRef} />
+            {(youtubeTitleIsEmpty && showYoutubeTitlePrompt) && <p
+              style={{ marginTop: '5px' }}
+              className='text-red-600 text-sm'>YouTube Shorts must have a title.</p>}
+            {showYoutubeTitlePrompt &&
+              <div className="relative w-full">
+                {/* YouTube Icon */}
+                <FaYoutube
+                  className="absolute left-3 top-1/4 translate-y-[30%] text-red-500"
+                  size={20}
+                />
+
+                <Input
+                  style={{ marginTop: '10px' }}
+                  onChange={handleInputChange}
+                  className={`${youtubeTitleIsEmpty && "border-red-500"} pl-10 focus:border-none  shadow-none`} placeholder='YouTube title' />
+              </div>
+            }
             <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
               {!postTypeIsShort ? photosInPost.map((photo, index) => (
@@ -739,10 +775,10 @@ export default function ComposePage() {
                     </svg>
                   </div>
                   <div style={{ height: '55px', width: `${55 * shortVideoForPostData.naturalAspectRatio}px` }}
-                  onClick={() => {
-                    setMediaBeingEditedUrl(shortVideoForPostData.url)
-                    setShowEditVideoModal(true)
-                  }}
+                    onClick={() => {
+                      setMediaBeingEditedUrl(shortVideoForPostData.url)
+                      setShowEditVideoModal(true)
+                    }}
                   >
                     {!shortVideoForPostData.beingEdited ? <video src={shortVideoForPostData.url} style={{ width: '100%', height: '100%', borderRadius: '5px' }} /> :
                       <div className={styles.skeleton}></div>}
@@ -1440,20 +1476,20 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
           </div>
         </Tooltip>
         <Tooltip title="AI Generated hashtags" placement="top" arrow followCursor>
-        <div
-          className={styles.createPostIcon}
-          onClick={() => {
-            if (hashtagsGenerating) return;
-            generateHashtags();
-          }}
-        >
-          {hashtagsGenerating && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '19px' }}>
-              <ClipLoader size={15} color='black' />
-            </div>
-          )}
-          {!hashtagsGenerating && <Hash size={20} strokeWidth={1.5} />}
-        </div>
+          <div
+            className={styles.createPostIcon}
+            onClick={() => {
+              if (hashtagsGenerating) return;
+              generateHashtags();
+            }}
+          >
+            {hashtagsGenerating && (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '19px' }}>
+                <ClipLoader size={15} color='black' />
+              </div>
+            )}
+            {!hashtagsGenerating && <Hash size={20} strokeWidth={1.5} />}
+          </div>
         </Tooltip>
       </div>
     </div>
