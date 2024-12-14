@@ -106,6 +106,8 @@ interface ModalStatesContextType {
   setShortVideoForPostData: React.Dispatch<React.SetStateAction<VideoInPost>>;
   showEditVideoModal: boolean;
   setShowEditVideoModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showVideoEditorModal: boolean;
+  setShowVideoEditorModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
@@ -133,6 +135,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showAddShortVideoModal, setShowAddShortVideoModal] = useState(false);
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState<boolean>(false);
   const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
+  const [showVideoEditorModal, setShowVideoEditorModal] = useState<boolean>(false);
   const [photosInPost, setPhotosInPost] = useState<PhotoInPost[]>([]);
   const [mediaBeingEditedUrl, setMediaBeingEditedUrl] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -205,7 +208,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showAddShortVideoModal,
       setShowAddShortVideoModal,
       shortVideoForPostData,
-      setShortVideoForPostData
+      setShortVideoForPostData,
+      showVideoEditorModal,
+      setShowVideoEditorModal
     }}>
       {children}
     </ModalStatesContext.Provider>

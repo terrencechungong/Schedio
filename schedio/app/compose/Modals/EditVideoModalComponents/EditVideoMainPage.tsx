@@ -11,7 +11,7 @@ import { ToastAction } from '@/components/ui/toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const EditVideoMainPage: React.FC = () => {
-    const { setShowEditVideoModal, mediaBeingEditedUrl, setShortVideoForPostData, shortVideoForPostData, setMediaBeingEditedUrl } = useModalStatesContext();
+    const { setShowEditVideoModal, mediaBeingEditedUrl, setShortVideoForPostData, shortVideoForPostData, setMediaBeingEditedUrl, setShowVideoEditorModal } = useModalStatesContext();
     const { setScreenPhase, screenPhase, setThumbnailToBeSetNext } = useEditVideoModalContext();
     const thumbanilFileRef = useRef(null);
     const { toast } = useToast();
@@ -121,7 +121,9 @@ export const EditVideoMainPage: React.FC = () => {
             <p style={{ fontWeight: '500', fontSize: '15px', marginBottom: '9px' }}>Video Editing</p>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '9px', flexWrap: 'wrap' }}>
                 <Button className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Crop <Crop /></Button>
-                <Tooltip title="Trim the video length" placement="top" arrow followCursor>
+                <Tooltip 
+                onClick={() => setShowVideoEditorModal(true)}
+                title="Trim the video length" placement="top" arrow followCursor>
                     <Button className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Trim<Scissors /></Button>
                 </Tooltip>
                 <Tooltip title="Remove the video from the post" placement="top" arrow followCursor>
