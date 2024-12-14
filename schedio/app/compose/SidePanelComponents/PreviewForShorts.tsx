@@ -18,7 +18,7 @@ export const PreviewForShorts = () => {
 
             {/* FRAME */}
             <div style={{ position: 'absolute', top: 0, zIndex: 10 }}>
-                <img src={iphoneFrame.src} style={{ width: '100%', height: '100%' }} />
+                <img src={iphoneFrame.src} style={{ width: '383px', height: '630px' }} />
             </div>
 
 
@@ -54,7 +54,7 @@ export const PreviewForShorts = () => {
                         >
 
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', color: 'white', marginBottom: '14px', width: '11%' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', color: 'white', marginBottom: '14px', width: '12%' }}>
                             <div style={{ width: 'auto', height: 'auto', display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center' }}>
                                 <RiThumbUpFill color='white' size={30} />
                                 <p style={{ fontSize: '12px' }}>230</p>

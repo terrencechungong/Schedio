@@ -98,6 +98,21 @@ export const EditVideoMainPage: React.FC = () => {
                 <Skeleton style={{ width: '100%', height: '400px' }}></Skeleton>}
         </div>
         <div style={{ width: '100%', marginBottom: '18px' }}>
+            <p style={{ fontWeight: '500', fontSize: '15px', marginBottom: '9px' }}>Video Actions</p>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '9px', flexWrap: 'wrap' }}>
+                <Button
+                    onClick={() => setShowVideoEditorModal(true)}
+                    className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Edit Video</Button>
+                <Tooltip title="Remove the video from the post" placement="top" arrow followCursor>
+                    <Button className="p-5 bg-white hover:bg-red-100 text-red-700 shadow-none"
+                        onClick={() => removeVideoFromPost()}
+                    >
+                        Remove
+                    </Button>
+                </Tooltip>
+            </div>
+        </div>
+        <div style={{ width: '100%' }}>
             <p style={{ fontWeight: '500', fontSize: '15px', marginBottom: '9px' }}>Thumbnail Actions</p>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '9px', flexWrap: 'wrap' }}>
                 <Button
@@ -114,24 +129,6 @@ export const EditVideoMainPage: React.FC = () => {
                             if (thumbanilFileRef.current) thumbanilFileRef.current.click()
                         }}
                         className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Upload Thumbnail<Upload /></Button>
-                </Tooltip>
-            </div>
-        </div>
-        <div style={{ width: '100%' }}>
-            <p style={{ fontWeight: '500', fontSize: '15px', marginBottom: '9px' }}>Video Editing</p>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '9px', flexWrap: 'wrap' }}>
-                <Button className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Crop <Crop /></Button>
-                <Tooltip 
-                onClick={() => setShowVideoEditorModal(true)}
-                title="Trim the video length" placement="top" arrow followCursor>
-                    <Button className="p-5 bg-accent hover:bg-gray-200 text-gray-700 shadow-none">Trim<Scissors /></Button>
-                </Tooltip>
-                <Tooltip title="Remove the video from the post" placement="top" arrow followCursor>
-                    <Button className="p-5 bg-white hover:bg-red-100 text-red-700 shadow-none"
-                        onClick={() => removeVideoFromPost()}
-                    >
-                        Remove
-                    </Button>
                 </Tooltip>
             </div>
         </div>

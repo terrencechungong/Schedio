@@ -85,9 +85,11 @@ export default function AppCode({
                     <AiGenGaption />}
             </AnimatePresence>
             <SidebarProvider>
+                
                 <AppSidebar />
                 <SidebarInset>
                 </SidebarInset>
+                
                 {children}
             </SidebarProvider>
         </div>
