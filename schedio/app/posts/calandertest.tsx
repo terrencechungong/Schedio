@@ -27,8 +27,8 @@ const FullCalendarWrapper = () => {
   };
 
   return (
-    <div style={{backgroundColor:'red', width:'100%',height:'100%'}}>
-     {/* <div style={{width:'100%', height:'100%'}}> */}
+    <div style={{ width: '100%', height: '100%', padding:'20px' }}>
+      {/* <div style={{width:'100%', height:'100%'}}> */}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
@@ -45,6 +45,29 @@ const FullCalendarWrapper = () => {
 
       <style jsx global>{`
         /* Custom styles for events */
+          /* Remove outer border of the main calendar table */
+
+          .fc-scrollgrid {
+            border: none !important; /* Remove outer border of the table */
+          }
+
+          /* Keep borders on table cells */
+          .fc-timegrid-slot,
+          .fc-daygrid-day-frame,
+          .fc-daygrid-day {
+            border: 1px solid #ddd !important; /* Keep borders on cells */
+          }
+
+          /* Remove borders on the calendar's wrapper container */
+          .fc-scrollgrid-liquid {
+            border: none !important;
+          }
+        .fc-scrollgrid-section-body:first-of-type {
+          display: none !important;
+        }
+          .fc-scrollgrid-section:nth-of-type(2) {
+            display: none !important;
+          }
         .fc-media-screen {
           max-width:100%;
           max-height: 100%;
