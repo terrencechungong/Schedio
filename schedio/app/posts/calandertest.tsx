@@ -27,7 +27,8 @@ const FullCalendarWrapper = () => {
   };
 
   return (
-    <div>
+    <div style={{backgroundColor:'red', width:'100%',height:'100%'}}>
+     {/* <div style={{width:'100%', height:'100%'}}> */}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
@@ -44,6 +45,12 @@ const FullCalendarWrapper = () => {
 
       <style jsx global>{`
         /* Custom styles for events */
+        .fc-media-screen {
+          max-width:100%;
+          max-height: 100%;
+          height: 100vh;
+          width: 100%;
+        }
         .fc-event {
           background-color: purple !important;
           border: 2px solid #6a0dad !important; /* Purple border */
