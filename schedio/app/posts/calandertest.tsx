@@ -27,7 +27,7 @@ const FullCalendarWrapper = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', padding:'20px', backgroundColor:'#f7fafc'}}>
+    <div style={{ width: '100%', height: '100%', padding: '20px', backgroundColor: '#f7fafc' }}>
       {/* <div style={{width:'100%', height:'100%'}}> */}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -45,11 +45,39 @@ const FullCalendarWrapper = () => {
           center: 'title',
           right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
+        dayHeaderContent={(args) => {
+          // Custom two-line header content
+          const weekday = args.date.toLocaleDateString('en-US', { weekday: 'long' }); // Full weekday name
+          const date = args.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }); // e.g., Dec 16, 2024
+          return (
+            <div style={{ textAlign: 'center', lineHeight: '20px' }}>
+              <div style={{ fontWeight: 'bold', color: '#626f84', fontSize:'14px' }}>{weekday}</div>
+              <div style={{ color: '#afbfcf', fontWeight: '500', fontSize:'14px' }}>{date}</div>
+            </div>
+          );
+        }}
         eventContent={renderEventContent} // Use custom JSX for events
       />
 
       <style jsx global>{`
         /* Custom styles for events */
+        .fc-toolbar-chunk {
+          display: flex !important;
+          flex-direction: row-reverse !important;
+          gap: 10px;
+        }
+
+        .fc-timegrid-axis {
+          border-color: #edf2f7 !important;
+        }
+
+        .fc-day {
+          border-color: #edf2f7 !important;
+        }
+          .fc-day-today {
+            background-color:#fafafa !important;
+          }
+        
           /* Remove outer border of the main calendar table */
           .fc-header-toolbar {
             background-color: #f7fafc;
@@ -57,18 +85,21 @@ const FullCalendarWrapper = () => {
             padding: 0 !important;          
           }
           .fc {
-            background-color: white !important; /* Set the desired color */
+            background-color: white !important; /* Set the desi#edf2f7 color */
           }
           .fc-scrollgrid-section-header {
             background-color: #f7fafc;
           }
           .fc-timegrid-slot-label {
             background-color: #f7fafc;
-            padding: 6px !important;
+            padding: 10px !important;
+            color: #626f84;
+            font-weight: 600;
+            font-size: 15px;
           }
           .fc-scrollgrid-shrink {
             background-color: #f7fafc;
-            padding: 6px !important;
+            padding: 10px !important;
 
           }
           .fc-scrollgrid {
@@ -79,7 +110,7 @@ const FullCalendarWrapper = () => {
           .fc-timegrid-slot,
           .fc-daygrid-day-frame,
           .fc-daygrid-day {
-            border: 1px solid #ddd !important; /* Keep borders on cells */
+            border: 1px solid #edf2f7 !important; /* Keep borders on cells */
           }
 
           /* Remove borders on the calendar's wrapper container */
