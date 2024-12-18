@@ -2,22 +2,21 @@ import { ImageUp, Search, X } from 'lucide-react';
 import styles from '../ScssModules/giftabcontent.module.scss'
 import { createGifOverlay } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
-import { useModalStatesContext } from '@/app/layout';
+import { PhotoInPost, useModalStatesContext } from '@/app/layout';
 import { fetchDimensions } from '@/app/utilFunctions';
 
 export const AddMediaGifTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState('');
-    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId, setPhotosInPost } = useModalStatesContext();
+    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId,
+        addOrUpdatePhotoInPost
+    } = useModalStatesContext();
 
-    const photoOnClick = async (photoObj) => {
-        setPhotosInPost((prev) => [...prev, {...photoObj}])
+    const photoOnClick = async (photoObj: PhotoInPost) => {
+        addOrUpdatePhotoInPost(photoObj);
         setShowMediaModal(false);
-        const {width, height} = await fetchDimensions(photoObj.regUrl);
-        setPhotosInPost((prev) => prev.map((photo) => {
-            if (photo.id != photoObj.id) return photo;
-            return {...photo, naturalAspectRatio: width/height, beingEdited:false}
-        }))
+        const { width, height } = await fetchDimensions(photoObj.regUrl);
+        addOrUpdatePhotoInPost({ ...photoObj, naturalAspectRatio: width / height, beingEdited: false })
     }
 
 

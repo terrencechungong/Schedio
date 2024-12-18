@@ -1,413 +1,96 @@
 "use client"
-import { CircleUser, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-react';
-import { useModalStatesContext } from '@/app/layout';
+import { CircleUser, Instagram, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-react';
+import { PostType, Profile, useModalStatesContext } from '@/app/layout';
 import styles from '../ScssModules/postpreview.module.scss';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PreviewForShorts } from './PreviewForShorts';
-import { FaTiktok, FaYoutube } from "react-icons/fa";
+import { FaLinkedin, FaFacebook, FaTiktok, FaYoutube } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Constants } from '@/app/constants';
+import WebPostPreviewParent from './WebPostPreviews/WebPostPreviewParent';
+import { SiThreads } from 'react-icons/si';
+import { useComposeSidePanelContext } from '../composeSidePanel/ComposeSidePanelContext';
 
 type PlatformVisibility = {
-    [key: string]: boolean;
+    [key: number]: boolean;
 }
 
 export const PostPreviewComponent: React.FC = () => {
-    const { postVariations, photosInPost, postVariationKey, postTypeIsShort, checkedProfile } = useModalStatesContext();
-    const [platformVisibility, setPlatformVisibility] = useState<PlatformVisibility>({
-        TikTok: true,
-        Youtube: true,
-    });
-    const [checkedPlatforms, setCheckedPlatforms] = useState<string[]>([]);
+    const { postVariations, postVariationKey, postTypeData, globalProfiles, globalProfilesArray } = useModalStatesContext();
+    // can start off as all true because they wont take effect until theyre checked anyway
+    // only changes with click
+    const {
+        mobileViewPlatformVisibility,
+        setMobileViewPlatformVisibility,
+        webViewPlatformVisibility,
+        setWebViewPlatformVisibility } = useComposeSidePanelContext();
 
-    useEffect(() => {
-        const platformsWithDubs: string[] = checkedProfile.reduce((acc: string[], profile) => {
-            if (profile.active) acc.push(profile.platform);
-            return acc;
-        }, [] as string[]);
-        setCheckedPlatforms(Array.from(new Set(platformsWithDubs)));
-    }, [checkedProfile]);
 
     const platformIcons: { [key: string]: JSX.Element } = {
         'TikTok': <FaTiktok color='#000000' size={18} />,
         'Youtube': <FaYoutube color='#FF0000' size={20} />,
+        'LinkedIn': <FaLinkedin color='#0a66c2' size={17} />,
+        'Facebook': <FaFacebook color='#0866ff' size={17} />,
+        'Instagram': <Instagram color='#833ab4' size={17} />,
+        'Threads': <SiThreads color='#89CFF0' size={17} />,
     };
 
     return (
         <div className={styles.container}>
-            {!postTypeIsShort ? <div className={styles.genericPostPreviewContainer}>
-                <div className={styles.genericPostPreviewHeader}>
-                    <Avatar>
-                        <AvatarFallback style={{ backgroundColor: '#7d4ecd', color: 'white' }}>GP</AvatarFallback>
-                    </Avatar>
-                    <p style={{ fontSize: '14px' }}>Post Preview</p>
-                </div>
-                <div className={styles.genericPostPreviewCaption}>
-                    <div
-                        dangerouslySetInnerHTML={{ __html: postVariations[postVariationKey].postCaption }}
-                    >
-
-                    </div>
-                </div>
-
-                <div style={{ width: '100%' }}>
-                    {photosInPost.length === 1 &&
-                        photosInPost.map((photo) => {
-                            return <img key={photo.regUrl} src={photo.regUrl} alt="Photo" />;
-                        })}
-                    {photosInPost.length === 2 && (
-                        <div
-                            style={{
-                                width: '100%',
-                                height: '425px',
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(2, 1fr)',
-                                overflow: 'hidden', // Ensures images outside bounds are hidden
-                            }}
-                        >
-                            {photosInPost.map((photo) => (
-                                <div
-                                    key={photo.regUrl}
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        overflow: 'hidden', // Hides overflow of individual images
-                                    }}
-                                >
-                                    <img
-                                        src={photo.regUrl}
-                                        alt="Photo"
-                                        style={{
-                                            height: '100%',
-                                            width: 'auto',
-                                            objectFit: 'cover', // Ensures the image covers its container
-                                            position: 'relative',
-                                            overflow: 'hidden',
-                                        }}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
-                    {photosInPost.length === 3 && (
-                        <div
-                            style={{
-                                width: '100%',
-                                height: '425px',
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(2, 1fr)',
-                                overflow: 'hidden', // Ensures images outside bounds are hidden
-                            }}
-                        >
-                            <div
-                                key={photosInPost[0].regUrl}
-                                style={{
-                                    minWidth: '100%',
-                                    minHeight: '100%',
-                                    overflow: 'hidden', // Hides overflow of individual images
-                                }}
-                            >
-                                <img
-                                    src={photosInPost[0].regUrl}
-                                    alt="Photo"
-                                    style={{
-                                        height: '100%',
-                                        minWidth: '100%',
-                                        width: 'auto',
-                                        objectFit: 'cover', // Ensures the image covers its container
-                                        position: 'relative',
-                                        overflow: 'hidden',
-                                    }}
-                                />
-                            </div>
-                            <div style={{
-                                width: '100%',
-                                height: '100%',
-                                display: 'grid',
-                                gridTemplateRows: 'repeat(2, 1fr)',
-                                overflow: 'hidden', // Ensures images outside bounds are hidden
-                            }}
-                            >
-                                {photosInPost.slice(1).map((photo) => (
-                                    <div
-                                        key={photo.regUrl}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            overflow: 'hidden', // Hides overflow of individual images
-                                        }}
-                                    >
-                                        <img
-                                            src={photo.regUrl}
-                                            alt="Photo"
-                                            style={{
-                                                height: '100%',
-                                                minWidth: '100%',
-                                                width: 'auto',
-                                                objectFit: 'cover', // Ensures the image covers its container
-                                                position: 'relative',
-                                                overflow: 'hidden',
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    {photosInPost.length === 4 &&
-                        (
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '425px',
-                                    display: 'grid',
-                                    gridTemplateRows: '2fr 1fr',
-                                    overflow: 'hidden', // Ensures images outside bounds are hidden
-                                }}
-                            >
-                                <div
-                                    key={photosInPost[0].regUrl}
-                                    style={{
-                                        minWidth: '100%',
-                                        minHeight: '100%',
-                                        overflow: 'hidden', // Hides overflow of individual images
-                                    }}
-                                >
-                                    <img
-                                        src={photosInPost[0].regUrl}
-                                        alt="Photo"
-                                        style={{
-                                            height: '100%',
-                                            minWidth: '100%',
-                                            width: 'auto',
-                                            objectFit: 'cover', // Ensures the image covers its container
-                                            position: 'relative',
-                                            overflow: 'hidden',
-                                        }}
-                                    />
-                                </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', width: '100%', height: '100%' }}>
-                                    {photosInPost.slice(1).map((photo) => (
+            {!(postTypeData.type == PostType.SHORT) ?
+                <div className={styles.webPostPreviewContainers}>
+                    {
+                        globalProfilesArray.filter(p => p.active && !p.isShort).length == 0 &&
+                        <WebPostPreviewParent profile={null} />
+                    }
+                    {
+                        globalProfilesArray.filter(p => p.active && !p.isShort).map((profile) => {
+                            return (
+                                <div key={profile.id} className={styles.webViewAndTitleContainer}>
+                                    <Tooltip title="Click to hide preview" placement="left" arrow>
                                         <div
-                                            key={photo.regUrl}
-                                            style={{
-                                                width: '100%',
-                                                minWidth: '100%',
-                                                height: '100%',
-                                                overflow: 'hidden', // Hides overflow of individual images
-                                            }}
-                                        >
-                                            <img
-                                                src={photo.regUrl}
-                                                alt="Photo"
-                                                style={{
-                                                    height: '100%',
-                                                    minWidth: '100%',
-                                                    width: 'auto',
-                                                    objectFit: 'cover', // Ensures the image covers its container
-                                                    position: 'relative',
-                                                    overflow: 'hidden',
-                                                }}
-                                            />
+                                            onClick={() => setWebViewPlatformVisibility(prevState =>
+                                                ({ ...prevState, [profile.id]: !prevState[profile.id] }))
+                                            }
+                                            style={{ alignItems: 'center', gap: '4px', marginBottom: '4px' }}
+                                            className='flex flex-row cursor-pointer hover:bg-gray-300 px-2 rounded-sm'>
+                                            {platformIcons[profile.platform]}
+                                            {profile.name} Preview
                                         </div>
-                                    ))}
+                                    </Tooltip>
+                                    <AnimatePresence>
+                                        {webViewPlatformVisibility[profile.id] && <WebPostPreviewParent profile={profile} />}
+                                    </AnimatePresence>
                                 </div>
-                            </div>
-                        )}
-                    {photosInPost.length === 5 && (
-                        <div
-                            style={{
-                                width: '100%',
-                                height: '425px',
-                                display: 'grid',
-                                gridTemplateRows: '1fr 1fr', // Top row takes 2/3 height, bottom row takes 1/3
-                                // gap: '5px', // Optional: adds spacing between images
-                                overflow: 'hidden',
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width: '100%',
-                                    minWidth: '100%',
-                                    height: '100%',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <img
-                                    src={photosInPost[0].regUrl}
-                                    alt="Photo"
-                                    style={{
-                                        minWidth: '100%',
-                                        width: 'auto',
-                                        height: '100%',
-                                        objectFit: 'cover', // Ensures the image covers its container
-                                    }}
-                                />
-                            </div>
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    display: 'grid',
-                                    gridTemplateColumns: '1fr 1fr', // Two columns
-                                    gridTemplateRows: '1fr 1fr',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                {photosInPost.slice(1).map((photo) => (
-                                    <div
-                                        style={{
-                                            width: '100%',
-                                            minWidth: '100%',
-                                            height: '100%',
-                                            overflow: 'hidden',
-                                        }}
-                                    >
-                                        <img
-                                            src={photo.regUrl}
-                                            alt="Photo"
-                                            style={{
-                                                minWidth: '100%',
-                                                width: 'auto',
-                                                height: '100%',
-                                                objectFit: 'cover', // Ensures the image covers its container
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {photosInPost.length > 5 &&
-                        (
-                            <div
-                                style={{
-                                    width: '100%',
-                                    height: '425px',
-                                    display: 'grid',
-                                    gridTemplateRows: '1fr 1fr', // Top row takes 2/3 height, bottom row takes 1/3
-                                    // gap: '5px', // Optional: adds spacing between images
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        minWidth: '100%',
-                                        height: '100%',
-                                        overflow: 'hidden',
-                                    }}
-                                >
-                                    <img
-                                        src={photosInPost[0].regUrl}
-                                        alt="Photo"
-                                        style={{
-                                            minWidth: '100%',
-                                            width: 'auto',
-                                            height: '100%',
-                                            objectFit: 'cover', // Ensures the image covers its container
-                                        }}
-                                    />
-                                </div>
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'grid',
-                                        gridTemplateColumns: '1fr 1fr', // Two columns
-                                        gridTemplateRows: '1fr 1fr',
-                                        overflow: 'hidden',
-                                    }}
-                                >
-                                    {photosInPost.slice(1, 5).map((photo, index) => {
-                                        console.log(index, photosInPost.length)
-                                        if (index != 3) {
-                                            return (
-                                                <div
-                                                    style={{
-                                                        width: '100%',
-                                                        minWidth: '100%',
-                                                        height: '100%',
-                                                        overflow: 'hidden',
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={photo.regUrl}
-                                                        alt="Photo"
-                                                        style={{
-                                                            minWidth: '100%',
-                                                            width: 'auto',
-                                                            height: '100%',
-                                                            objectFit: 'cover', // Ensures the image covers its container
-                                                        }}
-                                                    />
-                                                </div>
-                                            )
-                                        } else {
-                                            console.log("fourth")
-                                            return (
-                                                <div
-                                                    style={{
-                                                        width: '100%',
-                                                        minWidth: '100%',
-                                                        height: '100%',
-                                                        overflow: 'hidden',
-                                                        position: 'relative'
-                                                    }}
-                                                >
-                                                    <div style={{
-                                                        width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0.4)',
-                                                        display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'absolute'
-                                                    }}>
-                                                        <p style={{ fontWeight: '700', fontSize: '20px', color: 'white' }}>{`+${photosInPost.length - 5}`}</p>
-                                                    </div>
-                                                    <img
-                                                        src={photo.regUrl}
-                                                        alt="Photo"
-                                                        style={{
-                                                            minWidth: '100%',
-                                                            width: 'auto',
-                                                            height: '100%',
-                                                            objectFit: 'cover', // Ensures the image covers its container
-                                                        }}
-                                                    />
-                                                </div>
-
-
-                                            )
-                                        }
-                                    })}
-                                </div>
-                            </div>
-                        )}
-                </div>
-
-                <div className={styles.genericPostPreviewFooter}>
-                    <ThumbsUp size={16} />
-                    <MessageSquareText size={16} />
-                    <MoveUpRight size={16} />
-                </div>
-            </div> :
+                            )
+                        })
+                    }
+                </div> :
                 <div className={styles.shortPostPreviewContainer}>
-                    {checkedPlatforms.map((platform) => (
-                        <div key={platform} className={styles.phoneAndTitleContainer}>
-                            <Tooltip title="Click to hide preview" placement="left" arrow>
-                                <div
-                                    onClick={() => setPlatformVisibility(prevState => ({...prevState, [platform]: !prevState[platform]}) )}
-                                    style={{ alignItems: 'center', gap: '4px', marginBottom: '4px' }}
-                                    className='flex flex-row cursor-pointer hover:bg-gray-300 px-2 rounded-sm'>
-                                    {platformIcons[platform]}
-                                    {platform} Preview
-                                </div>
-                            </Tooltip>
-                            <AnimatePresence>
-                                {platformVisibility[platform] && <PreviewForShorts platform={platform} />}
-                            </AnimatePresence>
-                        </div>
-                    ))}
+                    {globalProfilesArray.filter(p => p.active && p.isShort).map((profile) => {
+                        const localPostVariationKey = profile.unique ? `${profile.platform}-${profile.name}-${profile.id}` : Constants.GENERIC_TEMPLATE;
+                        return (
+                            <div key={profile.id} className={styles.phoneAndTitleContainer}>
+                                <Tooltip title="Click to hide preview" placement="left" arrow>
+                                    <div
+                                        onClick={() => setMobileViewPlatformVisibility(prevState =>
+                                            ({ ...prevState, [profile.id]: !prevState[profile.id] }))
+                                        }
+                                        style={{ alignItems: 'center', gap: '4px', marginBottom: '4px' }}
+                                        className='flex flex-row cursor-pointer hover:bg-gray-300 px-2 rounded-sm'>
+                                        {platformIcons[profile.platform]}
+                                        {profile.name} Preview
+                                    </div>
+                                </Tooltip>
+                                <AnimatePresence>
+                                    {mobileViewPlatformVisibility[profile.id] && <PreviewForShorts
+                                        platform={profile.platform} name={profile.name} localPostVariationKey={localPostVariationKey} />}
+                                </AnimatePresence>
+                            </div>
+                        )
+                    })}
                 </div>
             }
         </div >

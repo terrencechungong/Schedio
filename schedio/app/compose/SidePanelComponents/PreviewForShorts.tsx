@@ -1,5 +1,5 @@
 import styles from '../ScssModules/shortdevicepreview.module.scss'
-import { useModalStatesContext } from '@/app/layout';
+import { PlatformName, useModalStatesContext } from '@/app/layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import iphoneFrame from '../../assets/iphoneframe2.png'
 import signalStrength from '../../assets/signal.png'
@@ -16,14 +16,17 @@ import { RiShareForwardFill } from "react-icons/ri";
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
+// need name, photo, oistvariationkey, platform
 
 // NEED TO IMPLEMENT RESIZING
 interface PreviewForShortsInput {
-  platform: string;
+  platform: PlatformName;
+  name: string;
+  localPostVariationKey: string;
 }
 
-export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, showPlatform }) => {
-  const { shortVideoForPostData, postVariations, postVariationKey } = useModalStatesContext();
+export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, name, localPostVariationKey }) => {
+  const { shortVideoForPostData, postVariations } = useModalStatesContext();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false); // Track play/pause state
   const [controlShowing, setControlShowing] = useState(true); // Track control visibility
@@ -183,8 +186,8 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, sh
         </div>
 
         {/* YOUTUBE OVERLAY */}
-        {platform == 'TikTok' && <TikTokOverlay />}
-        {platform == 'Youtube' && <YouTubeOverLay />}
+        {platform == 'TikTok' && <TikTokOverlay localPostVariationKey={localPostVariationKey} name={name} />}
+        {platform == 'Youtube' && <YouTubeOverLay localPostVariationKey={localPostVariationKey} name={name} />}
       </div>
 
       {/* FRAME */}
@@ -203,8 +206,8 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, sh
 
 
 
-const YouTubeOverLay = () => {
-  const { shortVideoForPostData, postVariations, postVariationKey } = useModalStatesContext();
+const YouTubeOverLay = ({ localPostVariationKey, name }: { localPostVariationKey: string, name: string }) => {
+  const { shortVideoForPostData, postVariations } = useModalStatesContext();
 
   return (
     <div
@@ -238,7 +241,7 @@ const YouTubeOverLay = () => {
             textOverflow: "ellipsis",
           }}
           dangerouslySetInnerHTML={{
-            __html: postVariations[postVariationKey].postCaption,
+            __html: postVariations[localPostVariationKey].postCaption,
           }}
         ></div>
 
@@ -345,9 +348,8 @@ const YouTubeOverLay = () => {
     </div>
   )
 }
-
-const TikTokOverlay = () => {
-  const { shortVideoForPostData, postVariations, postVariationKey } = useModalStatesContext();
+const TikTokOverlay = ({ localPostVariationKey, name }: { localPostVariationKey: string, name: string }) => {
+  const { shortVideoForPostData, postVariations } = useModalStatesContext();
 
   return (
     <div
@@ -383,7 +385,7 @@ const TikTokOverlay = () => {
               textOverflow: "ellipsis",
             }}
             dangerouslySetInnerHTML={{
-              __html: postVariations[postVariationKey].postCaption,
+              __html: postVariations[localPostVariationKey].postCaption,
             }}
           ></div>
         </div>

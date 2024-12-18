@@ -19,7 +19,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-interface PhotoInPost {
+export interface PhotoInPost {
   id: string;
   fileType: string;
   isGif: boolean;
@@ -46,18 +46,24 @@ interface VideoInPost {
   thumbnail: VideoInPostThumbnail | null;
 }
 
-interface CheckedProfile {
-  id: number;
-  name: string;
-  platform: string;
-  unique: boolean;
-  active: boolean;
-  isShortForm: boolean;
-}
-
+// add something to tell if its a short
 interface PostVariationData {
   postCaption: string;
-  postMedia: PhotoInPost[]
+  postMedia: PhotoInPost[];
+  // hasOneVideoLimit: boolean;
+  // hasPhotos: boolean;
+  // hasVideo: boolean;
+}
+
+interface PostTypeData {
+  defined: boolean;
+  type: PostType;
+}
+
+export enum PostType {
+  SHORT = "SHORT",
+  NORMAL = "NORMAL",
+  NONE = "NONE"
 }
 
 interface ModalStatesContextType {
@@ -86,20 +92,14 @@ interface ModalStatesContextType {
   setMediaBeingEditedUrl: React.Dispatch<React.SetStateAction<string>>;
   showAdobeEditor: boolean;
   setShowAdobeEditor: React.Dispatch<React.SetStateAction<boolean>>;
-  photosInPost: PhotoInPost[];
-  setPhotosInPost: React.Dispatch<React.SetStateAction<PhotoInPost[]>>;
   mediaBeingEditedId: MutableRefObject<string>;
   mediaIsGif: MutableRefObject<boolean>;
-  checkedProfile: CheckedProfile[];
-  setCheckedProfile: React.Dispatch<React.SetStateAction<CheckedProfile[]>>;
   postVariationKey: string;
   setPostVariationKey: React.Dispatch<React.SetStateAction<string>>;
   postVariations: { [key: string]: PostVariationData };
   setPostVariations: React.Dispatch<React.SetStateAction<{ [key: string]: PostVariationData }>>;
   showDeletionConfirmationModal: boolean;
   setShowDeletionConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
-  postTypeIsShort: boolean;
-  setPostTypeIsShort: React.Dispatch<React.SetStateAction<boolean>>;
   showAddShortVideoModal: boolean;
   setShowAddShortVideoModal: React.Dispatch<React.SetStateAction<boolean>>;
   shortVideoForPostData: VideoInPost;
@@ -108,14 +108,56 @@ interface ModalStatesContextType {
   setShowEditVideoModal: React.Dispatch<React.SetStateAction<boolean>>;
   showVideoEditorModal: boolean;
   setShowVideoEditorModal: React.Dispatch<React.SetStateAction<boolean>>;
+  normalPostIsUsingVideo: boolean;
+  setNormalPostIsUsingVideo: React.Dispatch<React.SetStateAction<boolean>>;
+  addOrUpdatePhotoInPost: (updates: Partial<PhotoInPost>, id?: string) => void;
+  removePhotoFromPost: (id: string) => void;
+  postTypeData: PostTypeData;
+  setPostTypeData: React.Dispatch<React.SetStateAction<PostTypeData>>;
+  globalProfiles: {[key: number]: Profile};
+  setGlobalProfiles: React.Dispatch<React.SetStateAction<{[key: number]: Profile}>>;
+  updateGlobalProfiles: (id: number, profile: Partial<Profile>) => void;
+  globalProfilesArray: Profile[]
 }
+
+export type Profile = {
+  name: string;
+  active: boolean;
+  unique: boolean;
+  id: number;
+  platform: PlatformName;
+  isShort: boolean;
+  sharesName: boolean;
+};
+
+export enum PlatformName {
+  LinkedIn = 'LinkedIn',
+  Youtube = 'Youtube',
+  Facebook = 'Facebook',
+  Instagram = 'Instagram',
+  Threads = 'Threads',
+  TikTok = 'TikTok',
+}
+
+export enum PlatformColor {
+  LinkedIn = '#0a66c2',
+  Youtube = '#FF0000',
+  Facebook = '#0866ff',
+  Instagram = '#833ab4',
+  Threads = '#89CFF0',
+  TikTok = '#000000',
+}
+
+
+
+// global post is short boolean
 
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [checkedProfile, setCheckedProfile] = useState<CheckedProfile[]>([]);
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
-  const [showEditVideoModal, setShowEditVideoModal] = useState(false)
+  const [showEditVideoModal, setShowEditVideoModal] = useState(false);
+  const [normalPostIsUsingVideo, setNormalPostIsUsingVideo] = useState<boolean>(false);
   const [showAddTeamMemberModal, setShowAddTeamMemberModal] = useState(false)
   const [showMediaModal, setShowMediaModal] = useState<boolean>(false);
   const [shortVideoForPostData, setShortVideoForPostData] = useState<VideoInPost>({
@@ -136,20 +178,52 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState<boolean>(false);
   const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
   const [showVideoEditorModal, setShowVideoEditorModal] = useState<boolean>(false);
-  const [photosInPost, setPhotosInPost] = useState<PhotoInPost[]>([]);
   const [mediaBeingEditedUrl, setMediaBeingEditedUrl] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const imgContainer = useRef<HTMLDivElement | null>(null);
   const mediaIsGif = useRef(false);
   const mediaBeingEditedId = useRef<string>("");
-  const [postTypeIsShort, setPostTypeIsShort] = useState(false);
+  const [postTypeData, setPostTypeData] = useState<PostTypeData>({ defined: false, type: PostType.NONE });
   const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
+  // in reality we will give facebook profiles one for shorts and another entry for normal to avoid id mixups
+  const [globalProfiles, setGlobalProfiles] = useState<{[key: number]: Profile}>(
+    {
+      0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+      1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
+      2: { name: 'Sarah Lee', active: false, unique: false, id: 2, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
+      3: { name: 'David Davis', active: false, unique: false, id: 3, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+      4: { name: 'Jessica Martin', active: false, unique: false, id: 4, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
+      5: { name: 'Kevin White', active: false, unique: false, id: 5, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
+      6: { name: 'Amanda Taylor', active: false, unique: false, id: 6, platform: 'Facebook', isShort: true, sharesName: true } as Profile,
+      7: { name: 'Brian Hall', active: false, unique: false, id: 7, platform: 'Facebook', isShort: true, sharesName: false } as Profile,
+      8: { name: 'Rachel Patel', active: false, unique: false, id: 8, platform: 'Youtube', isShort: true, sharesName: false } as Profile,
+      9: { name: 'Christopher Brooks', active: false, unique: false, id: 9, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
+      10: { name: 'Laura Garcia', active: false, unique: false, id: 10, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
+      11: { name: 'Matthew Thompson', active: false, unique: false, id: 11, platform: 'Youtube', isShort: true, sharesName: false } as Profile
+    }
+  );
+  const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
   const [postVariations, setPostVariations] = useState<{ [key: string]: PostVariationData }>({
     "GenericTemplate": {
       postCaption: "",
+      // hasOneVideoLimit: false,
+      // hasPhotos: false,
+      // hasVideo: false,
       postMedia: [],
     }
-  })
+  });
+
+  useEffect(() => {
+    setGlobalProfilesArray(Object.values(globalProfiles));
+  }, [globalProfiles]);
+
+  // NO ADDING
+  const updateGlobalProfiles = (id: number, profile: Partial<Profile>) => {
+    setGlobalProfiles((prev) => ({
+      ...prev, 
+      [id]: {...prev[id], ...profile}
+    }))
+  }
 
   // setPostCaption is a function that sets the selected key
   const setPostCaption = (postCaption: string) => {
@@ -161,6 +235,46 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       },
     }));
   }
+
+  const addOrUpdatePhotoInPost = (updates: Partial<PhotoInPost>, id = "") => {
+    const postMedia = postVariations[postVariationKey].postMedia;
+    const existingPost = postVariations[postVariationKey].postMedia.some(post => post.id == id || (updates.id && post.id == updates.id));
+    if (existingPost) {
+      setPostVariations((prev) => ({
+        ...prev,
+        [postVariationKey]: {
+          ...prev[postVariationKey],
+          postMedia: postMedia.map((p) => {
+            if (p.id != id || (updates.id && p.id == updates.id)) return { ...p, ...updates };
+            return p;
+          }),
+        },
+      }));
+    } else {
+      setPostVariations((prev) => ({
+        ...prev,
+        [postVariationKey]: {
+          ...prev[postVariationKey],
+          postMedia: [...postMedia, updates as PhotoInPost]
+        },
+      }));
+    }
+  };
+
+  const removePhotoFromPost = (id: string) => {
+    const postMedia = postVariations[postVariationKey].postMedia
+    setPostVariations((prev) => ({
+      ...prev,
+      [postVariationKey]: {
+        ...prev[postVariationKey],
+        postMedia: postMedia.filter(media => media.id != id),
+      },
+    }));
+  }
+
+  useEffect(() => {
+    console.log(postVariations)
+  }, [postVariations]);
 
   return (
     <ModalStatesContext.Provider value={{
@@ -190,11 +304,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showAdobeEditor,
       setShowAdobeEditor,
       mediaBeingEditedId,
-      photosInPost,
-      setPhotosInPost,
       mediaIsGif,
-      checkedProfile,
-      setCheckedProfile,
       postVariationKey,
       setPostVariationKey,
       postVariations,
@@ -203,14 +313,22 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setShowDeletionConfirmationModal,
       showEditVideoModal,
       setShowEditVideoModal,
-      postTypeIsShort,
-      setPostTypeIsShort,
       showAddShortVideoModal,
       setShowAddShortVideoModal,
       shortVideoForPostData,
       setShortVideoForPostData,
       showVideoEditorModal,
-      setShowVideoEditorModal
+      setShowVideoEditorModal,
+      normalPostIsUsingVideo,
+      setNormalPostIsUsingVideo,
+      addOrUpdatePhotoInPost,
+      removePhotoFromPost,
+      postTypeData,
+      setPostTypeData,
+      updateGlobalProfiles,
+      globalProfiles,
+      setGlobalProfiles,
+      globalProfilesArray
     }}>
       {children}
     </ModalStatesContext.Provider>

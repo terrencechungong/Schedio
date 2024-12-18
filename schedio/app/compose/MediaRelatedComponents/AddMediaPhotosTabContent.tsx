@@ -2,17 +2,18 @@ import { ImageUp, Search, X } from 'lucide-react';
 import styles from '../ScssModules/photostabcontent.module.scss'
 import { createGifOverlay, createImageOverlay, createImageOverlayUnsplash } from '../abstraction/GifTabAbstraction';
 import { useEffect, useRef, useState } from 'react';
-import { useModalStatesContext } from '@/app/layout';
+import { PhotoInPost, useModalStatesContext } from '@/app/layout';
 import { generateRandom4Digit } from '@/app/utilFunctions';
 
 export const AddMediaPhotosTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState('');
     var useResults = false;
-    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId, setPhotosInPost } = useModalStatesContext();
+    const { setShowMediaModal, imgContainer, setShowEditMediaModal, setMediaBeingEditedUrl, mediaBeingEditedId,addOrUpdatePhotoInPost ,setPhotosInPost } = useModalStatesContext();
 
-    const photoOnClick = (photoObj: {naturalAspectRatio: number, smallUrl: string, regUrl: string, fileType:string}) => {
-        setPhotosInPost((prev) => [...prev, {...photoObj, beingEdited:false}])
+    const photoOnClick = (photoObj: PhotoInPost) => {
+        addOrUpdatePhotoInPost(photoObj);
+        // setPhotosInPost((prev) => [...prev, {...photoObj, beingEdited:false}])
         setShowMediaModal(false)
     }
 

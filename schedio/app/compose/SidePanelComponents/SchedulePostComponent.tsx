@@ -7,7 +7,7 @@ import NumberInputHours from '../SimpleUIComponents/number-input';
 import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar';
 import { FaLinkedin } from "react-icons/fa";
 import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
-import { useModalStatesContext } from '@/app/layout';
+import { PlatformName, useModalStatesContext } from '@/app/layout';
 import React from 'react';
 import { SelectAccountForPost } from './SelectAccountForPost';
 
@@ -19,32 +19,35 @@ export const SchedulePostComponent: React.FC = () => {
         <div className={styles.container}
             onClick={() => setIsOpen(false)}
         >
-            <div className={styles.schedulePostHeader}>
-                <Button
-                    onClick={() => setShowSelectPostTimeModal(true)}
-                    className='text-primary border-primary border-[0.5px] bg-white hover:bg-[#f3eafc] pl-9 pr-9 pt-5 pb-5 shadow-none'>
-                    <CalendarClock size={13} strokeWidth={1.25} />
-                    Pick Time
-                </Button>
-                <Button
-                    onClick={() => setShowPostNowModal(true)}
-                    className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
-                    Post Now
-                    <MoveUpRight size={13} strokeWidth={1.25} />
-                </Button>
+            <div className={styles.schedulePostHeaderWrapper}>
+                <div className={styles.schedulePostHeader}>
+                    <Button
+                        onClick={() => setShowSelectPostTimeModal(true)}
+                        className='text-primary border-primary border-[0.5px] bg-white hover:bg-[#f3eafc] pl-9 pr-9 pt-5 pb-5 shadow-none'>
+                        <CalendarClock size={13} strokeWidth={1.25} />
+                        Pick Time
+                    </Button>
+                    <Button
+                        onClick={() => setShowPostNowModal(true)}
+                        className='text-white bg-primary pl-9 pr-9 pt-5 pb-5'>
+                        Post Now
+                        <MoveUpRight size={13} strokeWidth={1.25} />
+                    </Button>
+
+                </div>
             </div>
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost contentTypeIsShort={false} platformName="LinkedIn" />
-                    <SelectAccountForPost contentTypeIsShort={false} platformName="Facebook" />
-                    <SelectAccountForPost contentTypeIsShort={false} platformName="Instagram" />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.LinkedIn} />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.Facebook} />
+                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.Instagram} />
                 </div>
                 <p>PUBLISH REEL/SHORT</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost contentTypeIsShort={true} platformName="Youtube" />
-                    <SelectAccountForPost contentTypeIsShort={true} platformName="TikTok" />
-                    <SelectAccountForPost contentTypeIsShort={true} platformName="Instagram" />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.Youtube} />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.TikTok} />
+                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.Instagram} />
                 </div>
                 <div
                     style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}

@@ -113,7 +113,12 @@ export const createImageOverlayUnsplash = (overlay: HTMLDivElement, photo, photo
         const naturalAspectRatio = photo.width / photo.height;
         const fileType = photo.urls.regular.split('&fm=')[1].split('&')[0];
         const id = `${photo.urls.regular}-${generateRandom4Digit()}`
-        const photoObj = { naturalAspectRatio, smallUrl: photo.urls.small, regUrl: photo.urls.regular, fileType, id, isGif: false };
+        const photoObj = { naturalAspectRatio,
+            smallUrl: photo.urls.small,
+            regUrl: photo.urls.regular,
+            fileType, id,
+            beingEdited: false,
+            isGif: false };
         photoOnClick(photoObj);
     }
 

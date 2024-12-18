@@ -11,7 +11,8 @@ import Cropper from 'react-easy-crop';
 import ImageCropper from './ImageCropper';
 
 export const EditMediaModal = () => {
-    const { setShowEditMediaModal, mediaBeingEditedUrl, setShowAdobeEditor, setPhotosInPost, photosInPost, mediaBeingEditedId, mediaIsGif } = useModalStatesContext();
+    const { setShowEditMediaModal, mediaBeingEditedUrl, setShowAdobeEditor, addOrUpdatePhotoInPost,
+        mediaBeingEditedId, mediaIsGif, removePhotoFromPost } = useModalStatesContext();
     const [cropping, setCropping] = useState(false);
     const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
     const containerStyle: React.CSSProperties = {
@@ -61,10 +62,7 @@ export const EditMediaModal = () => {
 
 
     const saveToCloudinary = async (blob) => {
-        setPhotosInPost((prev) => prev.map((post, idx) => {
-            if (post.id != mediaBeingEditedId.current) return post;
-            return { ...post, beingEdited: true }
-        }));
+        addOrUpdatePhotoInPost({beingEdited: true}, mediaBeingEditedId.current);
         setShowEditMediaModal(false);
         try {
 
@@ -82,16 +80,11 @@ export const EditMediaModal = () => {
             const data = await uploadResponse.json();
             console.log(data)
             console.log('Uploaded image URL:', data.secure_url);
-            setPhotosInPost((prev) => prev.map((post, idx) => {
-                if (post.id != mediaBeingEditedId.current) return post;
-                return { ...post, beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url }
-            }));
+            addOrUpdatePhotoInPost({beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url }, mediaBeingEditedId.current);
+
         } catch (error) {
             console.error('Error uploading to Cloudinary:', error);
-            setPhotosInPost((prev) => prev.map((post, idx) => {
-                if (post.id != mediaBeingEditedId.current) return post;
-                return { ...post, beingEdited: false }
-            }));
+            addOrUpdatePhotoInPost({beingEdited: false}, mediaBeingEditedId.current);
         }
 
     };
@@ -121,7 +114,7 @@ export const EditMediaModal = () => {
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: mediaIsGif.current ? '0px' :'10px' }}>
                     <Button
                         onClick={() => {
-                            setPhotosInPost((prev) => prev.filter((photo) => photo.id !== mediaBeingEditedId.current))
+                            removePhotoFromPost(mediaBeingEditedId.current);
                             setShowEditMediaModal(false)
                         }}
                         className="p-5 bg-white hover:bg-red-100 text-red-700 shadow-none">

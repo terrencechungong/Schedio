@@ -1,0 +1,36 @@
+.gridContainer {
+    display: grid;
+    grid-template-areas: "a b c";
+    grid-template-columns: 1fr 1fr 1fr; /* Equal width columns */
+    column-gap: 5px; /* Optional: space between columns */
+    position: relative; /* Allow relative positioning */
+    width: 100%; /* Full width container */
+  }
+  
+  .gridItem {
+    grid-column-start: auto; /* Start at the default placement */
+    width: 150%; /* Let the width overflow into adjacent columns */
+    position: relative;
+    background-color: rgba(66, 133, 244, 0.8); /* Default color */
+    padding: 10px;
+    color: white;
+    box-sizing: border-box;
+  }
+  
+  .item1 {
+    grid-area: a;
+    z-index: 1; /* Stacking control */
+  }
+  
+  .item2 {
+    grid-area: b;
+    z-index: 2; /* Higher stacking order */
+    background-color: rgba(52, 168, 83, 0.8);
+  }
+  
+  .item3 {
+    grid-area: c;
+    background-color: rgba(234, 67, 53, 0.8);
+    z-index: 3;
+  }
+  

@@ -4,8 +4,8 @@ import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, Video, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
-import { ModalStatesContext, useModalStatesContext } from '../layout';
-import { ComposePoseSidePanel } from './ComposePostSidePanel';
+import { ModalStatesContext, PlatformName, PostType, useModalStatesContext } from '../layout';
+import { ComposePoseSidePanelWrapper } from './composeSidePanel/ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
 import Tooltip from '@mui/material/Tooltip';
@@ -24,9 +24,9 @@ import { Input } from '@/components/ui/input';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
-  const { textareaRef, setPostCaption, imgContainer, photosInPost, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
-    checkedProfile, setCheckedProfile, setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
-    postTypeIsShort, setShowEditVideoModal
+  const { textareaRef, setPostCaption, imgContainer, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
+    setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
+    postTypeData, setShowEditVideoModal, updateGlobalProfiles, globalProfilesArray
   } = useModalStatesContext();
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
@@ -52,20 +52,28 @@ export default function ComposePage() {
   const [isPopoverHidden, setIsPopoverHidden] = useState(false);
   const [deleteVersionPopoverHidden, setDeleteVersionPopoverHidden] = useState(true);
   const [showGenericTemplate, setShowGenericTemplate] = useState(false);
-  const [showYoutubeTitlePrompt, setShowYoutubeTitlePrompt] = useState(postTypeIsShort &&
-    (
-      (postVariationKey == 'GenericTemplate' && checkedProfile.some(profile => profile.platform == 'Youtube' && !profile.unique && profile.active)) ||
-      postVariationKey.split('-')[0] === 'Youtube'
-    ));
+  const [showYoutubeTitlePrompt, setShowYoutubeTitlePrompt] = useState(
+    (postVariationKey == 'GenericTemplate'
+      && globalProfilesArray.some(profile => profile.platform == PlatformName.Youtube
+        && !profile.unique && profile.active)) ||
+    postVariationKey.split('-')[0] === PlatformName.Youtube
+  );
   const [youtubeTitleIsEmpty, setYoutubeTitleIsEmpty] = useState(true);
 
+
   useEffect(() => {
-    setShowYoutubeTitlePrompt(postTypeIsShort &&
-      (
-        (postVariationKey == 'GenericTemplate' && checkedProfile.some(profile => profile.platform == 'Youtube' && !profile.unique && profile.active)) ||
-        postVariationKey.split('-')[0] === 'Youtube'
-      ))
-  }, [checkedProfile, postVariationKey]);
+    console.log("CHANGE", (postVariationKey == 'GenericTemplate'
+      && globalProfilesArray.some(profile => profile.platform == PlatformName.Youtube
+        && !profile.unique && profile.active)) ||
+      postVariationKey.split('-')[0] === PlatformName.Youtube)
+    setShowYoutubeTitlePrompt((postVariationKey == 'GenericTemplate'
+      && globalProfilesArray.some(profile => profile.platform == PlatformName.Youtube
+        && !profile.unique && profile.active)) ||
+      postVariationKey.split('-')[0] === PlatformName.Youtube
+    )
+  }, [globalProfilesArray, postVariationKey]);
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setYoutubeTitleIsEmpty(e.target.value.trim() === "");
@@ -545,16 +553,16 @@ export default function ComposePage() {
   };
 
   useEffect(() => {
-    const unique = checkedProfile.reduce((acc, profile) => {
+    const unique = globalProfilesArray.reduce((acc, profile) => {
       return profile.unique && profile.active ? acc + 1 : acc;
     }, 0);
-    const active = checkedProfile.reduce((acc, profile) => {
+    const active = globalProfilesArray.reduce((acc, profile) => {
       return profile.active ? acc + 1 : acc;
     }, 0);
     setShowPlus(active > 1 && (active - unique > 1));
     setShowGenericTemplate(active > 1);
     // IF YOU CANT SHOW GENERIC SWITCH TO GENERIC (NO) AND HIDE THE OTHER PLATFORMS
-  }, [checkedProfile]);
+  }, [globalProfilesArray]);
 
   useEffect(() => {
     const div = divRef.current;
@@ -621,48 +629,53 @@ export default function ComposePage() {
         <div style={{ width: '100%' }}>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             {showGenericTemplate &&
-              <div className='text-gray-600' style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer', fontSize: '12px',
-                borderBottom: postVariationKey == "GenericTemplate" ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
-              }}
-                onClick={() => {
-                  if (textareaRef.current) textareaRef.current.innerHTML = postVariations["GenericTemplate"].postCaption
-                  setPostVariationKey("GenericTemplate")
+              <Tooltip title={`${globalProfilesArray.filter(p => p.active && !p.unique).map((p) => (
+                `${p.name}${p.sharesName && ` (${p.platform})`}`
+              )).join(', ')}`} followCursor placement='top' arrow>
+                <div className='text-gray-600' style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer', fontSize: '12px',
+                  borderBottom: postVariationKey == "GenericTemplate" ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
                 }}
-              >
-                Generic Template
-              </div>
+                  onClick={() => {
+                    if (textareaRef.current) textareaRef.current.innerHTML = postVariations["GenericTemplate"].postCaption
+                    setPostVariationKey("GenericTemplate")
+                  }}
+                >
+                  Generic Template
+                </div>
+              </Tooltip>
             }
-            {showGenericTemplate && checkedProfile
+            {showGenericTemplate && globalProfilesArray
               .filter((profile, index) => profile.unique && profile.active)
               .map((profile) => {
                 const key = `${profile.platform}-${profile.name}-${profile.id}`;
-
                 return (
 
                   <Popover>
                     <PopoverTrigger asChild >
-                      <div
-                        onClick={(e) => {
+                      <Tooltip title={`${profile.name}${profile.sharesName && ` (${profile.platform})`}`} followCursor placement='top' arrow>
+                        <div
+                          onClick={(e) => {
 
-                          if (postVariationKey == key) {
-                            e.nativeEvent.stopImmediatePropagation()
-                            e.stopPropagation()
-                            console.log("CLICKKKD")
-                            setDeleteVersionPopoverHidden(false)
-                          } else {
-                            if (textareaRef.current) textareaRef.current.innerHTML = postVariations[key].postCaption
-                            setPostVariationKey(key)
-                            setDeleteVersionPopoverHidden(true)
-                          }
+                            if (postVariationKey == key) {
+                              e.nativeEvent.stopImmediatePropagation()
+                              e.stopPropagation()
+                              console.log("CLICKKKD")
+                              setDeleteVersionPopoverHidden(false)
+                            } else {
+                              if (textareaRef.current) textareaRef.current.innerHTML = postVariations[key].postCaption
+                              setPostVariationKey(key)
+                              setDeleteVersionPopoverHidden(true)
+                            }
 
-                        }}
-                        style={{
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer',
-                          borderBottom: postVariationKey == key ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
-                        }}>
-                        {platformIcons[profile.platform]}
-                      </div>
+                          }}
+                          style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer',
+                            borderBottom: postVariationKey == key ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
+                          }}>
+                          {platformIcons[profile.platform]}
+                        </div>
+                      </Tooltip>
                     </PopoverTrigger>
                     <PopoverContent align="start" className="w-39 shadow-md !p-3 rounded-lg border-[0.5px] alig" hidden={(postVariationKey != key || deleteVersionPopoverHidden)}>
                       <Button
@@ -685,7 +698,7 @@ export default function ComposePage() {
                   <p style={{ fontWeight: '500', fontSize: '14px' }}>Modify post for</p>
                 </div>
                 <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
-                  {checkedProfile
+                  {globalProfilesArray
                     .filter((profile, index) => !profile.unique && profile.active)
                     .map((profile) => (
                       <div
@@ -695,17 +708,12 @@ export default function ComposePage() {
                           if (!Object.keys(postVariations).some(postVar => postVar == key)) {
                             setPostVariations((prev) => ({
                               ...prev, [key]: {
-                                postCaption: postVariations[postVariationKey].postCaption,
-                                postMedia: photosInPost
+                                postCaption: postVariations['GenericTemplate'].postCaption,  ////CHANGE THIS
+                                postMedia: postVariations['GenericTemplate'].postMedia
                               }
                             }))
                           }
-                          setCheckedProfile((prev) => prev.map((p) => {
-                            if (p.id == profile.id) {
-                              return { ...p, unique: true }
-                            }
-                            return p;
-                          }))
+                          updateGlobalProfiles(profile.id, { unique: true });
                           setPostVariationKey(key);
                           setIsPopoverHidden(true);
                         }}
@@ -740,7 +748,7 @@ export default function ComposePage() {
             }
             <TextAreaComponent handleInput={handleInput} onSmileClick={onSmileClick} />
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', paddingTop: '8px', maxWidth: '100%', overflowX: 'auto' }} ref={imgContainer}>
-              {!postTypeIsShort ? photosInPost.map((photo, index) => (
+              {postTypeData.type == PostType.NORMAL ? postVariations[postVariationKey].postMedia.map((photo, index) => (
                 <div
                   className={styles.photoItem}
                   onClick={() => {
@@ -1406,7 +1414,7 @@ export default function ComposePage() {
           />
         </div>
       </div>
-      <ComposePoseSidePanel />
+      <ComposePoseSidePanelWrapper />
     </div>
   );
 }
@@ -1417,7 +1425,7 @@ interface TextAreaComponentInterface {
 }
 
 const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, onSmileClick }) => {
-  const { setShowMediaModal, textareaRef, setShowAiGenCaption, postTypeIsShort, setShowAddShortVideoModal } = useModalStatesContext();
+  const { setShowMediaModal, textareaRef, setShowAiGenCaption, postTypeData, setShowAddShortVideoModal } = useModalStatesContext();
   const [hashtagsGenerating, setHashtagsGenerating] = useState(false);
 
   const generateHashtags = () => {
@@ -1442,17 +1450,27 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
         contentEditable={true}
       ></div>
       <div className={styles.iconRowInCreatePost}>
-        <div
-          className={styles.createPostIcon}>
-          <EllipsisVertical size={20} strokeWidth={1.5} />
-        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <div
+              className={styles.createPostIcon}>
+              <EllipsisVertical size={20} strokeWidth={1.5} />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-50 shadow-none !p-3 rounded-lg border-[0.5px] border-gray-100" align='start'>
+           test
+          </PopoverContent>
+        </Popover>
+
+
+
         <Tooltip title="Add emoji" placement="top" arrow followCursor>
           <div
             className={styles.createPostIcon} onClick={(e) => onSmileClick(e)}>
             <SmilePlus size={20} strokeWidth={1.5} />
           </div>
         </Tooltip>
-        {postTypeIsShort ?
+        {postTypeData.type == PostType.SHORT ?
           (<Tooltip title="Select Short Video" placement="top" arrow followCursor>
             <div
               onClick={() => setShowAddShortVideoModal(true)}

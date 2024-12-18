@@ -9,7 +9,7 @@ import { generateRandom4Digit } from "@/app/utilFunctions";
 export const AddMediaUploadTabContent: React.FC = () => {
     const fileInputRef = useRef(null);
     const inputRef = useRef(null);
-    const { setShowMediaModal, setPhotosInPost } = useModalStatesContext();
+    const { setShowMediaModal, setPhotosInPost, addOrUpdatePhotoInPost } = useModalStatesContext();
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -41,7 +41,9 @@ export const AddMediaUploadTabContent: React.FC = () => {
                     isGif: false,
                 };
 
-                setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: true }]);
+                addOrUpdatePhotoInPost({ ...photoObj, beingEdited: true });
+                // setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: true }]);
+
                 setShowMediaModal(false);
                 URL.revokeObjectURL(url);
                 const blob = new Blob([file], { type: file.type });
@@ -58,10 +60,12 @@ export const AddMediaUploadTabContent: React.FC = () => {
                 );
 
                 const data = await uploadResponse.json();
-                setPhotosInPost((prev) => prev.map((post, idx) => {
-                    if (post.id != id) return post;
-                    return { ...post, beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url }
-                }));
+                // setPhotosInPost((prev) => prev.map((post, idx) => {
+                //     if (post.id != id) return post;
+                //     return { ...post, beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url }
+                // }));
+                addOrUpdatePhotoInPost({ ...photoObj, beingEdited: false, regUrl: data.secure_url, smallUrl: data.secure_url });
+
             };
 
             img.onerror = () => {
@@ -141,7 +145,8 @@ export const AddMediaUploadTabContent: React.FC = () => {
                 isGif: fileType.toLowerCase().includes('gif'),
             };
             // Proceed with your function
-            setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: false }]);
+            // setPhotosInPost((prev) => [...prev, { ...photoObj, beingEdited: false }]);
+            addOrUpdatePhotoInPost({ ...photoObj, beingEdited: false })
             setShowMediaModal(false);
         } catch (error) {
             alert(`Error: ${error.message}`);
