@@ -27,12 +27,17 @@ const FullCalendarWrapper = () => {
   };
 
   return (
-    <div style={{ width: '100%', height: '100%', padding:'20px' }}>
+    <div style={{ width: '100%', height: '100%', padding:'20px', backgroundColor:'#f7fafc'}}>
       {/* <div style={{width:'100%', height:'100%'}}> */}
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
         editable={true}
+        slotLabelFormat={{
+          hour: 'numeric',   // Shows hours in numeric format
+          minute: '2-digit', // Shows minutes in two-digit format
+          hour12: true,      // Ensures 12-hour format (AM/PM)
+        }}
         selectable={true}
         events={events}
         headerToolbar={{
@@ -46,7 +51,26 @@ const FullCalendarWrapper = () => {
       <style jsx global>{`
         /* Custom styles for events */
           /* Remove outer border of the main calendar table */
+          .fc-header-toolbar {
+            background-color: #f7fafc;
+            margin: 0 !important;
+            padding: 0 !important;          
+          }
+          .fc {
+            background-color: white !important; /* Set the desired color */
+          }
+          .fc-scrollgrid-section-header {
+            background-color: #f7fafc;
+          }
+          .fc-timegrid-slot-label {
+            background-color: #f7fafc;
+            padding: 6px !important;
+          }
+          .fc-scrollgrid-shrink {
+            background-color: #f7fafc;
+            padding: 6px !important;
 
+          }
           .fc-scrollgrid {
             border: none !important; /* Remove outer border of the table */
           }
