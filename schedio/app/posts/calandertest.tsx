@@ -1,5 +1,8 @@
 import dynamic from 'next/dynamic';
-
+import { FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
+import { Instagram } from "lucide-react";
+import { SiThreads } from "react-icons/si";
 // Dynamically import FullCalendar to disable SSR
 const FullCalendar = dynamic(() => import('@fullcalendar/react'), { ssr: false });
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -10,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { PlatformColor, PlatformIcons, PlatformName, Profile } from '../layout';
 
 enum View {
   MONTH = "Month",
@@ -19,21 +23,72 @@ enum View {
 
 const FullCalendarWrapper = () => {
   const [events, setEvents] = useState([
-    { id: 1, title: 'Meeting', start: '2024-12-17T10:00:00', end: '2024-12-17T12:00:00' },
-    { id: 2, title: 'Workshop', start: '2024-12-17T11:00:00', end: '2024-12-17T13:00:00' },
+    { id: 1, title: 'Meeting', start: '2024-12-17T10:00:00', end: '2024-12-17T11:06:00' },
+    { id: 2, title: 'Workshop', start: '2024-12-17T11:00:00', end: '2024-12-17T12:06:00' },
   ]);
   const [currentView, setCurrentView] = useState<View>(View.WEEK);
   const calendarRef = useRef(null); // Create a ref for FullCalendar
   const [dateRange, setDateRange] = useState("");
+  const eventTextStyle: React.CSSProperties =
+  {
+    display: "-webkit-box", // Enables line clamping
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2, // Limit text to 2 lines
+    overflow: "hidden", // Hide overflow text
+    textOverflow: "ellipsis",
+    whiteSpace: "normal", // Allow text wrapping
+    wordBreak: "break-word", // Break long words if needed
+    maxWidth: "100%", // Ensure it doesn’t stretch
+    lineHeight: "1.2", // Adjust line spacing
+  }
+
+  const ProfileIcon = ({ profile }: { profile: Profile }) => {
+    const Icon = PlatformIcons[profile.platform as PlatformName];
+    return <Icon color={PlatformColor[profile.platform]} size={17} />;
+  };
 
   // Custom JSX for event content
   const renderEventContent = (eventInfo) => {
     return (
-      <div className="custom-event">
-        <div className="custom-event-title">{eventInfo.event.title}</div>
-        <div className="custom-event-details">
-          <p>Time: {eventInfo.timeText}</p>
-          <p>ID: {eventInfo.event.id}</p>
+      <div className="custom-event"
+        style={{ overflowX: 'hidden' }}
+      >
+        <div
+          className="clamped-text"
+          style={eventTextStyle}
+        >
+          ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: '2px',
+            justifyContent: "flex-end",
+            // backgroundColor: "yellow",
+            padding: 0,
+            margin: 0,
+            lineHeight: 1, // Fix potential extra space
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: '3px', // Remove gaps between flex children
+              // backgroundColor:'blue',
+              padding: 0
+            }}
+          >
+            <FaLinkedin color={PlatformColor.LinkedIn} size={16} />
+            <SiThreads color={PlatformColor.Threads} size={16} />
+            <FaFacebook color={PlatformColor.Facebook} size={16} />
+            <Instagram color={PlatformColor.Instagram} size={16} />
+          </div>
+
+          <div style={{ padding: 0, margin: 0 }}>
+            3:00 PM
+          </div>
         </div>
       </div>
     );
@@ -138,7 +193,7 @@ const FullCalendarWrapper = () => {
           return (
             <div style={{ textAlign: 'center', lineHeight: '20px' }}>
               <div style={{ fontWeight: 'bold', color: '#626f84', fontSize: '14px' }}>{weekday}</div>
-              <div style={{ color: '#afbfcf', fontWeight: '500', fontSize: '14px' }}>{date}</div>
+              {(currentView != View.MONTH) && <div style={{ color: '#afbfcf', fontWeight: '500', fontSize: '14px' }}>{date}</div>}
             </div>
           );
         }}
@@ -147,10 +202,15 @@ const FullCalendarWrapper = () => {
 
       <style jsx global>{`
         /* Custom styles for events */
+      
         .fc-toolbar-chunk {
           display: flex !important;
           flex-direction: row-reverse !important;
           gap: 10px;
+        }
+
+        .fc-timegrid, fc-view-harness, fc-view {
+          border-color: #edf2f7 !important;
         }
 
         .fc-timegrid-axis {
@@ -166,7 +226,7 @@ const FullCalendarWrapper = () => {
         
           /* Remove outer border of the main calendar table */
           .fc-header-toolbar {
-           display: none !important; 
+          display: none !important; 
             background-color: #f7fafc;
             margin: 0 !important;
             padding: 0 !important;          
@@ -195,8 +255,10 @@ const FullCalendarWrapper = () => {
 
           /* Keep borders on table cells */
           .fc-timegrid-slot,
-          .fc-daygrid-day-frame,
-          .fc-daygrid-day {
+          .fc-daygrid-day-frame
+          
+          ${(currentView != View.MONTH) && `,
+          .fc-daygrid-day`} {
             border: 1px solid #edf2f7 !important; /* Keep borders on cells */
           }
 
@@ -204,9 +266,11 @@ const FullCalendarWrapper = () => {
           .fc-scrollgrid-liquid {
             border: none !important;
           }
-        .fc-scrollgrid-section-body:first-of-type {
+     
+
+        ${(currentView != View.MONTH) && `.fc-scrollgrid-section-body:first-of-type {
           display: none !important;
-        }
+        }`}
           .fc-scrollgrid-section:nth-of-type(2) {
             display: none !important;
           }
@@ -216,24 +280,34 @@ const FullCalendarWrapper = () => {
           width: 100%;
         }
         .fc-event {
-          background-color: purple !important;
-          border: 2px solid #6a0dad !important; /* Purple border */
+          background-color: white !important;
+          border: none !important; /* Purple border */
           box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
           border-radius: 8px; /* Rounded corners */
-          color: white !important; /* Text color */
+          color: black !important; /* Text color */
           padding: 5px;
+          overflow:hidden;
           font-size: 12px;
           display: flex;
           flex-direction: column;
           justify-content: center;
+            max-width: 100%;
+
           align-items: flex-start;
+         box-shadow: 0px 4px 19px rgba(102, 102, 102, 0.2) !important;
         }
 
         /* Style for the custom event content */
         .custom-event {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          justify-content: space-between;
+          padding: 3px;
+          color: black !important; /* Text color */
+          overflowX: hidden;
+            max-width: 100%;
+            height: 100%;
+            max-height: 100%;
         }
 
         .custom-event-title {
@@ -245,6 +319,15 @@ const FullCalendarWrapper = () => {
           margin: 0;
           font-size: 10px;
         }
+          .custom-event .clamped-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-width: 100%;
+}
       `}</style>
     </div>
   );

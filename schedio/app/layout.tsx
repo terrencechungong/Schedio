@@ -4,9 +4,15 @@ import React, { createContext, useState, useContext, useEffect, ReactNode, useRe
 import localFont from "next/font/local";
 import "./globals.scss";
 import { Toaster } from "@/components/ui/toaster"
+import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import { usePathname } from 'next/navigation'; // Use usePathname for current route
 import AppCode from "@/AppCode";
+import { FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
+import { Instagram } from "lucide-react";
+import { SiThreads } from "react-icons/si";
+import { IconType } from "react-icons/lib";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -144,11 +150,18 @@ export enum PlatformColor {
   Youtube = '#FF0000',
   Facebook = '#0866ff',
   Instagram = '#833ab4',
-  Threads = '#89CFF0',
+  Threads = '#000000',
   TikTok = '#000000',
 }
 
-
+export const PlatformIcons: { [key in PlatformName]: IconType | LucideIcon } = {
+  [PlatformName.LinkedIn]: FaLinkedin,
+  [PlatformName.Youtube]: FaYoutube,
+  [PlatformName.Facebook]: FaFacebook,
+  [PlatformName.Instagram]: Instagram,
+  [PlatformName.Threads]: SiThreads,
+  [PlatformName.TikTok]: FaTiktok,
+}
 
 // global post is short boolean
 
@@ -275,6 +288,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     console.log(postVariations)
   }, [postVariations]);
+
 
   return (
     <ModalStatesContext.Provider value={{

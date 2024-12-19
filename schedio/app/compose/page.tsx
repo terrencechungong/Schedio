@@ -4,7 +4,7 @@ import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, Video, WandSparkles, Wrench, X } from 'lucide-react';
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
-import { ModalStatesContext, PlatformName, PostType, useModalStatesContext } from '../layout';
+import { ModalStatesContext, PlatformColor, PlatformIcons, PlatformName, PostType, Profile, useModalStatesContext } from '../layout';
 import { ComposePoseSidePanelWrapper } from './composeSidePanel/ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 import { Button } from '@/components/ui/button';
@@ -623,6 +623,11 @@ export default function ComposePage() {
     'TikTok': <FaTiktok color='#000000' size={17} />,
   };
 
+  const ProfileIcon = ({ profile }: { profile: Profile }) => {
+    const Icon = PlatformIcons[profile.platform as PlatformName];
+    return <Icon color={PlatformColor[profile.platform]} size={17} />;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.composePostCenterDiv}>
@@ -673,7 +678,8 @@ export default function ComposePage() {
                             display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 10px 7px', cursor: 'pointer',
                             borderBottom: postVariationKey == key ? '1px solid hsl(262.1, 83.3%, 57.8%)' : '1px solid whitesmoke'
                           }}>
-                          {platformIcons[profile.platform]}
+                          <ProfileIcon profile={profile} />
+
                         </div>
                       </Tooltip>
                     </PopoverTrigger>
