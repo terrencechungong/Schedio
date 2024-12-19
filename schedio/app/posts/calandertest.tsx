@@ -46,48 +46,91 @@ const FullCalendarWrapper = () => {
     const Icon = PlatformIcons[profile.platform as PlatformName];
     return <Icon color={PlatformColor[profile.platform]} size={17} />;
   };
+  const [hover, setHover] = useState(false);
 
   // Custom JSX for event content
   const renderEventContent = (eventInfo) => {
     return (
-      <div className="custom-event"
-        style={{ overflowX: 'hidden' }}
+      <div style={{ width: '100%', position: 'relative', height: '100%', backgroundColor: 'red', flexGrow: 1, borderRadius:'8px' }}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
-        <div
-          className="clamped-text"
-          style={eventTextStyle}
-        >
-          ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-        </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: '2px',
-            justifyContent: "flex-end",
-            // backgroundColor: "yellow",
-            padding: 0,
-            margin: 0,
-            lineHeight: 1, // Fix potential extra space
-          }}
+        <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
+         onMouseEnter={(e) => {e.stopPropagation()
+          setHover(false)
+         }}
+          style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white' }}
         >
+          <div
+            className="clamped-text"
+            style={eventTextStyle}
+          >
+            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+          </div>
+
           <div
             style={{
               display: "flex",
-              gap: '3px', // Remove gaps between flex children
-              // backgroundColor:'blue',
-              padding: 0
+              flexDirection: "column",
+              gap: '2px',
+              justifyContent: "flex-end",
+              // backgroundColor: "yellow",
+              padding: 0,
+              margin: 0,
+              lineHeight: 1, // Fix potential extra space
+              width:'100%',
+              flex: '0 0 auto',
+              minWidth: '100%'
+              ,flexShrink: 0
             }}
           >
-            <FaLinkedin color={PlatformColor.LinkedIn} size={16} />
-            <SiThreads color={PlatformColor.Threads} size={16} />
-            <FaFacebook color={PlatformColor.Facebook} size={16} />
-            <Instagram color={PlatformColor.Instagram} size={16} />
-          </div>
+            <div
+              style={{
+                display: "flex",
+                gap: '3px', // Remove gaps between flex children
+                // backgroundColor:'blue',
+                padding: 0,
+                width:'100%',
+                flex: '0 0 auto',
+                minWidth: '100%'
+                ,flexShrink: 0
 
-          <div style={{ padding: 0, margin: 0 }}>
-            3:00 PM
+              }}
+            >
+              <FaLinkedin
+          color={PlatformColor.LinkedIn}
+          size={16}
+          style={{ flexShrink: 0 }} // Prevent resizing
+        />
+        <SiThreads
+          color={PlatformColor.Threads}
+          size={16}
+          style={{ flexShrink: 0 }} // Prevent resizing
+        />
+        <FaFacebook
+          color={PlatformColor.Facebook}
+          size={16}
+          style={{ flexShrink: 0 }} // Prevent resizing
+        />
+        <Instagram
+          color={PlatformColor.Instagram}
+          size={16}
+          style={{ flexShrink: 0 }} // Prevent resizing
+        />
+            </div>
+
+            <div  style={{
+              padding: 0,
+              margin: 0,
+              flexShrink: 0,
+              fontSize: "12px",
+              whiteSpace: "nowrap", // Prevent wrapping
+              overflow: "hidden", // Hide overflow if container is small
+              textOverflow: "ellipsis", // Optional ellipsis
+            }}>
+              3:00 PM
+            </div>
           </div>
         </div>
       </div>
@@ -285,28 +328,32 @@ const FullCalendarWrapper = () => {
           box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
           border-radius: 8px; /* Rounded corners */
           color: black !important; /* Text color */
-          padding: 5px;
           overflow:hidden;
           font-size: 12px;
           display: flex;
           flex-direction: column;
+          padding: 0 !important;
           justify-content: center;
             max-width: 100%;
-
-          align-items: flex-start;
+          
+           align-items: stretch;
          box-shadow: 0px 4px 19px rgba(102, 102, 102, 0.2) !important;
         }
 
         /* Style for the custom event content */
         .custom-event {
           display: flex;
+                    border-radius: 8px; /* Rounded corners */
+
           flex-direction: column;
           justify-content: space-between;
-          padding: 3px;
-          color: black !important; /* Text color */
+          padding: 8px;
+          color: #1a202c !important; /* Text color */
           overflowX: hidden;
             max-width: 100%;
+            font-weight: 400;
             height: 100%;
+            font-size:12px;
             max-height: 100%;
         }
 
