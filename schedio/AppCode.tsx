@@ -32,6 +32,7 @@ export default function AppCode({
 
     return (
         <div style={{ width: '100vw', height: '100vh', flex: '0 0 auto', maxWidth: '100vw' }}>
+     
             <AnimatePresence>
                 {showVideoEditorModal && <VideoEditorModal/>}
             </AnimatePresence>

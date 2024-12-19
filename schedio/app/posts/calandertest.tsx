@@ -34,6 +34,7 @@ const FullCalendarWrapper = () => {
     display: "-webkit-box", // Enables line clamping
     WebkitBoxOrient: "vertical",
     WebkitLineClamp: 2, // Limit text to 2 lines
+    fontSize: '11.5px',
     overflow: "hidden", // Hide overflow text
     textOverflow: "ellipsis",
     whiteSpace: "normal", // Allow text wrapping
@@ -51,16 +52,24 @@ const FullCalendarWrapper = () => {
   // Custom JSX for event content
   const renderEventContent = (eventInfo) => {
     return (
-      <div style={{ width: '100%', position: 'relative', height: '100%', backgroundColor: 'red', flexGrow: 1, borderRadius:'8px' }}
+      <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow:'0px 4px 19px rgba(102, 102, 102, 0.28)' }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
+        <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px'}}>
+          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'red', borderRadius: '8px 8px 0 0' }}></div>
+          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'blue' }}></div>
+          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'green' }}></div>
+          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'blue' }}></div>
 
+          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'yellow' , borderRadius: '0 0 8px 8px'}}></div>
+        </div>
         <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
-         onMouseEnter={(e) => {e.stopPropagation()
-          setHover(false)
-         }}
-          style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white' }}
+          onMouseEnter={(e) => {
+            e.stopPropagation()
+            setHover(false)
+          }}
+          style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white', zIndex: 2 }}
         >
           <div
             className="clamped-text"
@@ -79,10 +88,10 @@ const FullCalendarWrapper = () => {
               padding: 0,
               margin: 0,
               lineHeight: 1, // Fix potential extra space
-              width:'100%',
+              width: '100%',
               flex: '0 0 auto',
               minWidth: '100%'
-              ,flexShrink: 0
+              , flexShrink: 0
             }}
           >
             <div
@@ -91,40 +100,40 @@ const FullCalendarWrapper = () => {
                 gap: '3px', // Remove gaps between flex children
                 // backgroundColor:'blue',
                 padding: 0,
-                width:'100%',
+                width: '100%',
                 flex: '0 0 auto',
                 minWidth: '100%'
-                ,flexShrink: 0
+                , flexShrink: 0
 
               }}
             >
               <FaLinkedin
-          color={PlatformColor.LinkedIn}
-          size={16}
-          style={{ flexShrink: 0 }} // Prevent resizing
-        />
-        <SiThreads
-          color={PlatformColor.Threads}
-          size={16}
-          style={{ flexShrink: 0 }} // Prevent resizing
-        />
-        <FaFacebook
-          color={PlatformColor.Facebook}
-          size={16}
-          style={{ flexShrink: 0 }} // Prevent resizing
-        />
-        <Instagram
-          color={PlatformColor.Instagram}
-          size={16}
-          style={{ flexShrink: 0 }} // Prevent resizing
-        />
+                color={PlatformColor.LinkedIn}
+                size={17}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+              <SiThreads
+                color={PlatformColor.Threads}
+                size={17}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+              <FaFacebook
+                color={PlatformColor.Facebook}
+                size={17}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+              <Instagram
+                color={PlatformColor.Instagram}
+                size={17}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
             </div>
 
-            <div  style={{
+            <div style={{
               padding: 0,
               margin: 0,
               flexShrink: 0,
-              fontSize: "12px",
+              fontSize: "11.5px",
               whiteSpace: "nowrap", // Prevent wrapping
               overflow: "hidden", // Hide overflow if container is small
               textOverflow: "ellipsis", // Optional ellipsis
@@ -322,22 +331,24 @@ const FullCalendarWrapper = () => {
           height: 87vh;
           width: 100%;
         }
+          .fc-event-main {
+            background-color: rgba(0,0,0,0) !important
+          }
         .fc-event {
-          background-color: white !important;
+          background-color: rgba(0,0,0,0) !important;
           border: none !important; /* Purple border */
-          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
           border-radius: 8px; /* Rounded corners */
-          color: black !important; /* Text color */
-          overflow:hidden;
+          color: #484d56 !important; /* Text color */
           font-size: 12px;
           display: flex;
           flex-direction: column;
           padding: 0 !important;
           justify-content: center;
             max-width: 100%;
-          
+          border: 0px solid black !important;
            align-items: stretch;
-         box-shadow: 0px 4px 19px rgba(102, 102, 102, 0.2) !important;
+                    box-shadow: 0px 4px 19px rgba(102, 102, 102, 0.0) !important;
+
         }
 
         /* Style for the custom event content */
@@ -348,7 +359,7 @@ const FullCalendarWrapper = () => {
           flex-direction: column;
           justify-content: space-between;
           padding: 8px;
-          color: #1a202c !important; /* Text color */
+          color: #484d56 !important; /* Text color */
           overflowX: hidden;
             max-width: 100%;
             font-weight: 400;

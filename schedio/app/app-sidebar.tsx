@@ -120,41 +120,41 @@ export const TabContext = createContext({
 export function AppSidebar() {
     const [selectedTab, setSelectedTab] = useState(''); // State to track selected tab
     const { state, setOpen } = useSidebar();
-    // const previousWidth = useRef(window.innerWidth); // Track the previous width
+    const previousWidth = useRef(window.innerWidth); // Track the previous width
 
 
-    // useEffect(() => {
-    //     function handleResize() {
-    //       const currentWidth = window.innerWidth;
-    //       console.log(currentWidth);
+    useEffect(() => {
+        function handleResize() {
+          const currentWidth = window.innerWidth;
+          console.log(currentWidth);
 
-    //         const d = document.getElementById("compyy");
-    //         if (d) {
-    //             d.innerText = `${currentWidth}`;
-    //         }
-    //       if (currentWidth < 1270) {
-    //         // Retracting below 1280px
-    //         setOpen(false);
-    //       } else if (currentWidth >= 1270 && previousWidth.current < 1270) {
-    //         // Expanding above 1280px
-    //         setOpen(true);
-    //       }
+            const d = document.getElementById("compyy");
+            if (d) {
+                d.innerText = `${currentWidth}`;
+            }
+          if (currentWidth < 1270) {
+            // Retracting below 1280px
+            setOpen(false);
+          } else if (currentWidth >= 1270 && previousWidth.current < 1270) {
+            // Expanding above 1280px
+            setOpen(true);
+          }
     
-    //       // Update previousWidth to the current width for the next resize event
-    //       previousWidth.current = currentWidth;
-    //     }
+          // Update previousWidth to the current width for the next resize event
+          previousWidth.current = currentWidth;
+        }
     
-    //     // Set initial sidebar state based on current window width
-    //     handleResize();
+        // Set initial sidebar state based on current window width
+        handleResize();
     
-    //     // Add event listener on window resize
-    //     window.addEventListener('resize', handleResize);
+        // Add event listener on window resize
+        window.addEventListener('resize', handleResize);
     
-    //     // Clean up the event listener on component unmount
-    //     return () => {
-    //       window.removeEventListener('resize', handleResize);
-    //     };
-    //   }, []);
+        // Clean up the event listener on component unmount
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
     
 
 
