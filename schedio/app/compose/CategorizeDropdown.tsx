@@ -36,13 +36,31 @@ export function CategorizeDropdown({ isOpen, setIsOpen, FOR_TESTING_REMEMBER_TO_
     { id: 3, value: "motivation", label: "Motivation", bgColor: "#FFE13D", textColor: "black" },
   ]
 
+  const statusItems: CategoryItem[] = [
+    { id: 0, value: "tip", label: "Scheduled", bgColor: "#E9D5FF", textColor: "#7C3AED" },
+    { id: 1, value: "promotion", label: "Awaiting Approval", bgColor: "#ffeca2", textColor: "#c58f07" },
+    { id: 2, value: "thread", label: "Draft", bgColor: "#D3D3D3", textColor: "#696969" },
+  ]
+
   const socialItems: CategoryItem[] = [
-    { id: 0, value: "Schedio", label: "Tip", bgColor: "white", textColor: "black", platform: PlatformName.Facebook },
+    { id: 0, value: "FB account", label: "FB account", bgColor: "white", textColor: "black", platform: PlatformName.Facebook },
+    { id: 1, value: "Terrencechungong", label: "Terrencechungong", bgColor: "white", textColor: "black", platform: PlatformName.TikTok },
+    { id: 2, value: "terrence_chefor", label: "terrence_chefor", bgColor: "white", textColor: "black", platform: PlatformName.Instagram },
+    { id: 3, value: "terrence.c1", label: "terrence.c1", bgColor: "white", textColor: "black", platform: PlatformName.Pinterest },
+
   ]
 
   const [selectedItems, setSelectedItems] = React.useState<CategoryItem[]>(FOR_TESTING_REMEMBER_TO_DEPRECATE ? (
-    (!itemType || itemType == InputType.LABELS) ? labelsItems : (itemType == InputType.SOCIALS ? socialItems : socialItems)
-  ) : [])
+    (!itemType || itemType == InputType.LABELS) ? labelsItems : (itemType == InputType.SOCIALS ? [socialItems[0]] : [statusItems[0]])
+  ) : []);
+
+  const toggleStatusItem = (item: CategoryItem) => {
+    if (selectedItems.some((selected) => selected.id === item.id)) {
+      return;
+    } else {
+      setSelectedItems([item])
+    }
+  }
 
   const toggleItem = (item: CategoryItem) => {
     if (selectedItems.some((selected) => selected.id === item.id)) {
@@ -72,21 +90,27 @@ export function CategorizeDropdown({ isOpen, setIsOpen, FOR_TESTING_REMEMBER_TO_
               key={object.id}
               onClick={(e) => {
                 e.stopPropagation()
+                if (itemType == InputType.STATUS) {
+                  toggleStatusItem(object);
+                  return
+                }
                 toggleItem(object)
               }}
-              className="flex items-center rounded gap-1"
-              style={{ backgroundColor: object.bgColor, cursor: "pointer", padding: "4px" }}
+              className={`flex items-center ${(itemType == InputType.STATUS) ? 'rounded-[14px]' : 'rounded'} gap-1`}
+              style={{ backgroundColor: object.bgColor, cursor: "pointer", padding: (itemType == InputType.STATUS)? "4px 6px 4px" : "4px" }}
             >
-              {(itemType == InputType.LABELS || !itemType) && <p className="m-0" style={{ color: object.textColor, fontWeight: "600", fontSize: '13px' }}>
-                {object.label}
-              </p>}
+              {(itemType == InputType.STATUS) && <div className="m-0"
+                style={{ color: object.textColor, fontWeight: "600", fontSize: '13px', display: 'flex', flexDirection: 'row', gap: '6px', alignItems: 'center' }}>
+                <div className={`rounded-full h-2 w-2`} style={{ backgroundColor: object.textColor }}></div>
+                <span>{object.label}</span>
+              </div>}
               {(itemType == InputType.SOCIALS) && <div className="m-0"
-                style={{ color: object.textColor, fontWeight: "600", fontSize: '13px', display: 'flex', flexDirection: 'row', gap: '4px', alignItems:'center' }}>
+                style={{ color: object.textColor, fontWeight: "600", fontSize: '13px', display: 'flex', flexDirection: 'row', gap: '4px', alignItems: 'center' }}>
                 <PlatformIcon platform={object.platform} />
 
                 <span>{object.label}</span>
               </div>}
-              {(itemType == InputType.STATUS) && <p className="m-0" style={{ color: object.textColor, fontWeight: "600", fontSize: '13px' }}>
+              {(!itemType || itemType == InputType.LABELS) && <p className="m-0" style={{ color: object.textColor, fontWeight: "600", fontSize: '13px' }}>
                 {object.label}
               </p>}
               <X
@@ -105,7 +129,70 @@ export function CategorizeDropdown({ isOpen, setIsOpen, FOR_TESTING_REMEMBER_TO_
       {isOpen && (
         <div className="absolute z-10 mt-1 w-full shadow-lg bg-gray-200 border-[0px] rounded">
           <div className="py-1 max-h-60 overflow-auto">
-            {labelsItems.filter(item => !selectedItems.some(selected => selected.id === item.id)).map((item) => (
+
+            {(itemType == InputType.STATUS) && statusItems.filter(item => !selectedItems.some(selected => selected.id === item.id)).map((item) => (
+              <div
+                key={item.id}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleStatusItem(item)
+                }}
+                className="flex items-center bg-gray-200 p-1 cursor-pointer hover:bg-gray-300"
+
+              >
+                <div
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    backgroundColor: item.bgColor,
+                    color: item.textColor,
+                    borderRadius: "18px",
+                    padding: "4px 6px 4px",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '6px',
+                    alignItems: 'center'
+                  }}
+                >
+                  <div className={`rounded-full h-2 w-2`} style={{backgroundColor:item.textColor}}></div>
+                  <span>{item.label}</span>
+                </div>
+              </div>
+            ))}
+
+
+            {(itemType == InputType.SOCIALS) && socialItems.filter(item => !selectedItems.some(selected => selected.id === item.id)).map((item) => (
+              <div
+                key={item.id}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleItem(item)
+                }}
+                className="flex items-center bg-gray-200 p-1 cursor-pointer hover:bg-gray-300"
+
+              >
+                <div
+                  // className="w-full"
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    backgroundColor: item.bgColor,
+                    color: item.textColor,
+                    borderRadius: "4px",
+                    padding: "4px",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: '4px',
+                    alignItems: 'center'
+                  }}
+                >
+                  <PlatformIcon platform={item.platform} />
+                  <span>{item.label}</span>
+                </div>
+              </div>
+            ))}
+
+            {(!itemType || itemType == InputType.LABELS) && labelsItems.filter(item => !selectedItems.some(selected => selected.id === item.id)).map((item) => (
               <div
                 key={item.id}
                 onClick={(e) => {

@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import "./globals.scss";
 import { Toaster } from "@/components/ui/toaster"
 import { ChevronRight, type LucideIcon } from "lucide-react"
-
+import { FaPinterest } from "react-icons/fa";
 import { usePathname } from 'next/navigation'; // Use usePathname for current route
 import AppCode from "@/AppCode";
 import { FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
@@ -145,6 +145,7 @@ export enum PlatformName {
   Instagram = 'Instagram',
   Threads = 'Threads',
   TikTok = 'TikTok',
+  Pinterest = 'Pinterest'
 }
 
 export enum PlatformColor {
@@ -154,6 +155,7 @@ export enum PlatformColor {
   Instagram = '#833ab4',
   Threads = '#000000',
   TikTok = '#000000',
+  Pinterest = '#af1c2d'
 }
 
 export const PlatformIcons: { [key in PlatformName]: IconType | LucideIcon } = {
@@ -163,6 +165,7 @@ export const PlatformIcons: { [key in PlatformName]: IconType | LucideIcon } = {
   [PlatformName.Instagram]: Instagram,
   [PlatformName.Threads]: SiThreads,
   [PlatformName.TikTok]: FaTiktok,
+  [PlatformName.Pinterest]: FaPinterest,
 }
 
 // global post is short boolean

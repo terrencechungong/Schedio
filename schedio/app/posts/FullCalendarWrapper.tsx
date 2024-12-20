@@ -59,12 +59,14 @@ const FullCalendarWrapper = () => {
         onClick={() => setShowPostDetailsFromCalendarModal(true)}
       >
         <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px'}}>
-          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'red', borderRadius: '8px 8px 0 0' }}></div>
-          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'blue' }}></div>
-          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'green' }}></div>
-          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'blue' }}></div>
-
-          <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'yellow' , borderRadius: '0 0 8px 8px'}}></div>
+          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}></div>
+          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#1BC7B7' }}></div>
+          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FFE13D' }}></div>
+          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FF0000' , borderRadius: '0 0 8px 8px'}}></div>
+          {/* "#FF0000", textColor: "white" },
+        { id: 1, value: "promotion", label: "Promotion", bgColor: "#FF91B3", textColor: "white" },
+        { id: 2, value: "thread", label: "Thread", bgColor: "#1BC7B7", textColor: "white" },
+        { id: 3, value: "motivation", label: "Motivation", bgColor: "#FFE13D", */}
         </div>
         <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
           onMouseEnter={(e) => {

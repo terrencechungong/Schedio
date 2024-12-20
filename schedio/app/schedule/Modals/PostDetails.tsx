@@ -1,4 +1,4 @@
-import { ChevronDown, Globe, TableOfContents, CalendarClock, X } from "lucide-react";
+import { ChevronDown, Globe, TableOfContents, CalendarClock, X, Siren } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { PlatformColor, PlatformIcons, PlatformName, useModalStatesContext } from "@/app/layout";
 import { useState } from "react";
@@ -16,9 +16,20 @@ export const PostDetails = () => {
         { id: 2, value: "thread", label: "Thread", bgColor: "#1BC7B7", textColor: "white" },
         { id: 3, value: "motivation", label: "Motivation", bgColor: "#FFE13D", textColor: "black" },
     ]
-    const socialItems: CategoryItem[] = [
-        { id: 0, value: "Schedio", label: "Tip", bgColor: "white", textColor: "black", platform: PlatformName.Facebook },
-    ]
+
+    const statusItems: CategoryItem[] = [
+        { id: 0, value: "tip", label: "Scheduled", bgColor: "#E9D5FF", textColor: "#7C3AED" },
+        { id: 1, value: "promotion", label: "Awaiting Approval", bgColor: "#ffeca2", textColor: "#c58f07" },
+        { id: 2, value: "thread", label: "Draft", bgColor: "#D3D3D3", textColor: "#696969" },
+      ]
+
+      const socialItems: CategoryItem[] = [
+        { id: 0, value: "FB account", label: "FB account", bgColor: "white", textColor: "black", platform: PlatformName.Facebook },
+        { id: 1, value: "Terrencechungong", label: "Terrencechungong", bgColor: "white", textColor: "black", platform: PlatformName.TikTok },
+        { id: 2, value: "terrence_chefor", label: "terrence_chefor", bgColor: "white", textColor: "black", platform: PlatformName.Instagram },
+        { id: 3, value: "terrence.c1", label: "terrence.c1", bgColor: "white", textColor: "black", platform: PlatformName.Pinterest },
+    
+      ]
 
     const { setShowPostDetailsFromCalendarModal, setShowSelectPostTimeModal } = useModalStatesContext();
     const [showInformation, setShowInformation] = useState(true);
@@ -41,6 +52,9 @@ export const PostDetails = () => {
     const labelRowStyle: React.CSSProperties = { color: '#425466', fontWeight: '600', gap: '7px', fontSize: '14px' };
     const [labelDropdownOpen, setLabelDropdownOpen] = useState(false);
     const [socialsDropdownOpen, setSocialsDropdownOpen] = useState(false);
+    const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+    const [statusSectionActive, setStatusSectionActive] = useState(false);
+
 
     const PlatformIcon = ({ platform }: { platform: PlatformName }) => {
         const Icon = PlatformIcons[platform];
@@ -48,10 +62,25 @@ export const PostDetails = () => {
     };
 
 
+    const closeEverything = () => {
+        setLabelDropdownOpen(false)
+        setLabelsActive(false)
+        setSocialsSectionActive(false)
+        setSocialsDropdownOpen(false);
+        setStatusSectionActive(false)
+        setStatusDropdownOpen(false)
+        // fix animation error
+    }
+    
+
     return (
         <div
             style={containerStyle}
-            onClick={() => setShowPostDetailsFromCalendarModal(false)}>
+            onClick={() => {
+                closeEverything()
+                setShowPostDetailsFromCalendarModal(false)
+            }
+            }>
             <motion.div
                 initial={{ opacity: 0, scale: 0.94 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -64,14 +93,13 @@ export const PostDetails = () => {
                 }} onClick={(e) => {
                     e.stopPropagation()
                     // close all dropdowns and deactivate them
-                    setLabelDropdownOpen(false)
-                    setLabelsActive(false)
-                    setSocialsSectionActive(false)
-                    setSocialsDropdownOpen(false)
+                    closeEverything()
                 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div
-                        onClick={() => setShowInformation((prev) => !prev)}
+                        onClick={() => {
+                            closeEverything()
+                            setShowInformation((prev) => !prev)}}
                         className={styles.informationHeader}><ChevronDown className={`${!showInformation ? 'rotate-[-180deg]' : ''} transition-transform duration-300`} size={16} /> Information</div>
                     <AnimatePresence>
                         {showInformation && <motion.div
@@ -79,7 +107,10 @@ export const PostDetails = () => {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: '0px', opacity: .5 }}
                             transition={{ duration: 0.1 }}
-                            style={{ display: 'flex', flexDirection: 'column', gap: '15px',overflow:'hidden' }}
+                            style={{
+                                display: 'flex', flexDirection: 'column', gap: '15px',
+                                overflow: (socialsDropdownOpen || labelDropdownOpen || statusDropdownOpen) ? '' : 'hidden'
+                            }}
                         >
                             <div className={styles.informationRow}>
                                 <div style={{ ...rowReusable, ...labelRowStyle }}><User size={18} /><span>Created by</span></div>
@@ -127,7 +158,7 @@ export const PostDetails = () => {
                                             }
                                         </div>}
 
-                                    {labelsActive && <CategorizeDropdown FOR_TESTING_REMEMBER_TO_DEPRECATE={true}
+                                    {labelsActive && <CategorizeDropdown className="w-full" FOR_TESTING_REMEMBER_TO_DEPRECATE={true}
                                         isOpen={labelDropdownOpen} setIsOpen={setLabelDropdownOpen}
                                     />}
                                 </div>
@@ -144,7 +175,7 @@ export const PostDetails = () => {
                                             }}
                                             style={{ padding: '3px' }}
                                             className="flex flex-row gap-1 flex-wrap text-sm text-black hover:bg-gray-200 w-full cursor-pointer">
-                                            {socialItems.map((object) => (
+                                            {[socialItems[0]].map((object) => (
                                                 <div
                                                     key={object.id}
                                                     className="flex items-center rounded gap-1"
@@ -177,7 +208,40 @@ export const PostDetails = () => {
                                         20-12-2024 19:00 (America/EST)</span>
                                 </div>
                             </div>
+                            
 
+                            <div className={styles.informationRow}>
+                                <div style={{ ...rowReusable, ...labelRowStyle }}><Siren size={16} /><span>Status</span></div>
+                                <div style={{ width: '60%', ...rowReusable, justifyContent: 'space-between' }}>
+                                    {!statusSectionActive &&
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                setStatusSectionActive(true)
+                                            }}
+                                            style={{ padding: '3px' }}
+                                            className="flex flex-row gap-1 flex-wrap text-sm text-black hover:bg-gray-200 w-full cursor-pointer">
+                                            {[statusItems[0]].map((object) => (
+                                                <div
+                                                    key={object.id}
+                                                    className="flex items-center gap-1"
+                                                    style={{ backgroundColor: object.bgColor, cursor: "pointer", padding: "4px 6px 4px", borderRadius:'18px' }}
+                                                >
+                                                    <div className="m-0"
+                                                        style={{ color: object.textColor, fontWeight: "600", fontSize: '13px', display: 'flex', flexDirection: 'row', gap: '6px', alignItems: 'center' }}>
+                                                       <div className={`rounded-full h-2 w-2`} style={{backgroundColor:object.textColor}}></div>
+                                                        <span>{object.label}</span>
+                                                    </div>
+                                                </div>))
+                                            }
+                                        </div>}
+
+                                    {statusSectionActive && <CategorizeDropdown className="w-full" FOR_TESTING_REMEMBER_TO_DEPRECATE={true}
+                                        itemType={InputType.STATUS}
+                                        isOpen={statusDropdownOpen} setIsOpen={setStatusDropdownOpen}
+                                    />}
+                                </div>
+                            </div>
 
                         </motion.div>}
                     </AnimatePresence>
@@ -185,6 +249,6 @@ export const PostDetails = () => {
 
 
             </motion.div>
-        </div>
+        </div >
     );
 }
