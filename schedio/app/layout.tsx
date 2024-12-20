@@ -120,10 +120,12 @@ interface ModalStatesContextType {
   removePhotoFromPost: (id: string) => void;
   postTypeData: PostTypeData;
   setPostTypeData: React.Dispatch<React.SetStateAction<PostTypeData>>;
-  globalProfiles: {[key: number]: Profile};
-  setGlobalProfiles: React.Dispatch<React.SetStateAction<{[key: number]: Profile}>>;
+  globalProfiles: { [key: number]: Profile };
+  setGlobalProfiles: React.Dispatch<React.SetStateAction<{ [key: number]: Profile }>>;
   updateGlobalProfiles: (id: number, profile: Partial<Profile>) => void;
-  globalProfilesArray: Profile[]
+  globalProfilesArray: Profile[];
+  showPostDetailsFromCalendarModal: boolean;
+  setShowPostDetailsFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type Profile = {
@@ -188,6 +190,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
   const [showAdobeEditor, setShowAdobeEditor] = useState<boolean>(false);
   const [showAddShortVideoModal, setShowAddShortVideoModal] = useState(false);
+  const [showPostDetailsFromCalendarModal, setShowPostDetailsFromCalendarModal] = useState(false); // add state for the id when i add the database
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState<boolean>(false);
   const [showEditMediaModal, setShowEditMediaModal] = useState<boolean>(false);
   const [showVideoEditorModal, setShowVideoEditorModal] = useState<boolean>(false);
@@ -199,7 +202,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [postTypeData, setPostTypeData] = useState<PostTypeData>({ defined: false, type: PostType.NONE });
   const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
   // in reality we will give facebook profiles one for shorts and another entry for normal to avoid id mixups
-  const [globalProfiles, setGlobalProfiles] = useState<{[key: number]: Profile}>(
+  const [globalProfiles, setGlobalProfiles] = useState<{ [key: number]: Profile }>(
     {
       0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
       1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
@@ -233,8 +236,8 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // NO ADDING
   const updateGlobalProfiles = (id: number, profile: Partial<Profile>) => {
     setGlobalProfiles((prev) => ({
-      ...prev, 
-      [id]: {...prev[id], ...profile}
+      ...prev,
+      [id]: { ...prev[id], ...profile }
     }))
   }
 
@@ -342,7 +345,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       updateGlobalProfiles,
       globalProfiles,
       setGlobalProfiles,
-      globalProfilesArray
+      globalProfilesArray,
+      showPostDetailsFromCalendarModal,
+      setShowPostDetailsFromCalendarModal
     }}>
       {children}
     </ModalStatesContext.Provider>
@@ -368,7 +373,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        style={{ maxWidth: '100vw', maxHeight:'100vh', overflow:'hidden'}}
+        style={{ maxWidth: '100vw', maxHeight: '100vh', overflow: 'hidden' }}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ModalStatesProvider >

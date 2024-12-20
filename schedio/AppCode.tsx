@@ -16,6 +16,7 @@ import { DeleteVersionConfirmationModal } from "./app/compose/Modals/DeleteVersi
 import { AddShortVideoModal } from "./app/compose/Modals/AddShortVideoModal";
 import { EditVideoModalWrapper } from "./app/compose/Modals/EditVideoModalComponents/EditVideoModal";
 import { VideoEditorModal } from "./app/compose/Modals/EditVideoModalComponents/VideoEditorModal";
+import { PostDetails } from "./app/schedule/Modals/PostDetails";
 
 
 export default function AppCode({
@@ -26,13 +27,15 @@ export default function AppCode({
 
     const { showMediaModal, showAiGenCaption, showAddLabelFromSchedulePost, showSelectPostTimeModal, showAdobeEditor,
         showPostNowModal, showUserPermissionModal, showAddTeamMemberModal, showTriggerInfoModal, showEditMediaModal,
-        showDeletionConfirmationModal, showAddShortVideoModal, showEditVideoModal, showVideoEditorModal
+        showDeletionConfirmationModal, showAddShortVideoModal, showEditVideoModal, showVideoEditorModal, showPostDetailsFromCalendarModal
     } = useModalStatesContext();
 
 
     return (
         <div style={{ width: '100vw', height: '100vh', flex: '0 0 auto', maxWidth: '100vw' }}>
-     
+            <AnimatePresence>
+                {showPostDetailsFromCalendarModal && <PostDetails />}
+            </AnimatePresence>
             <AnimatePresence>
                 {showVideoEditorModal && <VideoEditorModal/>}
             </AnimatePresence>

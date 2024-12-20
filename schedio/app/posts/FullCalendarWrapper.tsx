@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ChevronDownIcon } from "@heroicons/react/solid";
-import { PlatformColor, PlatformIcons, PlatformName, Profile } from '../layout';
+import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from '../layout';
 
 enum View {
   MONTH = "Month",
@@ -26,6 +26,7 @@ const FullCalendarWrapper = () => {
     { id: 1, title: 'Meeting', start: '2024-12-17T10:00:00', end: '2024-12-17T11:06:00' },
     { id: 2, title: 'Workshop', start: '2024-12-17T11:00:00', end: '2024-12-17T12:06:00' },
   ]);
+  const {setShowPostDetailsFromCalendarModal} = useModalStatesContext();
   const [currentView, setCurrentView] = useState<View>(View.WEEK);
   const calendarRef = useRef(null); // Create a ref for FullCalendar
   const [dateRange, setDateRange] = useState("");
@@ -55,6 +56,7 @@ const FullCalendarWrapper = () => {
       <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow:'0px 4px 19px rgba(102, 102, 102, 0.28)' }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        onClick={() => setShowPostDetailsFromCalendarModal(true)}
       >
         <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px'}}>
           <div style={{ height: '20%', minHeight: '22%', width: '100%', backgroundColor: 'red', borderRadius: '8px 8px 0 0' }}></div>

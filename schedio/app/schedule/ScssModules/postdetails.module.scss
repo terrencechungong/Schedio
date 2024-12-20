@@ -1,0 +1,17 @@
+.informationHeader {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 600;
+    gap: 5px;
+    color: #1a202c;
+    cursor: pointer;
+}
+
+.informationRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    color: #1a202c;
+}
