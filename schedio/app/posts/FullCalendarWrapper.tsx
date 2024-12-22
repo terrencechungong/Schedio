@@ -8,7 +8,7 @@ const FullCalendar = dynamic(() => import('@fullcalendar/react'), { ssr: false }
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -23,10 +23,10 @@ enum View {
 
 const FullCalendarWrapper = () => {
   const [events, setEvents] = useState([
-    { id: 1, title: 'Meeting', start: '2024-12-17T10:00:00', end: '2024-12-17T11:06:00' },
-    { id: 2, title: 'Workshop', start: '2024-12-17T11:00:00', end: '2024-12-17T12:06:00' },
+    { id: 1, title: 'Meeting', start: '2024-12-24T10:00:00', end: '2024-12-24T11:06:00' },
+    { id: 2, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
   ]);
-  const {setShowPostDetailsFromCalendarModal} = useModalStatesContext();
+  const { setShowPostDetailsFromCalendarModal } = useModalStatesContext();
   const [currentView, setCurrentView] = useState<View>(View.WEEK);
   const calendarRef = useRef(null); // Create a ref for FullCalendar
   const [dateRange, setDateRange] = useState("");
@@ -50,23 +50,34 @@ const FullCalendarWrapper = () => {
   };
   const [hover, setHover] = useState(false);
 
+
+  // fix the elipsis at some point
+
+  const eventBgSlicStyles = {height: '25%', minHeight: '22%', width: '100%', display: 'flex', flexDirection: 'column', padding:'1px 5px 1px 0', justifyContent:'center', textOverflow:'ellipsis',overflow:'hidden' }
+  const innerSliceText = {width: '64%', alignSelf: 'flex-end', display: 'flex', justifyContent: 'flex-end', textAlign: 'end',textOverflow:'ellipsis',overflow:'hidden',fontWeight:'600' }
+
   // Custom JSX for event content
   const renderEventContent = (eventInfo) => {
     return (
-      <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow:'0px 4px 19px rgba(102, 102, 102, 0.28)' }}
+      <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)' }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onClick={() => setShowPostDetailsFromCalendarModal(true)}
       >
-        <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px'}}>
-          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}></div>
-          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#1BC7B7' }}></div>
-          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FFE13D' }}></div>
-          <div style={{ height: '25%', minHeight: '22%', width: '100%', backgroundColor: '#FF0000' , borderRadius: '0 0 8px 8px'}}></div>
-          {/* "#FF0000", textColor: "white" },
-        { id: 1, value: "promotion", label: "Promotion", bgColor: "#FF91B3", textColor: "white" },
-        { id: 2, value: "thread", label: "Thread", bgColor: "#1BC7B7", textColor: "white" },
-        { id: 3, value: "motivation", label: "Motivation", bgColor: "#FFE13D", */}
+        <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px', overflow:'hidden' }}>
+          <div style={{...eventBgSlicStyles, backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}>
+            <span style={{ ...innerSliceText }}>Tester</span>
+          </div>
+          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#1BC7B7' }}>
+            <span style={{ ...innerSliceText }}>Tester</span>
+          </div>
+          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#FFE13D' }}>
+            <span style={{ ...innerSliceText }}>Tester</span>
+          </div>
+          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#FF0000', borderRadius: '0 0 8px 8px' }}>
+            <span style={{ ...innerSliceText }}>Tester</span>
+          </div>
+          
         </div>
         <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
           onMouseEnter={(e) => {
@@ -152,7 +163,95 @@ const FullCalendarWrapper = () => {
 
   const handleCalendarRendered = () => {
     const titleElement = document.querySelector(".fc-toolbar-title")?.textContent;
-    setDateRange(titleElement || '')
+    setDateRange(titleElement || '');
+
+    const placeLiveLine = () => {
+      // Grab the two divs based on their attributes
+      const horizontalDiv = document.querySelector('[data-date="2024-12-25"][role="gridcell"][class="fc-day fc-day-wed fc-day-future fc-timegrid-col"]');
+      const columnDiv = document.querySelector('[data-time="05:30:00"][class="fc-timegrid-slot fc-timegrid-slot-lane fc-timegrid-slot-minor"]');
+      // console.log("dddddddddddddde",  horizontalDiv, columnDiv)
+      const indicatorContainer = horizontalDiv?.querySelector('[class="fc-timegrid-now-indicator-container"]')
+      if (indicatorContainer) {
+        indicatorContainer.style.position = 'relative'
+        indicatorContainer.style.zIndex = 40
+
+        indicatorContainer.style.display = 'block'
+      }
+
+      // const columnDiv = document.querySelector('[data-date="2024-12-22"][class="fc-day-today"]');
+      // const horizontalDiv = document.querySelector('[data-time="09:30:00"][class="fc-timegrid-slot"]');
+      console.log("dddddddddddddde", indicatorContainer, horizontalDiv, columnDiv)
+
+      if (!columnDiv || !horizontalDiv) return; // Exit if divs aren't found
+      console.log("yoooooooooo")
+      // Get positions and dimensions of the divs
+      const columnDivRect = columnDiv.getBoundingClientRect();
+      const horizontalDivRect = horizontalDiv.getBoundingClientRect();
+
+      // Calculate the line's position
+      const lineTop = columnDivRect.top + window.scrollY; // Include scroll offset
+      // const lineLeft = columnDivRect.left + window.scrollX; // Include scroll offset
+
+
+      let liveLine = document.querySelector(".live-line");
+      if (!liveLine) {
+        console.log("Creating live line");
+        liveLine = document.createElement("div");
+        liveLine.className = "live-line";
+        const ball = document.createElement("div");
+        ball.style.width = "13px";
+        ball.style.height = "13px";
+        ball.style.borderRadius = "50%"; // Perfect circle
+        ball.style.backgroundColor = "#db372d";
+        ball.style.flexShrink = "0"; // Prevent shrinking
+
+        // Create the line
+        const line = document.createElement("div");
+        line.style.width = "100%"; // Line stretches full width
+        line.style.height = "3px"; // Thickness of the line
+        line.style.backgroundColor = "#db372d";
+
+        // Style the live line container
+        liveLine.style.position = "absolute";
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+        // liveLine.style.width = `100%`; // Match container width
+        liveLine.style.display = `flex`; // Use flexbox for ball + line alignment
+        liveLine.style.alignItems = `center`; // Vertically align ball with line
+        liveLine.style.height = `auto`; // Adjust height dynamically
+        liveLine.style.backgroundColor = "rgba(0,0,0,0)"; // Transparent background
+        liveLine.style.zIndex = "1000";
+        liveLine.style.marginLeft = "-6.5px"; // Move it 10px before the parent's left edge
+        liveLine.style.width = `calc(100% + 6.5px)`; // Extend width to compensate for negative margin
+
+        // Append ball and line to the live line container
+        liveLine.appendChild(ball);
+        liveLine.appendChild(line);
+        indicatorContainer?.appendChild(liveLine);
+      } else {
+        // Clear previous children if the line is already present
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+      }
+
+
+    };
+
+    //  Place the line initially and on window resize
+    placeLiveLine();
+
+    // Reposition the line every minute
+    const interval = setInterval(() => {
+      placeLiveLine();
+    }, 60000); // 60,000ms = 1 minute
+
+    // Also reposition on window resize
+    window.addEventListener("resize", placeLiveLine);
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", placeLiveLine);
+    };
+    placeLiveLine()
   };
 
   const handleViewChange = (view: '.fc-dayGridMonth-button' | '.fc-timeGridWeek-button' | '.fc-timeGridDay-button') => {
@@ -258,7 +357,17 @@ const FullCalendarWrapper = () => {
 
       <style jsx global>{`
         /* Custom styles for events */
-      
+      .live-line {
+  position: absolute;
+  width: 2px;
+  background-color: red;
+  z-index: 1000;
+}
+.fc-timegrid-now-indicator-container {
+  overflow: visible !important;
+    opacity: 1 !important;
+  visibility: visible !important;
+}
         .fc-toolbar-chunk {
           display: flex !important;
           flex-direction: row-reverse !important;

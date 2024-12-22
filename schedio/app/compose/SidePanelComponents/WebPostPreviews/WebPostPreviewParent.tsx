@@ -22,9 +22,10 @@ import { PiShareFatFill } from "react-icons/pi";
 
 interface WebPostPreviewParentProps {
     profile: Profile | null;
+    width?: string;
 }
 
-const WebPostPreviewParent: React.FC<WebPostPreviewParentProps> = ({ profile }) => {
+const WebPostPreviewParent: React.FC<WebPostPreviewParentProps> = ({ profile, width }) => {
     const { postVariations, globalProfilesArray } = useModalStatesContext();
     const { currentPage, setCurrentPage } = useComposeSidePanelContext();
     const [localPostVariationKey, setLocalPostVariationKey] = useState(
@@ -45,7 +46,7 @@ const WebPostPreviewParent: React.FC<WebPostPreviewParentProps> = ({ profile }) 
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: '0px', opacity: 0.3 }}
             transition={{ duration: 0.1 }}
-            style={{ overflowY: 'hidden', width: '80%' }}
+            style={{ overflowY: 'hidden', width: ( !width || width == "") ? '80%' : width }}
         >
             <div className={styles.genericPostPreviewContainer}>
                 <Header profile={profile} />
