@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
+import { FaLinkedin, FaYoutube, FaTiktok, FaTag } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import { Instagram } from "lucide-react";
 import { SiThreads } from "react-icons/si";
@@ -301,8 +301,45 @@ const FullCalendarWrapper = () => {
       );
     } else {
       return (
-        <div>
-          hello word
+        <div 
+        onClick={() => setShowPostDetailsFromCalendarModal(true)}
+        style={{
+          width: '100%', backgroundColor: 'white', position: 'relative',
+          height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)',
+          padding: '7px', marginBottom: '6px', display:'flex', flexDirection:'column', gap:'5px'
+        }}>
+
+          <div
+            style={{ ...eventTextStyle, WebkitLineClamp: 1 }}>
+            dddddddddddddddddddddddddddddddddddddddddddddddddd
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '3px' }}>
+              <SiThreads
+                color={PlatformColor.Threads}
+                size={13}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+              <FaFacebook
+                color={PlatformColor.Facebook}
+                size={13}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+              <Instagram
+                color={PlatformColor.Instagram}
+                size={13}
+                style={{ flexShrink: 0 }} // Prevent resizing
+              />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '3px' }}>
+              <FaTag color="#FF91B3" size={11}/>  
+              <FaTag color="#1BC7B7" size={11}/>
+              <FaTag color="#FFE13D" size={11}/>
+
+            </div>
+          </div>
         </div>
       )
     }
@@ -478,11 +515,11 @@ const FullCalendarWrapper = () => {
         ref={calendarRef}
         initialView="timeGridWeek"
         editable={true}
-        views={{
-          dayGridMonth: {
-            dayMaxEventRows: 3, // Limit events in monthly view
-          },
-        }}
+        // views={{
+        //   dayGridMonth: {
+        //     dayMaxEventRows: 3, // Limit events in monthly view
+        //   },
+        // }}
         slotLabelFormat={{
           hour: 'numeric',   // Shows hours in numeric format
           minute: '2-digit', // Shows minutes in two-digit format
