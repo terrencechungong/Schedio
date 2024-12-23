@@ -1,0 +1,62 @@
+.headerWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    align-items: center;
+
+    span {
+        // '#626f84', fontSize: '14px' }}>{weekday}</div>
+        //       {(currentView != View.MONTH) && <div style={{ color: '#afbfcf'
+        color: #626f84;
+        font-size: 14px;
+    }
+
+    .modalHeader {
+        // wrap with a sticky!!
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        position: relative;
+        // background-color: red;
+        padding: 0;
+        margin: 0;
+        h4 {
+            padding: 0;
+            margin: 0;
+            font-weight: 700;
+            font-size: 16px;
+        }
+    }
+}
+
+.iconWrapper {
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 6px;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    &:hover {
+        background-color: #F2F2F2;
+    }
+}
+
+.modalFooter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    position: sticky;
+    background-color: white;
+    width: 100%;
+    bottom: 0;
+    gap: 5px;
+}

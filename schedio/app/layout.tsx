@@ -126,6 +126,8 @@ interface ModalStatesContextType {
   globalProfilesArray: Profile[];
   showPostDetailsFromCalendarModal: boolean;
   setShowPostDetailsFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showCreatePostFromCalendarModal: boolean;
+  setShowCreatePostFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type Profile = {
@@ -191,6 +193,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showTriggerInfoModal, setShowTriggerInfoModal] = useState<boolean>(false);
   const [showUserPermissionModal, setShowUserPermissionModal] = useState<boolean>(false);
   const [showPostNowModal, setShowPostNowModal] = useState<boolean>(false);
+  const [showCreatePostFromCalendarModal, setShowCreatePostFromCalendarModal] = useState(false);
   const [showAdobeEditor, setShowAdobeEditor] = useState<boolean>(false);
   const [showAddShortVideoModal, setShowAddShortVideoModal] = useState(false);
   const [showPostDetailsFromCalendarModal, setShowPostDetailsFromCalendarModal] = useState(false); // add state for the id when i add the database
@@ -350,7 +353,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setGlobalProfiles,
       globalProfilesArray,
       showPostDetailsFromCalendarModal,
-      setShowPostDetailsFromCalendarModal
+      setShowPostDetailsFromCalendarModal,
+      showCreatePostFromCalendarModal,
+      setShowCreatePostFromCalendarModal
     }}>
       {children}
     </ModalStatesContext.Provider>

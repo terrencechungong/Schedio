@@ -7,7 +7,7 @@ import { SiThreads } from "react-icons/si";
 const FullCalendar = dynamic(() => import('@fullcalendar/react'), { ssr: false });
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -32,7 +32,7 @@ const FullCalendarWrapper = () => {
     { id: 3, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
     { id: 4, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
   ]);
-  const { setShowPostDetailsFromCalendarModal } = useModalStatesContext();
+  const { setShowPostDetailsFromCalendarModal, setShowCreatePostFromCalendarModal } = useModalStatesContext();
   const [currentView, setCurrentView] = useState<View>(View.WEEK);
   const calendarRef = useRef(null); // Create a ref for FullCalendar
   const [dateRange, setDateRange] = useState("");
@@ -301,13 +301,13 @@ const FullCalendarWrapper = () => {
       );
     } else {
       return (
-        <div 
-        onClick={() => setShowPostDetailsFromCalendarModal(true)}
-        style={{
-          width: '100%', backgroundColor: 'white', position: 'relative',
-          height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)',
-          padding: '7px', marginBottom: '6px', display:'flex', flexDirection:'column', gap:'5px'
-        }}>
+        <div
+          onClick={() => setShowPostDetailsFromCalendarModal(true)}
+          style={{
+            width: '100%', backgroundColor: 'white', position: 'relative',
+            height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)',
+            padding: '7px', marginBottom: '6px', display: 'flex', flexDirection: 'column', gap: '5px'
+          }}>
 
           <div
             style={{ ...eventTextStyle, WebkitLineClamp: 1 }}>
@@ -334,9 +334,9 @@ const FullCalendarWrapper = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '3px' }}>
-              <FaTag color="#FF91B3" size={11}/>  
-              <FaTag color="#1BC7B7" size={11}/>
-              <FaTag color="#FFE13D" size={11}/>
+              <FaTag color="#FF91B3" size={11} />
+              <FaTag color="#1BC7B7" size={11} />
+              <FaTag color="#FFE13D" size={11} />
 
             </div>
           </div>
@@ -440,6 +440,17 @@ const FullCalendarWrapper = () => {
     placeLiveLine()
   };
 
+  const handleDateClick = (info: DateClickArg) => {
+    if (currentView == View.MONTH) {
+      return
+    }
+    setShowCreatePostFromCalendarModal(true)
+
+    // Capture the date and time of the clicked cell
+    console.log("Clicked date:", info.dateStr); // ISO date string
+    console.log("Clicked date (Date object):", info.date); // JavaScript Date object
+  };
+
   const handleViewChange = (view: '.fc-dayGridMonth-button' | '.fc-timeGridWeek-button' | '.fc-timeGridDay-button') => {
 
     const views = {
@@ -520,6 +531,7 @@ const FullCalendarWrapper = () => {
         //     dayMaxEventRows: 3, // Limit events in monthly view
         //   },
         // }}
+        dateClick={handleDateClick}
         slotLabelFormat={{
           hour: 'numeric',   // Shows hours in numeric format
           minute: '2-digit', // Shows minutes in two-digit format
