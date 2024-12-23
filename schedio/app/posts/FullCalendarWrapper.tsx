@@ -15,6 +15,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from '../layout';
 
+// change event view for month add line for day and day
+
+
 enum View {
   MONTH = "Month",
   DAY = "Day",
@@ -25,6 +28,8 @@ const FullCalendarWrapper = () => {
   const [events, setEvents] = useState([
     { id: 1, title: 'Meeting', start: '2024-12-24T10:00:00', end: '2024-12-24T11:06:00' },
     { id: 2, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
+    { id: 3, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
+    { id: 4, title: 'Workshop', start: '2024-12-24T11:00:00', end: '2024-12-24T12:06:00' },
   ]);
   const { setShowPostDetailsFromCalendarModal } = useModalStatesContext();
   const [currentView, setCurrentView] = useState<View>(View.WEEK);
@@ -51,114 +56,183 @@ const FullCalendarWrapper = () => {
   const [hover, setHover] = useState(false);
 
 
+
+  useEffect(() => {
+    if (currentView == View.DAY) {
+      const columnDiv = document.querySelector('[data-time="05:30:00"][class="fc-timegrid-slot fc-timegrid-slot-lane fc-timegrid-slot-minor"]');
+      if (!columnDiv) return;
+
+      const columnDivRect = columnDiv.getBoundingClientRect();
+
+      // Calculate the line's position
+      const lineTop = columnDivRect.top + window.scrollY; // Include scroll offset
+      // const lineLeft = columnDivRect.left + window.scrollX; // Include scroll offs
+      let liveLine = document.querySelector(".live-line-day");
+      console.log("LIVE LINE", liveLine);
+      if (!liveLine) {
+        console.log("Creating live line");
+        liveLine = document.createElement("div");
+        liveLine.className = "live-line-day";
+        const ball = document.createElement("div");
+        ball.style.width = "13px";
+        ball.style.height = "13px";
+        ball.style.borderRadius = "50%"; // Perfect circle
+        ball.style.backgroundColor = "#db372d";
+        ball.style.flexShrink = "0"; // Prevent shrinking
+
+        // Create the line
+        const line = document.createElement("div");
+        line.style.width = "100%"; // Line stretches full width
+        line.style.height = "3px"; // Thickness of the line
+        line.style.backgroundColor = "#db372d";
+
+        // Style the live line container
+        liveLine.style.position = "absolute";
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+        // liveLine.style.width = `100%`; // Match container width
+        liveLine.style.display = `flex`; // Use flexbox for ball + line alignment
+        liveLine.style.alignItems = `center`; // Vertically align ball with line
+        liveLine.style.height = `auto`; // Adjust height dynamically
+        liveLine.style.backgroundColor = "rgba(0,0,0,0)"; // Transparent background
+        liveLine.style.zIndex = "1000";
+        liveLine.style.marginLeft = "-6.5px"; // Move it 10px before the parent's left edge
+        liveLine.style.width = `calc(100% + 6.5px)`; // Extend width to compensate for negative margin
+
+        // Append ball and line to the live line container
+        liveLine.appendChild(ball);
+        liveLine.appendChild(line);
+        columnDiv?.appendChild(liveLine);
+        // indicatorContainer?.appendChild(liveLine);
+      } else {
+        // Clear previous children if the line is already present
+        liveLine.style.display = 'flex'
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+      }
+    } else {
+      let liveLine = document.querySelector(".live-line-day");
+      if (liveLine) {
+        liveLine.style.display = 'none'
+      }
+    }
+
+  }, [currentView]);
+
   // fix the elipsis at some point
 
-  const eventBgSlicStyles = {height: '25%', minHeight: '22%', width: '100%', display: 'flex', flexDirection: 'column', padding:'1px 5px 1px 0', justifyContent:'center', textOverflow:'ellipsis',overflow:'hidden' }
-  const innerSliceText = {width: '64%', alignSelf: 'flex-end', display: 'flex', justifyContent: 'flex-end', textAlign: 'end',textOverflow:'ellipsis',overflow:'hidden',fontWeight:'600' }
+  const eventBgSlicStyles = { height: '25%', minHeight: '22%', width: '100%', display: 'flex', flexDirection: 'column', padding: '1px 5px 1px 0', justifyContent: 'center', textOverflow: 'ellipsis', overflow: 'hidden' }
+  const innerSliceText = { width: '64%', alignSelf: 'flex-end', display: 'flex', justifyContent: 'flex-end', textAlign: 'end', textOverflow: 'ellipsis', overflow: 'hidden', fontWeight: '600' }
 
   // Custom JSX for event content
   const renderEventContent = (eventInfo) => {
-    return (
-      <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)' }}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        onClick={() => setShowPostDetailsFromCalendarModal(true)}
-      >
-        <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px', overflow:'hidden' }}>
-          <div style={{...eventBgSlicStyles, backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}>
-            <span style={{ ...innerSliceText }}>Tester</span>
-          </div>
-          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#1BC7B7' }}>
-            <span style={{ ...innerSliceText }}>Tester</span>
-          </div>
-          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#FFE13D' }}>
-            <span style={{ ...innerSliceText }}>Tester</span>
-          </div>
-          <div style={{ ...eventBgSlicStyles, paddingRight:'5px', backgroundColor: '#FF0000', borderRadius: '0 0 8px 8px' }}>
-            <span style={{ ...innerSliceText }}>Tester</span>
-          </div>
-          
-        </div>
-        <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
-          onMouseEnter={(e) => {
-            e.stopPropagation()
-            setHover(false)
-          }}
-          style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white', zIndex: 2 }}
+    if (currentView == View.DAY || currentView == View.WEEK) {
+      return (
+        <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)' }}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          onClick={() => setShowPostDetailsFromCalendarModal(true)}
         >
-          <div
-            className="clamped-text"
-            style={eventTextStyle}
-          >
-            ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-          </div>
+          <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{ ...eventBgSlicStyles, backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}>
+              <span style={{ ...innerSliceText }}>Tester</span>
+            </div>
+            <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#1BC7B7' }}>
+              <span style={{ ...innerSliceText }}>Tester</span>
+            </div>
+            <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#FFE13D' }}>
+              <span style={{ ...innerSliceText }}>Tester</span>
+            </div>
+            <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#FF0000', borderRadius: '0 0 8px 8px' }}>
+              <span style={{ ...innerSliceText }}>Tester</span>
+            </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: '2px',
-              justifyContent: "flex-end",
-              // backgroundColor: "yellow",
-              padding: 0,
-              margin: 0,
-              lineHeight: 1, // Fix potential extra space
-              width: '100%',
-              flex: '0 0 auto',
-              minWidth: '100%'
-              , flexShrink: 0
+          </div>
+          <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
+            onMouseEnter={(e) => {
+              e.stopPropagation()
+              setHover(false)
             }}
+            style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white', zIndex: 2 }}
           >
+            <div
+              className="clamped-text"
+              style={eventTextStyle}
+            >
+              ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+            </div>
+
             <div
               style={{
                 display: "flex",
-                gap: '3px', // Remove gaps between flex children
-                // backgroundColor:'blue',
+                flexDirection: "column",
+                gap: '2px',
+                justifyContent: "flex-end",
+                // backgroundColor: "yellow",
                 padding: 0,
+                margin: 0,
+                lineHeight: 1, // Fix potential extra space
                 width: '100%',
                 flex: '0 0 auto',
                 minWidth: '100%'
                 , flexShrink: 0
-
               }}
             >
-              <FaLinkedin
-                color={PlatformColor.LinkedIn}
-                size={17}
-                style={{ flexShrink: 0 }} // Prevent resizing
-              />
-              <SiThreads
-                color={PlatformColor.Threads}
-                size={17}
-                style={{ flexShrink: 0 }} // Prevent resizing
-              />
-              <FaFacebook
-                color={PlatformColor.Facebook}
-                size={17}
-                style={{ flexShrink: 0 }} // Prevent resizing
-              />
-              <Instagram
-                color={PlatformColor.Instagram}
-                size={17}
-                style={{ flexShrink: 0 }} // Prevent resizing
-              />
-            </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: '3px', // Remove gaps between flex children
+                  // backgroundColor:'blue',
+                  padding: 0,
+                  width: '100%',
+                  flex: '0 0 auto',
+                  minWidth: '100%'
+                  , flexShrink: 0
 
-            <div style={{
-              padding: 0,
-              margin: 0,
-              flexShrink: 0,
-              fontSize: "11.5px",
-              whiteSpace: "nowrap", // Prevent wrapping
-              overflow: "hidden", // Hide overflow if container is small
-              textOverflow: "ellipsis", // Optional ellipsis
-            }}>
-              3:00 PM
+                }}
+              >
+                <FaLinkedin
+                  color={PlatformColor.LinkedIn}
+                  size={17}
+                  style={{ flexShrink: 0 }} // Prevent resizing
+                />
+                <SiThreads
+                  color={PlatformColor.Threads}
+                  size={17}
+                  style={{ flexShrink: 0 }} // Prevent resizing
+                />
+                <FaFacebook
+                  color={PlatformColor.Facebook}
+                  size={17}
+                  style={{ flexShrink: 0 }} // Prevent resizing
+                />
+                <Instagram
+                  color={PlatformColor.Instagram}
+                  size={17}
+                  style={{ flexShrink: 0 }} // Prevent resizing
+                />
+              </div>
+
+              <div style={{
+                padding: 0,
+                margin: 0,
+                flexShrink: 0,
+                fontSize: "11.5px",
+                whiteSpace: "nowrap", // Prevent wrapping
+                overflow: "hidden", // Hide overflow if container is small
+                textOverflow: "ellipsis", // Optional ellipsis
+              }}>
+                3:00 PM
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div>
+          hello word
+        </div>
+      )
+    }
   };
 
   const handleCalendarRendered = () => {
@@ -167,6 +241,7 @@ const FullCalendarWrapper = () => {
 
     const placeLiveLine = () => {
       // Grab the two divs based on their attributes
+      // const testDiv = document.querySelector('[data-time="07:30:00"][class="fc-timegrid-slot fc-timegrid-slot-lane fc-timegrid-slot-minor"]')
       const horizontalDiv = document.querySelector('[data-date="2024-12-25"][role="gridcell"][class="fc-day fc-day-wed fc-day-future fc-timegrid-col"]');
       const columnDiv = document.querySelector('[data-time="05:30:00"][class="fc-timegrid-slot fc-timegrid-slot-lane fc-timegrid-slot-minor"]');
       // console.log("dddddddddddddde",  horizontalDiv, columnDiv)
@@ -180,7 +255,7 @@ const FullCalendarWrapper = () => {
 
       // const columnDiv = document.querySelector('[data-date="2024-12-22"][class="fc-day-today"]');
       // const horizontalDiv = document.querySelector('[data-time="09:30:00"][class="fc-timegrid-slot"]');
-      console.log("dddddddddddddde", indicatorContainer, horizontalDiv, columnDiv)
+      // console.log("dddddddddddddde", indicatorContainer, horizontalDiv, columnDiv)
 
       if (!columnDiv || !horizontalDiv) return; // Exit if divs aren't found
       console.log("yoooooooooo")
@@ -226,6 +301,7 @@ const FullCalendarWrapper = () => {
         // Append ball and line to the live line container
         liveLine.appendChild(ball);
         liveLine.appendChild(line);
+        // columnDiv?.appendChild(liveLine);
         indicatorContainer?.appendChild(liveLine);
       } else {
         // Clear previous children if the line is already present
@@ -329,6 +405,11 @@ const FullCalendarWrapper = () => {
         ref={calendarRef}
         initialView="timeGridWeek"
         editable={true}
+        views={{
+          dayGridMonth: {
+            dayMaxEventRows: 3, // Limit events in monthly view
+          },
+        }}
         slotLabelFormat={{
           hour: 'numeric',   // Shows hours in numeric format
           minute: '2-digit', // Shows minutes in two-digit format
