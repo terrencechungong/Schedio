@@ -303,15 +303,16 @@ export const PostDetailsWrapper = () => {
                             setShowComments((prev) => !prev)}
                         className={styles.informationHeader}><ChevronDown className={`${!showComments ? 'rotate-[-180deg]' : ''} transition-transform duration-300`} size={16} /> Conversation</div>
                     <AnimatePresence>
-                        <div style={{ width: '100%', paddingBottom: '30px', borderBottom: '1px solid #DCDCDC', gap: '20px', display: 'flex', flexDirection: 'column' }}>
 
-                            {showComments && <motion.div
-                                initial={{ height: '0px', opacity: .5 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: '0px', opacity: .5 }}
-                                transition={{ duration: 0.1 }}
-                                style={{ width: '100%', overflow: 'hidden' }}
-                            >
+                        {showComments && <motion.div
+                            initial={{ height: '0px', opacity: .5 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: '0px', opacity: .5 }}
+                            transition={{ duration: 0.1 }}
+                            style={{ width: '100%', overflow: 'hidden' }}
+                        >
+                            <div style={{ width: '100%', paddingBottom: '30px', borderBottom: '1px solid #DCDCDC', gap: '20px', display: 'flex', flexDirection: 'column' }}>
+
                                 <div
                                     className="border border-gray-200"
                                     style={{ backgroundColor: 'rgb(255,255,255,0.6)', display: 'flex', flexDirection: 'column', padding: '7px', gap: '3px' }}>
@@ -322,8 +323,9 @@ export const PostDetailsWrapper = () => {
                                     </div>
                                     <Button style={{ alignSelf: 'flex-end', color: 'white', fontSize: '13px' }}>Comment</Button>
                                 </div>
-                            </motion.div>}
-                        </div>
+                            </div>
+
+                        </motion.div>}
                     </AnimatePresence>
 
 

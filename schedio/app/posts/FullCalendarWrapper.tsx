@@ -14,6 +14,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from '../layout';
+import { EventImpl } from '@fullcalendar/core/internal';
 
 // change event view for month add line for day and day
 
@@ -53,7 +54,7 @@ const FullCalendarWrapper = () => {
     const Icon = PlatformIcons[profile.platform as PlatformName];
     return <Icon color={PlatformColor[profile.platform]} size={17} />;
   };
-  const [hover, setHover] = useState(false);
+  const [hover, setHover] = useState<{ [key: string]: boolean }>(events.reduce((acc, event) => ({ ...acc, [String(event.id)]: false }), {}));
 
 
 
@@ -109,10 +110,79 @@ const FullCalendarWrapper = () => {
         liveLine.style.top = `${lineTop}px`; // Dynamically position the line
       }
     } else {
-      let liveLine = document.querySelector(".live-line-day");
-      if (liveLine) {
-        liveLine.style.display = 'none'
+      let liveLineDay = document.querySelector(".live-line-day");
+      if (liveLineDay) {
+        liveLineDay.style.display = 'none'
       }
+
+      const horizontalDiv = document.querySelector('[data-date="2024-12-25"][role="gridcell"][class="fc-day fc-day-wed fc-day-future fc-timegrid-col"]');
+      const columnDiv = document.querySelector('[data-time="05:30:00"][class="fc-timegrid-slot fc-timegrid-slot-lane fc-timegrid-slot-minor"]');
+      // console.log("dddddddddddddde",  horizontalDiv, columnDiv)
+      const indicatorContainer = horizontalDiv?.querySelector('[class="fc-timegrid-now-indicator-container"]')
+      if (indicatorContainer) {
+        indicatorContainer.style.position = 'relative'
+        indicatorContainer.style.zIndex = 40
+
+        indicatorContainer.style.display = 'block'
+      }
+
+      // const columnDiv = document.querySelector('[data-date="2024-12-22"][class="fc-day-today"]');
+      // const horizontalDiv = document.querySelector('[data-time="09:30:00"][class="fc-timegrid-slot"]');
+      // console.log("dddddddddddddde", indicatorContainer, horizontalDiv, columnDiv)
+
+      if (!columnDiv || !horizontalDiv) return; // Exit if divs aren't found
+      console.log("yoooooooooo")
+      // Get positions and dimensions of the divs
+      const columnDivRect = columnDiv.getBoundingClientRect();
+      const horizontalDivRect = horizontalDiv.getBoundingClientRect();
+
+      // Calculate the line's position
+      const lineTop = columnDivRect.top + window.scrollY; // Include scroll offset
+      // const lineLeft = columnDivRect.left + window.scrollX; // Include scroll offset
+
+
+      let liveLine = document.querySelector(".live-line");
+      if (!liveLine) {
+        console.log("Creating live line");
+        liveLine = document.createElement("div");
+        liveLine.className = "live-line";
+        const ball = document.createElement("div");
+        ball.style.width = "13px";
+        ball.style.height = "13px";
+        ball.style.borderRadius = "50%"; // Perfect circle
+        ball.style.backgroundColor = "#db372d";
+        ball.style.flexShrink = "0"; // Prevent shrinking
+
+        // Create the line
+        const line = document.createElement("div");
+        line.style.width = "100%"; // Line stretches full width
+        line.style.height = "3px"; // Thickness of the line
+        line.style.backgroundColor = "#db372d";
+
+        // Style the live line container
+        liveLine.style.position = "absolute";
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+        // liveLine.style.width = `100%`; // Match container width
+        liveLine.style.display = `flex`; // Use flexbox for ball + line alignment
+        liveLine.style.alignItems = `center`; // Vertically align ball with line
+        liveLine.style.height = `auto`; // Adjust height dynamically
+        liveLine.style.backgroundColor = "rgba(0,0,0,0)"; // Transparent background
+        liveLine.style.zIndex = "1000";
+        liveLine.style.marginLeft = "-6.5px"; // Move it 10px before the parent's left edge
+        liveLine.style.width = `calc(100% + 6.5px)`; // Extend width to compensate for negative margin
+
+        // Append ball and line to the live line container
+        liveLine.appendChild(ball);
+        liveLine.appendChild(line);
+        // columnDiv?.appendChild(liveLine);
+        indicatorContainer?.appendChild(liveLine);
+      } else {
+        // Clear previous children if the line is already present
+        liveLine.style.top = `${lineTop}px`; // Dynamically position the line
+      }
+
+
+
     }
 
   }, [currentView]);
@@ -127,8 +197,11 @@ const FullCalendarWrapper = () => {
     if (currentView == View.DAY || currentView == View.WEEK) {
       return (
         <div style={{ width: '100%', position: 'relative', height: '100%', flexGrow: 1, borderRadius: '8px', boxShadow: '0px 4px 19px rgba(102, 102, 102, 0.28)' }}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
+          onMouseEnter={() => {
+            console.log(eventInfo, eventInfo.event.id)
+            setHover((prev) => ({ ...prev, [eventInfo.event.id]: true }))
+          }}
+          onMouseLeave={() => setHover((prev) => ({ ...prev, [eventInfo.event.id]: false }))}
           onClick={() => setShowPostDetailsFromCalendarModal(true)}
         >
           <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px', overflow: 'hidden' }}>
@@ -146,10 +219,10 @@ const FullCalendarWrapper = () => {
             </div>
 
           </div>
-          <div className={`custom-event transition-all duration-100 ${hover ? "w-[33%]" : "w-[90%]"}`}
+          <div className={`custom-event transition-all duration-100 ${hover[eventInfo.event.id] ? "w-[33%]" : "w-[90%]"}`}
             onMouseEnter={(e) => {
               e.stopPropagation()
-              setHover(false)
+              setHover((prev) => ({ ...prev, [eventInfo.event.id]: false }))
             }}
             style={{ overflowX: 'hidden', position: 'absolute', top: 0, left: 0, height: '100%', backgroundColor: 'white', zIndex: 2 }}
           >
