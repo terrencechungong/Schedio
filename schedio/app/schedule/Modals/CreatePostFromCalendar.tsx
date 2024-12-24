@@ -4,8 +4,22 @@ import { useState } from 'react';
 import styles from '../ScssModules/createpostmodal.module.scss'
 import { MoveLeft, MoveRight, MoveUpRight, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import WebPostPreviewParent from '@/app/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent';
+import { ComposeSidePanelContextProvider } from '@/app/compose/composeSidePanel/ComposeSidePanelContext';
+
 
 export const CreatePostFromCalendar = () => {
+
+    return (
+        <ComposeSidePanelContextProvider>
+            <CreatePostFromCalendarJSX />
+
+        </ComposeSidePanelContextProvider>
+    )
+}
+
+
+const CreatePostFromCalendarJSX = () => {
     const [draftSelected, setDraftSelected] = useState(false);
     const [screenPhase, setScreenPhase] = useState(0); // 0 = pickDraft, 1 = pickSocials
     const { setShowCreatePostFromCalendarModal } = useModalStatesContext();
@@ -37,7 +51,7 @@ export const CreatePostFromCalendar = () => {
                 className="rounded-lg"
                 style={{
                     width: '700px', height: 'auto', maxHeight: '80%', backgroundColor: "white",
-                    padding: '20px', position: 'relative', overflowY: 'auto'
+                    padding: '0 20px 0', position: 'relative', overflowY: 'auto'
                 }}
                 onClick={(e) => {
                     e.stopPropagation()
@@ -57,6 +71,15 @@ export const CreatePostFromCalendar = () => {
                         {/* Add a filter */}
 
                         <div className={styles.postPreviewsForCenter}>
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+                            <WebPostPreviewParent profile={null} width='100%' />
+
 
                         </div>
                         {/* ++++++++++++ ADD ALTERNATIVE NO DRAFT TEXT ++++++++++++++++++++++++ */}

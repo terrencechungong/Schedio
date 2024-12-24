@@ -7,6 +7,9 @@
     top: 0;
     background-color: white;
     align-items: center;
+    padding-top: 15px;
+    padding-bottom: 8px;
+    z-index: 100;
 
     span {
         // '#626f84', fontSize: '14px' }}>{weekday}</div>
@@ -26,6 +29,7 @@
         // background-color: red;
         padding: 0;
         margin: 0;
+
         h4 {
             padding: 0;
             margin: 0;
@@ -34,6 +38,41 @@
         }
     }
 }
+
+
+// view depends on width squares or single row
+.postPreviewsForCenter {
+    width: 100%;
+    padding-bottom: 15px;
+
+    @media (max-width: 674px) {
+       display: flex;
+       flex-direction: column;
+       gap: 5px;
+       align-items: center;
+    }
+
+    @media (min-width: 674px) and (max-width: 914px) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    @media (min-width: 914px) {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+
+// from small to 504px then 2 cols
+// then to 680px
+
+
+
+
+
+
 
 .iconWrapper {
     cursor: pointer;
@@ -51,6 +90,7 @@
 
 .modalFooter {
     display: flex;
+    z-index: 100;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
@@ -59,4 +99,5 @@
     width: 100%;
     bottom: 0;
     gap: 5px;
+    padding: 10px 0 10px;
 }
