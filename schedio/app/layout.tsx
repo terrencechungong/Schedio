@@ -13,6 +13,8 @@ import { FaFacebook } from "react-icons/fa";
 import { Instagram } from "lucide-react";
 import { SiThreads } from "react-icons/si";
 import { IconType } from "react-icons/lib";
+import client from "./apolloClient";
+import { ApolloProvider } from '@apollo/client';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -384,11 +386,13 @@ export default function RootLayout({
         style={{ maxWidth: '100vw', maxHeight: '100vh', overflow: 'hidden' }}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ModalStatesProvider >
-          <AppCode>
-            {children}
-          </AppCode>
-        </ModalStatesProvider>
+        <ApolloProvider client={client}>
+          <ModalStatesProvider >
+            <AppCode>
+              {children}
+            </AppCode>
+          </ModalStatesProvider>
+        </ApolloProvider>
         <Toaster />
       </body>
     </html>
