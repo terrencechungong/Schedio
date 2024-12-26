@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import styles from '../ScssModules/schedulepostcomponent.module.scss';
-import { BadgeInfo, CalendarClock, Linkedin, MoveUpRight, PencilLine, PlusIcon } from 'lucide-react';
+import { BadgeInfo, CalendarClock, Linkedin, MoveUpRight, PencilLine, Plus, PlusIcon } from 'lucide-react';
 import { CategorizeDropdown } from '../CategorizeDropdown';
 import { Switch } from '@/components/ui/switch';
 import NumberInputHours from '../SimpleUIComponents/number-input';
@@ -12,6 +12,7 @@ import React from 'react';
 import { SelectAccountForPost } from './SelectAccountForPost';
 import { useWorkspaceContext } from '@/app/WorkspaceProvider';
 import { Constants } from '@/app/constants';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const SchedulePostComponent: React.FC = () => {
     const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext();
@@ -42,14 +43,19 @@ export const SchedulePostComponent: React.FC = () => {
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 {globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.GLOBAL_PROFILES_STILL_LOADING ?
-                    <div className={styles.publishPostDivChildWrapper}>
-                        <p>doodod</p>
+                    <div className={styles.socialAccounts}>
+                        <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
+                        <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
                     </div>
                     :
 
                     !globalProfilesArray.some(p => !p.isShort) ?
                         <div className={styles.publishPostDivChildWrapper}>
-                            <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
+                            <div style={{
+                                width: '100%', display: 'flex', flexDirection: 'column',
+                                justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support regular posts. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
 
                             </div>
                         </div>
@@ -65,15 +71,20 @@ export const SchedulePostComponent: React.FC = () => {
                 }
                 <p>PUBLISH REEL/SHORT</p>
                 {globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.GLOBAL_PROFILES_STILL_LOADING ?
-                    <div className={styles.publishPostDivChildWrapper}>
-                        <p>doodod</p>
+                    <div className={styles.socialAccounts}>
+                        <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
+                        <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
                     </div>
                     :
 
                     !globalProfilesArray.some(p => p.isShort) ?
                         <div className={styles.publishPostDivChildWrapper}>
-                            <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
-                            
+                            <div style={{
+                                width: '100%', display: 'flex', flexDirection: 'column',
+                                justifyContent: 'center', alignItems: 'center'
+                            }}>
+                                <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support short form content. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
+
                             </div>
                         </div>
                         :
