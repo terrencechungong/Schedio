@@ -10,9 +10,11 @@ import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
 import { PlatformName, useModalStatesContext } from '@/app/layout';
 import React from 'react';
 import { SelectAccountForPost } from './SelectAccountForPost';
+import { useWorkspaceContext } from '@/app/WorkspaceProvider';
 
 export const SchedulePostComponent: React.FC = () => {
-    const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext()
+    const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext();
+    const { globalProfilesArray } = useWorkspaceContext()
     const [isOpen, setIsOpen] = React.useState(false);
 
     return (
@@ -39,15 +41,20 @@ export const SchedulePostComponent: React.FC = () => {
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.LinkedIn} />
-                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.Facebook} />
-                    <SelectAccountForPost contentTypeIsShort={false} platformName={PlatformName.Instagram} />
+                    {/* add loading state */}
+                {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Pinterest, PlatformName.LinkedIn, PlatformName.Threads].filter((platform) => (
+                        globalProfilesArray.some(profile => profile.platform == platform)
+                ), []).map((platform) => (
+                        <SelectAccountForPost contentTypeIsShort={false} platformName={platform} />
+                    ))}
                 </div>
                 <p>PUBLISH REEL/SHORT</p>
                 <div className={styles.socialAccounts}>
-                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.Youtube} />
-                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.TikTok} />
-                    <SelectAccountForPost contentTypeIsShort={true} platformName={PlatformName.Instagram} />
+                    {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Youtube, PlatformName.TikTok].filter((platform) => (
+                        globalProfilesArray.some(profile => profile.platform == platform)
+                    ), []).map((platform) => (
+                        <SelectAccountForPost contentTypeIsShort={true} platformName={platform} />
+                    ))}
                 </div>
                 <div
                     style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}

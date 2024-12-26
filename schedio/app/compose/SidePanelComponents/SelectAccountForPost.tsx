@@ -22,13 +22,10 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
     // X, Threads, facebook, ig, tiktok
     const { postTypeData, setPostTypeData } = useModalStatesContext();
     const { updateGlobalProfiles, globalProfilesArray } = useWorkspaceContext()
-    // const [accounts, setAccounts] = useState(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
-    const [accounts, setAccounts] = useState(globalProfilesArray);
+    const [accounts, setAccounts] = useState(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
 
     useEffect(() => {
-        // setAccounts(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
-        setAccounts(globalProfilesArray);
-        console.log("ACCOUNTS", accounts, globalProfilesArray);
+        setAccounts(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
         // console.log("ACCOUNTS", accounts, globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort))
     }, [globalProfilesArray]);
 
@@ -142,8 +139,7 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id, setChecked, dis
     //     'Threads': <SiThreads color='#89CFF0' />,
     //     'TikTok': <FaTiktok color='#000000' />,
     // };
-    const { globalProfilesArray } = useWorkspaceContext();
-    console.log(globalProfilesArray)
+    const { globalProfilesArray } = useWorkspaceContext()
     const toolTipMessage = `Cannot use in combination with ${globalProfilesArray[id].isShort ? 'a normal post' : 'a short or reel'}`
     const accountRow = (
         <div
