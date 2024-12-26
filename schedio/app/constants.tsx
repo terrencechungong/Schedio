@@ -1,3 +1,4 @@
 export const Constants = {
   GENERIC_TEMPLATE: "GenericTemplate",
+  GLOBAL_PROFILES_STILL_LOADING: "GLOBAL_PROFILES_STILL_LOADING"
 };

@@ -21,13 +21,15 @@ import { FaFacebook, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { SiThreads } from 'react-icons/si';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
+import { useWorkspaceContext } from '../WorkspaceProvider';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
   const { textareaRef, setPostCaption, imgContainer, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
     setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
-    postTypeData, setShowEditVideoModal, updateGlobalProfiles, globalProfilesArray
+    postTypeData, setShowEditVideoModal
   } = useModalStatesContext();
+  const {updateGlobalProfiles, globalProfilesArray} = useWorkspaceContext()
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);

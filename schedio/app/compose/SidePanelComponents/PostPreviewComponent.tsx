@@ -12,13 +12,15 @@ import { Constants } from '@/app/constants';
 import WebPostPreviewParent from './WebPostPreviews/WebPostPreviewParent';
 import { SiThreads } from 'react-icons/si';
 import { useComposeSidePanelContext } from '../composeSidePanel/ComposeSidePanelContext';
+import { useWorkspaceContext } from '@/app/WorkspaceProvider';
 
 type PlatformVisibility = {
     [key: number]: boolean;
 }
 
 export const PostPreviewComponent: React.FC = () => {
-    const { postVariations, postVariationKey, postTypeData, globalProfiles, globalProfilesArray } = useModalStatesContext();
+    const { postVariations, postVariationKey, postTypeData } = useModalStatesContext();
+    const {globalProfiles, globalProfilesArray } = useWorkspaceContext()
     // can start off as all true because they wont take effect until theyre checked anyway
     // only changes with click
     const {

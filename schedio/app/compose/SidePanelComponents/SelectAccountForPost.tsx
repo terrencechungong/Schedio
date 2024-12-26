@@ -10,25 +10,36 @@ import { SiGooglemybusiness, SiThreads } from "react-icons/si";
 import { useEffect, use, useState } from "react";
 import { PlatformColor, PlatformName, PostType, useModalStatesContext } from "@/app/layout";
 import Tooltip from '@mui/material/Tooltip';
+import { useWorkspaceContext } from "@/app/WorkspaceProvider";
 
 
 interface PlatFormInput {
-    platformName: string;
+    platformName: PlatformName;
     contentTypeIsShort: boolean;
 }
 
 export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, contentTypeIsShort }) => {
     // X, Threads, facebook, ig, tiktok
-    const { postTypeData, updateGlobalProfiles,setPostTypeData, globalProfilesArray } = useModalStatesContext();
-    const accounts = globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort);
+    const { postTypeData, setPostTypeData } = useModalStatesContext();
+    const { updateGlobalProfiles, globalProfilesArray } = useWorkspaceContext()
+    // const [accounts, setAccounts] = useState(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
+    const [accounts, setAccounts] = useState(globalProfilesArray);
 
-    const platformIcons = {
+    useEffect(() => {
+        // setAccounts(globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort));
+        setAccounts(globalProfilesArray);
+        console.log("ACCOUNTS", accounts, globalProfilesArray);
+        // console.log("ACCOUNTS", accounts, globalProfilesArray.filter(profile => profile.platform === platformName && profile.isShort == contentTypeIsShort))
+    }, [globalProfilesArray]);
+
+    const platformIcons: Record<PlatformName, JSX.Element> = {
         [PlatformName.LinkedIn]: <FaLinkedin color='#0a66c2' />,
         [PlatformName.Youtube]: <FaYoutube color='#FF0000' />,
         [PlatformName.Facebook]: <FaFacebook color='#0866ff' />,
         [PlatformName.Instagram]: <Instagram color='#833ab4' />,
         [PlatformName.Threads]: <SiThreads color='#89CFF0' />,
         [PlatformName.TikTok]: <FaTiktok color='#000000' />,
+        [PlatformName.Pinterest]: <FaPinterest color='#E60023' />,
     };
 
 
@@ -71,18 +82,18 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
     const toggleGlobalPostType = (activating: boolean) => {
         // MIGHT BE 0 FOR CHECKED TYPES
         if (activating && contentTypeIsShort && postTypeData.type != PostType.SHORT) {
-            setPostTypeData({defined:true, type:PostType.SHORT})
+            setPostTypeData({ defined: true, type: PostType.SHORT })
             return
         }
         if (activating && !contentTypeIsShort && postTypeData.type != PostType.NORMAL) {
-            setPostTypeData({defined:true, type:PostType.NORMAL})
+            setPostTypeData({ defined: true, type: PostType.NORMAL })
             return
         }
         // at t his point we know only shorts can be active since its being selected
         const remaingSelected = globalProfilesArray.filter(profile => profile.active && profile.isShort == contentTypeIsShort).length;
-       console.log(remaingSelected ,"REMAINING SELECTED");
+        console.log(remaingSelected, "REMAINING SELECTED");
         if (!activating && remaingSelected < 2) {
-            setPostTypeData({defined:false, type:PostType.NONE})
+            setPostTypeData({ defined: false, type: PostType.NONE })
         }
     }
 
@@ -90,7 +101,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
         if (!disabled) {
             const active = !globalProfilesArray[id].active;
             console.log("ACTIVE", globalProfilesArray[id], active)
-            updateGlobalProfiles(id, {active});
+            updateGlobalProfiles(id, { active });
             toggleGlobalPostType(active)
         }
     }
@@ -104,7 +115,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '17px' }}>
                 {/* change to hashmap */}
-                {accounts.map((account) => <AccountRow 
+                {accounts.map((account) => <AccountRow
                     id={account.id}
                     disabled={disabled}
                     checkColor={color}
@@ -122,7 +133,7 @@ interface AccountRowInput {
     setChecked: () => void;
     disabled: boolean;
 }
-const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id,setChecked, disabled }) => {
+const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id, setChecked, disabled }) => {
     // const platformIcons = {
     //     'LinkedIn': <FaLinkedin color='#0a66c2' />,
     //     'Youtube': <FaYoutube color='#FF0000' />,
@@ -131,8 +142,9 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id,setChecked, disa
     //     'Threads': <SiThreads color='#89CFF0' />,
     //     'TikTok': <FaTiktok color='#000000' />,
     // };
-    const {globalProfilesArray} = useModalStatesContext()
-    const toolTipMessage = `Cannot use in combination with ${globalProfilesArray[id].isShort ? 'a normal post' : 'a short or reel' }`
+    const { globalProfilesArray } = useWorkspaceContext();
+    console.log(globalProfilesArray)
+    const toolTipMessage = `Cannot use in combination with ${globalProfilesArray[id].isShort ? 'a normal post' : 'a short or reel'}`
     const accountRow = (
         <div
             onClick={() => setChecked()}

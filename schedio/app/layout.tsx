@@ -15,6 +15,7 @@ import { SiThreads } from "react-icons/si";
 import { IconType } from "react-icons/lib";
 import client from "./apolloClient";
 import { ApolloProvider } from '@apollo/client';
+import { WorkspaceProvider } from "./WorkspaceProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -122,10 +123,10 @@ interface ModalStatesContextType {
   removePhotoFromPost: (id: string) => void;
   postTypeData: PostTypeData;
   setPostTypeData: React.Dispatch<React.SetStateAction<PostTypeData>>;
-  globalProfiles: { [key: number]: Profile };
-  setGlobalProfiles: React.Dispatch<React.SetStateAction<{ [key: number]: Profile }>>;
-  updateGlobalProfiles: (id: number, profile: Partial<Profile>) => void;
-  globalProfilesArray: Profile[];
+  // globalProfiles: { [key: number]: Profile };
+  // setGlobalProfiles: React.Dispatch<React.SetStateAction<{ [key: number]: Profile }>>;
+  // updateGlobalProfiles: (id: number, profile: Partial<Profile>) => void;
+  // globalProfilesArray: Profile[];
   showPostDetailsFromCalendarModal: boolean;
   setShowPostDetailsFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
   showCreatePostFromCalendarModal: boolean;
@@ -210,23 +211,23 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [postTypeData, setPostTypeData] = useState<PostTypeData>({ defined: false, type: PostType.NONE });
   const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
   // in reality we will give facebook profiles one for shorts and another entry for normal to avoid id mixups
-  const [globalProfiles, setGlobalProfiles] = useState<{ [key: number]: Profile }>(
-    {
-      0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-      1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-      2: { name: 'Sarah Lee', active: false, unique: false, id: 2, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-      3: { name: 'David Davis', active: false, unique: false, id: 3, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-      4: { name: 'Jessica Martin', active: false, unique: false, id: 4, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-      5: { name: 'Kevin White', active: false, unique: false, id: 5, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-      6: { name: 'Amanda Taylor', active: false, unique: false, id: 6, platform: 'Facebook', isShort: true, sharesName: true } as Profile,
-      7: { name: 'Brian Hall', active: false, unique: false, id: 7, platform: 'Facebook', isShort: true, sharesName: false } as Profile,
-      8: { name: 'Rachel Patel', active: false, unique: false, id: 8, platform: 'Youtube', isShort: true, sharesName: false } as Profile,
-      9: { name: 'Christopher Brooks', active: false, unique: false, id: 9, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-      10: { name: 'Laura Garcia', active: false, unique: false, id: 10, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-      11: { name: 'Matthew Thompson', active: false, unique: false, id: 11, platform: 'Youtube', isShort: true, sharesName: false } as Profile
-    }
-  );
-  const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
+  // const [globalProfiles, setGlobalProfiles] = useState<{ [key: number]: Profile }>(
+  //   {
+  //     0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+  //     1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
+  //     2: { name: 'Sarah Lee', active: false, unique: false, id: 2, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
+  //     3: { name: 'David Davis', active: false, unique: false, id: 3, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+  //     4: { name: 'Jessica Martin', active: false, unique: false, id: 4, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
+  //     5: { name: 'Kevin White', active: false, unique: false, id: 5, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
+  //     6: { name: 'Amanda Taylor', active: false, unique: false, id: 6, platform: 'Facebook', isShort: true, sharesName: true } as Profile,
+  //     7: { name: 'Brian Hall', active: false, unique: false, id: 7, platform: 'Facebook', isShort: true, sharesName: false } as Profile,
+  //     8: { name: 'Rachel Patel', active: false, unique: false, id: 8, platform: 'Youtube', isShort: true, sharesName: false } as Profile,
+  //     9: { name: 'Christopher Brooks', active: false, unique: false, id: 9, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
+  //     10: { name: 'Laura Garcia', active: false, unique: false, id: 10, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
+  //     11: { name: 'Matthew Thompson', active: false, unique: false, id: 11, platform: 'Youtube', isShort: true, sharesName: false } as Profile
+  //   }
+  // );
+  // const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
   const [postVariations, setPostVariations] = useState<{ [key: string]: PostVariationData }>({
     "GenericTemplate": {
       postCaption: "",
@@ -237,17 +238,17 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   });
 
-  useEffect(() => {
-    setGlobalProfilesArray(Object.values(globalProfiles));
-  }, [globalProfiles]);
+  // useEffect(() => {
+  //   setGlobalProfilesArray(Object.values(globalProfiles));
+  // }, [globalProfiles]);
 
-  // NO ADDING
-  const updateGlobalProfiles = (id: number, profile: Partial<Profile>) => {
-    setGlobalProfiles((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], ...profile }
-    }))
-  }
+  // // NO ADDING
+  // const updateGlobalProfiles = (id: number, profile: Partial<Profile>) => {
+  //   setGlobalProfiles((prev) => ({
+  //     ...prev,
+  //     [id]: { ...prev[id], ...profile }
+  //   }))
+  // }
 
   // setPostCaption is a function that sets the selected key
   const setPostCaption = (postCaption: string) => {
@@ -350,10 +351,10 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       removePhotoFromPost,
       postTypeData,
       setPostTypeData,
-      updateGlobalProfiles,
-      globalProfiles,
-      setGlobalProfiles,
-      globalProfilesArray,
+      // updateGlobalProfiles,
+      // globalProfiles,
+      // setGlobalProfiles,
+      // globalProfilesArray,
       showPostDetailsFromCalendarModal,
       setShowPostDetailsFromCalendarModal,
       showCreatePostFromCalendarModal,
@@ -387,11 +388,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ApolloProvider client={client}>
-          <ModalStatesProvider >
-            <AppCode>
-              {children}
-            </AppCode>
-          </ModalStatesProvider>
+          <WorkspaceProvider>
+            <ModalStatesProvider >
+              <AppCode>
+                {children}
+              </AppCode>
+            </ModalStatesProvider>
+          </WorkspaceProvider>
         </ApolloProvider>
         <Toaster />
       </body>

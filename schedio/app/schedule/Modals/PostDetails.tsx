@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Tooltip from "@mui/material/Tooltip";
 import WebPostPreviewParent from "@/app/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent";
 import { ComposeSidePanelContextProvider, useComposeSidePanelContext } from "@/app/compose/composeSidePanel/ComposeSidePanelContext";
+import { useWorkspaceContext } from "@/app/WorkspaceProvider";
 
 // REMEMBER TO GIVE EVERYTHING AN ELLIPSIS
 
@@ -69,7 +70,7 @@ export const PostDetailsWrapper = () => {
     const [notesSectionActive, setNotesSectionActive] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [showPostPreview, setShowPostPreview] = useState(true);
-    const { globalProfilesArray } = useModalStatesContext();
+    const { globalProfilesArray } = useWorkspaceContext();
     const {
         webViewPlatformVisibility,
         setWebViewPlatformVisibility } = useComposeSidePanelContext();

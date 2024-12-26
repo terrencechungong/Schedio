@@ -19,6 +19,7 @@ import linkedInInteractions from '../../../assets/linkedininteractions.png'
 import facebookInteractions from '../../../assets/facebookinteractions.png'
 import { FaComment } from "react-icons/fa6";
 import { PiShareFatFill } from "react-icons/pi";
+import { useWorkspaceContext } from '@/app/WorkspaceProvider';
 
 interface WebPostPreviewParentProps {
     profile: Profile | null;
@@ -26,7 +27,8 @@ interface WebPostPreviewParentProps {
 }
 
 const WebPostPreviewParent: React.FC<WebPostPreviewParentProps> = ({ profile, width }) => {
-    const { postVariations, globalProfilesArray } = useModalStatesContext();
+    const { postVariations } = useModalStatesContext();
+    const {globalProfilesArray} = useWorkspaceContext();
     const { currentPage, setCurrentPage } = useComposeSidePanelContext();
     const [localPostVariationKey, setLocalPostVariationKey] = useState(
         profile == null ? Constants.GENERIC_TEMPLATE :

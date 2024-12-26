@@ -1,4 +1,5 @@
 import { useModalStatesContext, VideoInPostThumbnail } from "@/app/layout";
+import { useWorkspaceContext } from "@/app/WorkspaceProvider";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface ComposeSidePanelContextType {
@@ -23,7 +24,7 @@ export enum SidePanelPage {
 
 export const ComposeSidePanelContext = createContext<ComposeSidePanelContextType | undefined>(undefined);
 export const ComposeSidePanelContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const { globalProfilesArray } = useModalStatesContext()
+    const { globalProfilesArray } = useWorkspaceContext()
     const [currentPage, setCurrentPage] = useState<SidePanelPage>(SidePanelPage.SCHEDULE);
     const [mobileViewPlatformVisibility, setMobileViewPlatformVisibility] = useState<PlatformVisibility>(
         globalProfilesArray.reduce((acc, profile) => {

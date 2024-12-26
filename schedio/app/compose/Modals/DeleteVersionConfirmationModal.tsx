@@ -1,4 +1,5 @@
 import { Profile, useModalStatesContext } from "@/app/layout";
+import { useWorkspaceContext } from "@/app/WorkspaceProvider";
 import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion'
 
@@ -7,7 +8,8 @@ import { motion } from 'framer-motion'
 
 
 export const DeleteVersionConfirmationModal = () => {
-    const { setShowDeletionConfirmationModal, updateGlobalProfiles, globalProfilesArray, postVariationKey, textareaRef, setPostVariationKey, postVariations, setPostVariations } = useModalStatesContext();
+    const { setShowDeletionConfirmationModal, postVariationKey, textareaRef, setPostVariationKey, postVariations, setPostVariations } = useModalStatesContext();
+    const { updateGlobalProfiles, globalProfilesArray} = useWorkspaceContext()
     const containerStyle: React.CSSProperties = {
         position: 'absolute',
         width: '100vw',
