@@ -11,6 +11,7 @@ import { PlatformName, useModalStatesContext } from '@/app/layout';
 import React from 'react';
 import { SelectAccountForPost } from './SelectAccountForPost';
 import { useWorkspaceContext } from '@/app/WorkspaceProvider';
+import { Constants } from '@/app/constants';
 
 export const SchedulePostComponent: React.FC = () => {
     const { setShowAddLabelFromSchedulePost, setShowSelectPostTimeModal, setShowPostNowModal } = useModalStatesContext();
@@ -40,22 +41,51 @@ export const SchedulePostComponent: React.FC = () => {
             </div>
             <div className={styles.publishPostDiv}>
                 <p>PUBLISH POST</p>
-                <div className={styles.socialAccounts}>
-                    {/* add loading state */}
-                {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Pinterest, PlatformName.LinkedIn, PlatformName.Threads].filter((platform) => (
-                        globalProfilesArray.some(profile => profile.platform == platform)
-                ), []).map((platform) => (
-                        <SelectAccountForPost contentTypeIsShort={false} platformName={platform} />
-                    ))}
-                </div>
+                {globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.GLOBAL_PROFILES_STILL_LOADING ?
+                    <div className={styles.publishPostDivChildWrapper}>
+                        <p>doodod</p>
+                    </div>
+                    :
+
+                    !globalProfilesArray.some(p => !p.isShort) ?
+                        <div className={styles.publishPostDivChildWrapper}>
+                            <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
+
+                            </div>
+                        </div>
+                        :
+                        <div className={styles.socialAccounts}>
+                            {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Pinterest, PlatformName.LinkedIn, PlatformName.Threads].filter((platform) => (
+                                globalProfilesArray.some(profile => profile.platform == platform)
+                            ), []).map((platform) => (
+                                <SelectAccountForPost contentTypeIsShort={false} platformName={platform} />
+                            ))}
+                        </div>
+
+                }
                 <p>PUBLISH REEL/SHORT</p>
-                <div className={styles.socialAccounts}>
-                    {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Youtube, PlatformName.TikTok].filter((platform) => (
-                        globalProfilesArray.some(profile => profile.platform == platform)
-                    ), []).map((platform) => (
-                        <SelectAccountForPost contentTypeIsShort={true} platformName={platform} />
-                    ))}
-                </div>
+                {globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.GLOBAL_PROFILES_STILL_LOADING ?
+                    <div className={styles.publishPostDivChildWrapper}>
+                        <p>doodod</p>
+                    </div>
+                    :
+
+                    !globalProfilesArray.some(p => p.isShort) ?
+                        <div className={styles.publishPostDivChildWrapper}>
+                            <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
+                            
+                            </div>
+                        </div>
+                        :
+                        <div className={styles.socialAccounts}>
+                            {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Youtube, PlatformName.TikTok].filter((platform) => (
+                                globalProfilesArray.some(profile => profile.platform == platform)
+                            ), []).map((platform) => (
+                                <SelectAccountForPost contentTypeIsShort={true} platformName={platform} />
+                            ))}
+                        </div>
+
+                }
                 <div
                     style={{ color: 'gray', fontSize: '14px', fontWeight: 600, padding: '3px 5px 3px' }}
                     className='bg-accent border-[0.5px] border-gray shadow-none rounded-sm' >Not scheduled</div>
@@ -105,6 +135,16 @@ export const SchedulePostComponent: React.FC = () => {
                     <div style={{ color: '#808080', fontSize: '15px' }}><span style={{ color: '#06402B' }}>On{" "}</span>13 Nov 12:04</div>
                 </div>
             </div>
+
+        </div>
+    )
+}
+
+
+const NoProfilesToShowMessage = ({ short }: { short: boolean }) => {
+
+    return (
+        <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
 
         </div>
     )
