@@ -48,25 +48,18 @@ export const SchedulePostComponent: React.FC = () => {
                         <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
                     </div>
                     :
-
-                    !globalProfilesArray.some(p => !p.isShort) ?
-                        <div className={styles.publishPostDivChildWrapper}>
-                            <div style={{
-                                width: '100%', display: 'flex', flexDirection: 'column',
-                                justifyContent: 'center', alignItems: 'center'
-                            }}>
-                                <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support regular posts. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
-
+                    globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.ERROR_LOADING_PROFILES ?
+                        <ProfileSectionMessage short={false} error={true} /> :
+                        !globalProfilesArray.some(p => !p.isShort) ?
+                            <ProfileSectionMessage short={false} error={false} />
+                            :
+                            <div className={styles.socialAccounts}>
+                                {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Pinterest, PlatformName.LinkedIn, PlatformName.Threads].filter((platform) => (
+                                    globalProfilesArray.some(profile => profile.platform == platform)
+                                ), []).map((platform) => (
+                                    <SelectAccountForPost contentTypeIsShort={false} platformName={platform} />
+                                ))}
                             </div>
-                        </div>
-                        :
-                        <div className={styles.socialAccounts}>
-                            {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Pinterest, PlatformName.LinkedIn, PlatformName.Threads].filter((platform) => (
-                                globalProfilesArray.some(profile => profile.platform == platform)
-                            ), []).map((platform) => (
-                                <SelectAccountForPost contentTypeIsShort={false} platformName={platform} />
-                            ))}
-                        </div>
 
                 }
                 <p>PUBLISH REEL/SHORT</p>
@@ -76,25 +69,18 @@ export const SchedulePostComponent: React.FC = () => {
                         <Skeleton className='w-full rounded-md' style={{ height: '140px' }} />
                     </div>
                     :
-
-                    !globalProfilesArray.some(p => p.isShort) ?
-                        <div className={styles.publishPostDivChildWrapper}>
-                            <div style={{
-                                width: '100%', display: 'flex', flexDirection: 'column',
-                                justifyContent: 'center', alignItems: 'center'
-                            }}>
-                                <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support short form content. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
-
+                    globalProfilesArray.length == 1 && globalProfilesArray[0].name == Constants.ERROR_LOADING_PROFILES ?
+                        <ProfileSectionMessage short={false} error={true} /> :
+                        !globalProfilesArray.some(p => p.isShort) ?
+                            <ProfileSectionMessage short={true} error={false} />
+                            :
+                            <div className={styles.socialAccounts}>
+                                {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Youtube, PlatformName.TikTok].filter((platform) => (
+                                    globalProfilesArray.some(profile => profile.platform == platform)
+                                ), []).map((platform) => (
+                                    <SelectAccountForPost contentTypeIsShort={true} platformName={platform} />
+                                ))}
                             </div>
-                        </div>
-                        :
-                        <div className={styles.socialAccounts}>
-                            {[PlatformName.Facebook, PlatformName.Instagram, PlatformName.Youtube, PlatformName.TikTok].filter((platform) => (
-                                globalProfilesArray.some(profile => profile.platform == platform)
-                            ), []).map((platform) => (
-                                <SelectAccountForPost contentTypeIsShort={true} platformName={platform} />
-                            ))}
-                        </div>
 
                 }
                 <div
@@ -152,11 +138,26 @@ export const SchedulePostComponent: React.FC = () => {
 }
 
 
-const NoProfilesToShowMessage = ({ short }: { short: boolean }) => {
+const ProfileSectionMessage = ({ short, error }: { short: boolean, error: boolean }) => {
+    let message: JSX.Element;
+    if (error) {
+        message = <p style={{ fontSize: '14px' }}>There was a problem fetching your connected pages. Refresh this page to try again. Please reach out to us if the issue persists!</p>
+    } else if (short) {
+        message = <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support short form content. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
+    } else {
+        message = <p style={{ fontSize: '14px' }}>You do not have any connected accounts that support regular posts. <Button className='text-sm'>Add a Page<Plus size={20} /></Button></p>
+    }
 
     return (
-        <div style={{ width: '100%', height: '10px', backgroundColor: 'red' }}>
 
+        <div className={styles.publishPostDivChildWrapper}>
+            <div style={{
+                width: '100%', display: 'flex', flexDirection: 'column',
+                justifyContent: 'center', alignItems: 'center'
+            }}>
+                {message}
+            </div>
         </div>
     )
 }
+

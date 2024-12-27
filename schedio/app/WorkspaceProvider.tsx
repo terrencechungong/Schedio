@@ -100,6 +100,12 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({ children 
             }, [{}, 0]); // object and index
             setGlobalProfiles(accounts[0]);
             console.log("GLOBAL PROFILES SET", accounts)
+        } 
+        if (error) {
+            console.log("error", error)
+            setGlobalProfiles({
+                0: { name: Constants.ERROR_LOADING_PROFILES, active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+            })
         }
 
     }, [loading]);
