@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src", // Set the base URL to `./src`
+    "paths": {
+      "@/*": ["*"] // Map "@/..." to everything inside `./src`
+    },
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "strict": true,
+    "target": "ES2017",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "react-shadow.d.ts",
+    "index.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
