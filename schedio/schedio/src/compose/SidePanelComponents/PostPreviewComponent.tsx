@@ -1,6 +1,6 @@
 
 import { CircleUser, Instagram, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-react';
-import { PostType, Profile, useModalStatesContext } from '@/app/layout';
+import { PostType, Profile, useModalStatesContext } from '@/layout';
 import styles from '../ScssModules/postpreview.module.scss';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PreviewForShorts } from './PreviewForShorts';
@@ -8,11 +8,11 @@ import { FaLinkedin, FaFacebook, FaTiktok, FaYoutube } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Constants } from '@/app/constants';
+import { Constants } from '@/constants';
 import WebPostPreviewParent from './WebPostPreviews/WebPostPreviewParent';
 import { SiThreads } from 'react-icons/si';
 import { useComposeSidePanelContext } from '../composeSidePanel/ComposeSidePanelContext';
-import { useWorkspaceContext } from '@/app/WorkspaceProvider';
+import { useWorkspaceContext } from '@/WorkspaceProvider';
 
 type PlatformVisibility = {
     [key: number]: boolean;

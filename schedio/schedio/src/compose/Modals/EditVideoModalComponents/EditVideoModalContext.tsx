@@ -1,5 +1,5 @@
 // @ts-ignore
-import { VideoInPostThumbnail } from "@/layout.tsx";
+import { VideoInPostThumbnail } from "@/layout";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface EditVideoModalContextType {

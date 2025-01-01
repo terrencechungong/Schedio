@@ -1,17 +1,17 @@
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 // @ts-ignore
 import { X } from 'lucide-react';
 // @ts-ignore
 import styles from '../ScssModules/addmediamodal.module.scss'
 // @ts-ignore
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs.tsx";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 // @ts-ignore
-import { AddMediaUploadTabContent } from '../MediaRelatedComponents/AddMediaUploadTabContent.tsx';
+import { AddMediaUploadTabContent } from '../MediaRelatedComponents/AddMediaUploadTabContent';
 // @ts-ignore
-import { AddMediaGifTabContent } from "../MediaRelatedComponents/AddMediaGifTabContent.tsx";
+import { AddMediaGifTabContent } from "../MediaRelatedComponents/AddMediaGifTabContent";
 // @ts-ignore
-import { AddMediaPhotosTabContent } from "../MediaRelatedComponents/AddMediaPhotosTabContent.tsx";
+import { AddMediaPhotosTabContent } from "../MediaRelatedComponents/AddMediaPhotosTabContent";
 // @ts-ignore
 import { motion } from 'framer-motion';
 

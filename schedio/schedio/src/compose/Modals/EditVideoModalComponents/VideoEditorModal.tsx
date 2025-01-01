@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx'
+import { useModalStatesContext } from '@/layout'
 import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion';
 import CircularProgress from '@mui/material/CircularProgress';

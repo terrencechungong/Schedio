@@ -1,16 +1,16 @@
 
 // @ts-ignore
-import { useModalStatesContext } from '@//layout.tsx';
+import { useModalStatesContext } from '@//layout';
 import { Loader2, X } from 'lucide-react';
 // @ts-ignore
 import styles from '../ScssModules/aigencaption.module.scss'
 import { motion } from "framer-motion";
 // @ts-ignore
-import { SearchAudienceDropDown } from '../SimpleUIComponents/SearchAudienceDropDown.tsx';
+import { SearchAudienceDropDown } from '../SimpleUIComponents/SearchAudienceDropDown';
 // @ts-ignore
-import { SelectAiCaptionTone } from "./SelectAiCaptionTone.tsx";
+import { SelectAiCaptionTone } from "./SelectAiCaptionTone";
 // @ts-ignore
-import { Button } from "@/components/ui/button.tsx"
+import { Button } from "@/components/ui/button"
 import ClipLoader from "react-spinners/ClipLoader";
 import { useRef, useState } from 'react';
 

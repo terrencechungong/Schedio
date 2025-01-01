@@ -1,12 +1,12 @@
 // @ts-ignore
-import ComposePage from "../page.tsx"
+import ComposePage from "../page"
 
 
 export default function ComposeWithParamPage() {
 
     return (
         // might be an issue
-        // @ts-ignore
+       
         <ComposePage />
     )
 }

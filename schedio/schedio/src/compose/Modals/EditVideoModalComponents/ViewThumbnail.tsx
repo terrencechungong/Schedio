@@ -1,22 +1,22 @@
 // @ts-ignore
-import { useToast } from '@/hooks/use-toast.tsx';
+import { useToast } from '@/hooks/use-toast';
 
 // @ts-ignore
 import styles from '../../ScssModules/editmediamodal.module.scss';
 // @ts-ignore
-import { useEditVideoModalContext } from './EditVideoModalContext.tsx';
+import { useEditVideoModalContext } from './EditVideoModalContext';
 // @ts-ignore
 import { useRef } from 'react';
 // @ts-ignore
-import { Button } from '@/components/ui/button.tsxs';
+import { Button } from '@/components/ui/buttons';
 // @ts-ignore
 import Tooltip from '@mui/material/Tooltip';
 // @ts-ignore
 import { ChevronLeft, Scissors, Upload, X } from 'lucide-react';
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 // @ts-ignore
-import { Skeleton } from '@/components/ui/skeleton.tsx';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 

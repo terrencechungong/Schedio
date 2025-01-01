@@ -7,9 +7,9 @@ import { FcAddImage } from "react-icons/fc";
 // @ts-ignore
 import { ImageUp, X } from "lucide-react";
 // @ts-ignore
-import { useModalStatesContext } from "@/app/layout.tsx";
+import { useModalStatesContext } from "@/layout";
 // @ts-ignore
-import { generateRandom4Digit } from "@/app/utilFunctions.tsx";
+import { generateRandom4Digit } from "@/utilFunctions";
 
 
 export const AddMediaUploadTabContent: React.FC = () => {

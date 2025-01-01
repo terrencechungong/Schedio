@@ -1,16 +1,16 @@
- // @ts-ignore 
-import { useModalStatesContext } from '../../layout.tsx';
+ 
+import { useModalStatesContext } from '../../layout';
 import { motion } from 'framer-motion'
 import { useState } from 'react';
- // @ts-ignore 
+ 
 import styles from '../ScssModules/createpostmodal.module.scss'
 import { MoveLeft, MoveRight, MoveUpRight, Plus, X } from 'lucide-react';
- // @ts-ignore 
-import { Button } from '@/components/ui/button.tsx';
- // @ts-ignore 
-import WebPostPreviewParent from '@/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent.tsx'
- // @ts-ignore ;
-import { ComposeSidePanelContextProvider } from '@/compose/composeSidePanel/ComposeSidePanelContext.tsx';
+ 
+import { Button } from '@/components/ui/button';
+ 
+import WebPostPreviewParent from '@/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent'
+ ;
+import { ComposeSidePanelContextProvider } from '@/compose/composeSidePanel/ComposeSidePanelContext';
 
 
 export const CreatePostFromCalendar = () => {

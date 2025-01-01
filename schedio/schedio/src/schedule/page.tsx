@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
- // @ts-ignore 
-import {FullCalendarWrapper} from '../posts/FullCalendarWrapper.tsx';
+ 
+import {FullCalendarWrapper} from '../posts/FullCalendarWrapper';
 
 
 export default function SchedulePage() {

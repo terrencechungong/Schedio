@@ -8,9 +8,9 @@ import { FaPinterest, FaTiktok } from 'react-icons/fa'
 import { FaFacebook } from "react-icons/fa";
 import { SiGooglemybusiness, SiThreads } from "react-icons/si";
 import { useEffect, use, useState } from "react";
-import { PlatformColor, PlatformName, PostType, useModalStatesContext } from "@/app/layout";
+import { PlatformColor, PlatformName, PostType, useModalStatesContext } from "@/layout";
 import Tooltip from '@mui/material/Tooltip';
-import { useWorkspaceContext } from "@/app/WorkspaceProvider";
+import { useWorkspaceContext } from "@/WorkspaceProvider";
 
 
 interface PlatFormInput {

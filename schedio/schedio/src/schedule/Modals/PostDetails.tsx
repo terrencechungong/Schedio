@@ -1,27 +1,27 @@
 import { ChevronDown, Globe, TableOfContents, CalendarClock, X, Siren, NotebookPen } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
- // @ts-ignore 
-import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from "@/app/layout.tsx";
+ 
+import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from "@/layout";
 import { useState } from "react";
- // @ts-ignore 
+ 
 import styles from '../ScssModules/postdetails.module.scss';
 import { User } from 'lucide-react';
- // @ts-ignore 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
- // @ts-ignore 
-import { CategorizeDropdown, InputType } from "@/compose/CategorizeDropdown.tsx";
- // @ts-ignore 
-import { Textarea } from "@/components/ui/textarea.tsx";
- // @ts-ignore 
-import { Button } from "@/components/ui/button.tsx";
- // @ts-ignore 
+ 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+ 
+import { CategorizeDropdown, InputType } from "@/compose/CategorizeDropdown";
+ 
+import { Textarea } from "@/components/ui/textarea";
+ 
+import { Button } from "@/components/ui/button";
+ 
 import Tooltip from "@mui/material/Tooltip";
- // @ts-ignore 
-import WebPostPreviewParent from "@/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent.tsx";
- // @ts-ignore 
-import { ComposeSidePanelContextProvider, useComposeSidePanelContext } from "@/compose/composeSidePanel/ComposeSidePanelContext.tsx";
- // @ts-ignore 
-import { useWorkspaceContext } from "@/WorkspaceProvider.tsx";
+ 
+import WebPostPreviewParent from "@/compose/SidePanelComponents/WebPostPreviews/WebPostPreviewParent";
+ 
+import { ComposeSidePanelContextProvider, useComposeSidePanelContext } from "@/compose/composeSidePanel/ComposeSidePanelContext";
+ 
+import { useWorkspaceContext } from "@/WorkspaceProvider";
 import { CategoryItem } from "@/compose/CategorizeDropdown";
 
 // REMEMBER TO GIVE EVERYTHING AN ELLIPSIS

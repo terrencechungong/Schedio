@@ -1,5 +1,5 @@
 
-// app/schedule/page.tsx
+// app/schedule/page
 import { Button } from '@/components/ui/button';
 import styles from './ScssModules/teampage.module.scss'
 import { Ellipsis, Plus } from 'lucide-react';

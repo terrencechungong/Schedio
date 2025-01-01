@@ -1,17 +1,17 @@
 // @ts-ignore
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // @ts-ignore
 import styles from '../ScssModules/compose.module.scss';
 // @ts-ignore
-import { PostPreviewComponent } from '../SidePanelComponents/PostPreviewComponent.tsx';
+import { PostPreviewComponent } from '../SidePanelComponents/PostPreviewComponent';
 // @ts-ignore
-import { useModalStatesContext } from '../../layout.tsx';
+import { useModalStatesContext } from '../../layout';
 // @ts-ignore
-import { PostCommentsComponent } from '../SidePanelComponents/PostCommentsComponent.tsx';
+import { PostCommentsComponent } from '../SidePanelComponents/PostCommentsComponent';
 // @ts-ignore
-import { SchedulePostComponent } from '../SidePanelComponents/SchedulePostComponent.tsx';
+import { SchedulePostComponent } from '../SidePanelComponents/SchedulePostComponent';
 // @ts-ignore
-import { ComposeSidePanelContextProvider, SidePanelPage, useComposeSidePanelContext } from './ComposeSidePanelContext.tsx';
+import { ComposeSidePanelContextProvider, SidePanelPage, useComposeSidePanelContext } from './ComposeSidePanelContext';
 
 export const ComposePoseSidePanelWrapper: React.FC = () => {
 

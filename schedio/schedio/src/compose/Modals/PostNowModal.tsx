@@ -1,4 +1,4 @@
-import { useModalStatesContext } from "@/app/layout";
+import { useModalStatesContext } from "@/layout";
 import { motion } from "framer-motion";
 import styles from '../ScssModules/postnowmodal.module.scss'
 import { Button } from "@/components/ui/button";

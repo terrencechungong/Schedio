@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
- // @ts-ignore 
-import RootLayout from './layout.tsx'
+ 
+import RootLayout from './layout'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

@@ -6,7 +6,7 @@
     },
     "moduleResolution": "Node",
     "jsx": "react-jsx",
-    "strict": true,
+    "strict": false,
     "target": "ES2017",
     "esModuleInterop": true,
     "allowJs": true,

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useModalStatesContext } from "@/app/layout.tsx";
+import { useModalStatesContext } from "@/layout";
 // @ts-ignore
 import { motion } from "framer-motion";
 // @ts-ignore
@@ -15,7 +15,7 @@ import styles from '../ScssModules/addshortvideomodal.module.scss'
 // @ts-ignore
 import { useRef } from "react";
 // @ts-ignore
-import { generateRandom4Digit } from "@/app/utilFunctions.tsx";
+import { generateRandom4Digit } from "@/utilFunctions";
 
 export const AddShortVideoModal = () => {
     const { setShowAddShortVideoModal, setShortVideoForPostData } = useModalStatesContext();
@@ -115,7 +115,7 @@ export const AddShortVideoModal = () => {
                         if (inputFileRef) inputFileRef.current.click()
                     }}
                 >
-                    <img src={videoEdit.src} style={{ width: '105px', height: '105px' }} />
+                    <img src={videoEdit} style={{ width: '105px', height: '105px' }} />
                     <div style={{ alignSelf: 'center', textAlign: 'center' }}>
                         <p >Drag and drop, or click to upload your video</p>
                         <i style={{ color: 'rgb(120, 120, 120)', fontSize: '14px' }}>video/mp4, video/quicktime, video/mov</i>

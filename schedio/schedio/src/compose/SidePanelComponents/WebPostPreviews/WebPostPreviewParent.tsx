@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from '../../ScssModules/postpreview.module.scss';
 import { CircleUser, MessageSquareText, MoveUpRight, ThumbsUp } from 'lucide-react';
-import { PlatformName, PostType, Profile, useModalStatesContext } from '@/app/layout';
+import { PlatformName, PostType, Profile, useModalStatesContext } from '@/layout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaTiktok, FaYoutube } from "react-icons/fa";
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Constants } from '@/app/constants';
+import { Constants } from '@/constants';
 import { ImageSection } from './ImageSection';
 import { useComposeSidePanelContext } from '../../composeSidePanel/ComposeSidePanelContext';
 import { SidePanelPage } from '../../composeSidePanel/ComposeSidePanelContext';
@@ -19,7 +19,7 @@ import linkedInInteractions from '../../../assets/linkedininteractions.png'
 import facebookInteractions from '../../../assets/facebookinteractions.png'
 import { FaComment } from "react-icons/fa6";
 import { PiShareFatFill } from "react-icons/pi";
-import { useWorkspaceContext } from '@/app/WorkspaceProvider';
+import { useWorkspaceContext } from '@/WorkspaceProvider';
 
 interface WebPostPreviewParentProps {
     profile: Profile | null;
@@ -86,7 +86,7 @@ const FooterHeader = ({ profile }: { profile: Profile | null }) => {
                 padding: '8px 0 8px', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
-                    <img src={linkedInInteractions.src} style={{ width: '39px' }} />
+                    <img src={linkedInInteractions} style={{ width: '39px' }} />
                     <p style={linkedinSubText}>190</p>
                 </div>
                 <div>
@@ -102,7 +102,7 @@ const FooterHeader = ({ profile }: { profile: Profile | null }) => {
                 padding: '8px 0 8px', justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
-                    <img src={facebookInteractions.src} style={{ width: '30px' }} />
+                    <img src={facebookInteractions} style={{ width: '30px' }} />
                     <p style={linkedinSubText}>276</p>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -152,11 +152,11 @@ const Footer = ({ profile }: { profile: Profile | null }) => {
             {profile?.platform == PlatformName.LinkedIn && (
                 <div className={styles.linkedInPostPreviewFooter}>
                     <div style={{ ...linkedInIconWrapper, gap: '4px' }}>
-                        <img src={likeButton.src} style={{ width: '14.5px' }} />
+                        <img src={likeButton} style={{ width: '14.5px' }} />
                         <span>Like</span>
                     </div>
                     <div style={{ ...linkedInIconWrapper, gap: '2px' }}>
-                        <img src={linkedinComment.src} style={{ width: '22px' }} />
+                        <img src={linkedinComment} style={{ width: '22px' }} />
                         <span>Comment</span>
                     </div>
                     <div style={linkedInIconWrapper}>

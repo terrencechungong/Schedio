@@ -3,13 +3,13 @@ import { ImageUp, Search, X } from 'lucide-react';
 // @ts-ignore
 import styles from '../ScssModules/giftabcontent.module.scss'
 // @ts-ignore
-import { createGifOverlay } from '../abstraction/GifTabAbstraction.tsx';
+import { createGifOverlay } from '../abstraction/GifTabAbstraction';
 // @ts-ignore
 import { useEffect, useRef, useState } from 'react';
 // @ts-ignore
-import { PhotoInPost, useModalStatesContext } from '@/layout.tsx';
+import { PhotoInPost, useModalStatesContext } from '@/layout';
 // @ts-ignore
-import { fetchDimensions } from '@/utilFunctions.tsx';
+import { fetchDimensions } from '@/utilFunctions';
 
 export const AddMediaGifTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);

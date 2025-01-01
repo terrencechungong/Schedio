@@ -1,4 +1,4 @@
-import { useModalStatesContext } from '@/app/layout';
+import { useModalStatesContext } from '@/layout';
 import { motion } from 'framer-motion';
 import styles from '../ScssModules/editmediamodal.module.scss';
 import { Input } from '@/components/ui/input';
@@ -123,7 +123,7 @@ export const EditMediaModal = () => {
                     {(!cropping && !mediaIsGif.current) && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignSelf: 'flex-end' }}>
                         <Button
                             onClick={() => setShowAdobeEditor(true)}
-                            className="p-5 text-black bg-gray-300 hover:bg-gray-400 shadow-none">Edit with <img src={adobeIcon.src} style={{ width: '20px', height: '20px' }} /></Button>
+                            className="p-5 text-black bg-gray-300 hover:bg-gray-400 shadow-none">Edit with <img src={adobeIcon} style={{ width: '20px', height: '20px' }} /></Button>
                         <Button
                             onClick={() => setCropping(true)}
                             className="p-5 bg-white hover:bg-blue-100 text-blue-700 shadow-none">

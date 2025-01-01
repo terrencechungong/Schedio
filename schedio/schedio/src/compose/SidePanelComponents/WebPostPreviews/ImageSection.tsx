@@ -1,4 +1,4 @@
-import { useModalStatesContext } from "@/app/layout";
+import { useModalStatesContext } from "@/layout";
 
 
 export const ImageSection = ({ localPostVariationKey }: { localPostVariationKey: string }) => {

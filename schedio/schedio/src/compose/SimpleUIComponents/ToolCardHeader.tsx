@@ -1,6 +1,6 @@
-import lightbulb from '@/app/assets/light-bulb-with-removebg-preview (2).png';
-import template from '@/app/assets/icons8-template-64 (1).png';
-import hashtag from '@/app/assets/hashtag.png';
+import lightbulb from '@/assets/light-bulb-with-removebg-preview (2).png';
+import template from '@/assets/icons8-template-64 (1).png';
+import hashtag from '@/assets/hashtag.png';
 import styles from '../ScssModules/compose.module.scss';
 import { X } from 'lucide-react';
 
@@ -14,7 +14,7 @@ export const GetInspirationHeader = () => {
                     width: '58px', height: '58px', borderRadius: '6px', backgroundColor: '#FDE68A', alignItems: 'center', justifyContent: 'center'
                     , minHeight: '58px', minWidth: '58px'
                 }}>
-                    <img src={lightbulb.src} />
+                    <img src={lightbulb} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '58px' }}>
                     <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Get inspiration</p>
@@ -36,7 +36,7 @@ export const PostTemplatesHeader = () => {
                     width: '58px', height: '58px', borderRadius: '6px', backgroundColor: '#BFDBFE', alignItems: 'center', justifyContent: 'center'
                     , minHeight: '58px', minWidth: '58px', display:'flex'
                 }}>
-                    <img src={template.src} style={{width:'75%', alignSelf:'center'}}/>
+                    <img src={template} style={{width:'75%', alignSelf:'center'}}/>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '58px' }}>
                     <p style={{ fontWeight: 'bold', fontSize: '18px' }}>Post templates</p>

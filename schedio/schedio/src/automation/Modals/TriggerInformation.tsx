@@ -1,22 +1,22 @@
 
 import { motion } from "framer-motion";
- // @ts-ignore 
+ 
 import styles from '../ScssModules/triggerinformation.module.scss'
- // @ts-ignore 
-import { useModalStatesContext } from "@/app/layout.tsx";
- // @ts-ignore 
-import { Info, X } from "lucide-react.tsx";
- // @ts-ignore 
-import { Input } from "@/components/ui/input.tsx";
- // @ts-ignore 
-import { CreateDraftDropdown } from "../SimpleUiComponents/CreateDraftDropdown.tsx";
- // @ts-ignore 
-import { Button } from "@/components/ui/button.tsx";
- // @ts-ignore 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.tsx";
+ 
+import { useModalStatesContext } from "@/layout";
+ 
+import { Info, X } from "lucide-react";
+ 
+import { Input } from "@/components/ui/input";
+ 
+import { CreateDraftDropdown } from "../SimpleUiComponents/CreateDraftDropdown";
+ 
+import { Button } from "@/components/ui/button";
+ 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaLinkedin } from "react-icons/fa";
- // @ts-ignore 
-import { CategorizeDropdown } from "@/app/compose/CategorizeDropdown.tsx";
+ 
+import { CategorizeDropdown } from "@/compose/CategorizeDropdown";
 import React, { useState } from "react";
 
 export const TriggerInformation = () => {

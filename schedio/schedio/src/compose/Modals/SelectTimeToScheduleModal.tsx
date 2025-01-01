@@ -1,4 +1,4 @@
-import { useModalStatesContext } from '@/app/layout';
+import { useModalStatesContext } from '@/layout';
 import { motion } from "framer-motion";
 import styles from '../ScssModules/selecttimetoschedulemodal.module.scss'
 import { useState } from "react";

@@ -1,39 +1,39 @@
- // @ts-ignore 
+ 
 import styles from './ScssModules/compose.module.scss';
 import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, Video, WandSparkles, Wrench, X } from 'lucide-react';
- // @ts-ignore 
-import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader.tsx';
- // @ts-ignore 
-import { ModalStatesContext, PlatformColor, PlatformIcons, PlatformName, PostType, Profile, useModalStatesContext } from '../layout.tsx';
- // @ts-ignore 
-import { ComposePoseSidePanelWrapper } from './composeSidePanel/ComposePostSidePanel.tsx';
+ 
+import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
+ 
+import { ModalStatesContext, PlatformColor, PlatformIcons, PlatformName, PostType, Profile, useModalStatesContext } from '../layout';
+ 
+import { ComposePoseSidePanelWrapper } from './composeSidePanel/ComposePostSidePanel';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
- // @ts-ignore 
-import { Button } from '@/components/ui/button.tsx';
+ 
+import { Button } from '@/components/ui/button';
 import Tooltip from '@mui/material/Tooltip';
- // @ts-ignore 
+ 
 import templateIcon from '../assets/interface.png'
- // @ts-ignore 
+ 
 import hashtagIcon from '../assets/hashchc.png'
- // @ts-ignore 
+ 
 import notepad from '../assets/check-list.png';
- // @ts-ignore 
+ 
 import browser from '../assets/savedtemps.png';
- // @ts-ignore 
+ 
 import { AnimatePresence, motion } from 'framer-motion';
- // @ts-ignore 
+ 
 
 import variable from '../assets/algorithm.png'
 import { FaCircleCheck } from "react-icons/fa6";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FaFacebook, FaLinkedin, FaTiktok, FaYoutube } from 'react-icons/fa';
 import { SiThreads } from 'react-icons/si';
- // @ts-ignore 
-import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover.tsx';
+ 
+import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Input } from '../components/ui/input';
- // @ts-ignore 
-import { useWorkspaceContext } from '../WorkspaceProvider.tsx';
+ 
+import { useWorkspaceContext } from '../WorkspaceProvider';
 
 export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
@@ -828,7 +828,7 @@ export default function ComposePage() {
               <div className={`${showAiGenTemplate ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-[#E7F8E9] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={templateIcon.src} width={"27px"} height={"27px"} />
+                    <img src={templateIcon} width={"27px"} height={"27px"} />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row', gap: '6px', alignItems: 'center' }}>
                     <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>AI Generated Templates</h4>
@@ -978,7 +978,7 @@ export default function ComposePage() {
               <div className={`${showHashtagGroupTool ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-[#b2ebf778] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={hashtagIcon.src} width={"30px"} height={"30px"} />
+                    <img src={hashtagIcon} width={"30px"} height={"30px"} />
                   </div>
                   <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Saved Hashtag Groups</h4>
                 </div>
@@ -1077,7 +1077,7 @@ export default function ComposePage() {
               <div className={`${showPostInternalNotes ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-red-100 rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={notepad.src} width={"29px"} height={"29px"} />
+                    <img src={notepad} width={"29px"} height={"29px"} />
                   </div>
                   <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Post Notes</h4>
                 </div>
@@ -1140,7 +1140,7 @@ export default function ComposePage() {
                 <div className='rounded-lg' style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                   <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                     <div className='bg-[#ffeeb6b8] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                      <img src={variable.src} width={"27px"} height={"27px"} />
+                      <img src={variable} width={"27px"} height={"27px"} />
                     </div>
                     <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Variables</h4>
                   </div>
@@ -1273,7 +1273,7 @@ export default function ComposePage() {
               <div className={`${showUserTemplateTools ? 'rounded-b-none rounded-t-lg' : 'rounded-lg'}`} style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white', padding: '8px 8px 8px 10px' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', gap: '13px', flexShrink: 1, alignItems: 'center' }}>
                   <div className='bg-[#F9E7FF] rounded-md' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px', minHeight: '40px' }}>
-                    <img src={browser.src} width={"27px"} height={"27px"} />
+                    <img src={browser} width={"27px"} height={"27px"} />
                   </div>
                   <h4 style={{ color: '#2d3748', fontWeight: '600', fontSize: '16px', margin: 0 }}>Saved Templates</h4>
                 </div>

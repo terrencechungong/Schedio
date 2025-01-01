@@ -1,43 +1,43 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
- // @ts-ignore 
-import { AppSidebar } from "./app-sidebar.tsx";
- // @ts-ignore 
-import { AddMediaModal } from "./compose/Modals/AddMediaModal.tsx";
- // @ts-ignore 
-import { AiGenGaption } from "./compose/AIComposeRelated/AiGenGaption.tsx";
- // @ts-ignore 
-import { useModalStatesContext } from "./layout.tsx";
- // @ts-ignore 
-import { SidebarInset, SidebarProvider } from "./components/ui/sidebar.tsx";
- // @ts-ignore 
-import { AddIconFromSchedulePostModal } from "./compose/Modals/AddIconFromSchedulePostModal.tsx";
- // @ts-ignore 
-import { SelectTimeToScheduleModal } from "./compose/Modals/SelectTimeToScheduleModal.tsx";
- // @ts-ignore 
-import { PostNowModal } from "./compose/Modals/PostNowModal.tsx";
- // @ts-ignore 
-import { UserPermissionsModal } from "./team/modals/UserPermissionsModal.tsx";
- // @ts-ignore 
-import { AddTeamMemberModal } from "./team/modals/AddTeamMemberModal.tsx";
- // @ts-ignore 
-import { TriggerInformation } from "./automation/Modals/TriggerInformation.tsx";
- // @ts-ignore 
-import { EditMediaModal } from "./compose/Modals/EditMediaModal.tsx";
- // @ts-ignore 
-import AdobeEditor from "./compose/Modals/AdobeEditor.tsx";
- // @ts-ignore 
-import { DeleteVersionConfirmationModal } from "./compose/Modals/DeleteVersionConfirmationModal.tsx";
- // @ts-ignore 
-import { AddShortVideoModal } from "./compose/Modals/AddShortVideoModal.tsx";
- // @ts-ignore 
-import { EditVideoModalWrapper } from "./compose/Modals/EditVideoModalComponents/EditVideoModal.tsx";
- // @ts-ignore 
-import { VideoEditorModal } from "./compose/Modals/EditVideoModalComponents/VideoEditorModal.tsx";
- // @ts-ignore 
-import { PostDetails } from "./schedule/Modals/PostDetails.tsx";
- // @ts-ignore 
-import { CreatePostFromCalendar } from "./schedule/Modals/CreatePostFromCalendar.tsx";
+ 
+import { AppSidebar } from "./app-sidebar";
+ 
+import { AddMediaModal } from "./compose/Modals/AddMediaModal";
+ 
+import { AiGenGaption } from "./compose/AIComposeRelated/AiGenGaption";
+ 
+import { useModalStatesContext } from "./layout";
+ 
+import { SidebarInset, SidebarProvider } from "./components/ui/sidebar";
+ 
+import { AddIconFromSchedulePostModal } from "./compose/Modals/AddIconFromSchedulePostModal";
+ 
+import { SelectTimeToScheduleModal } from "./compose/Modals/SelectTimeToScheduleModal";
+ 
+import { PostNowModal } from "./compose/Modals/PostNowModal";
+ 
+import { UserPermissionsModal } from "./team/modals/UserPermissionsModal";
+ 
+import { AddTeamMemberModal } from "./team/modals/AddTeamMemberModal";
+ 
+import { TriggerInformation } from "./automation/Modals/TriggerInformation";
+ 
+import { EditMediaModal } from "./compose/Modals/EditMediaModal";
+ 
+import AdobeEditor from "./compose/Modals/AdobeEditor";
+ 
+import { DeleteVersionConfirmationModal } from "./compose/Modals/DeleteVersionConfirmationModal";
+ 
+import { AddShortVideoModal } from "./compose/Modals/AddShortVideoModal";
+ 
+import { EditVideoModalWrapper } from "./compose/Modals/EditVideoModalComponents/EditVideoModal";
+ 
+import { VideoEditorModal } from "./compose/Modals/EditVideoModalComponents/VideoEditorModal";
+ 
+import { PostDetails } from "./schedule/Modals/PostDetails";
+ 
+import { CreatePostFromCalendar } from "./schedule/Modals/CreatePostFromCalendar";
 
 
 export default function AppCode({

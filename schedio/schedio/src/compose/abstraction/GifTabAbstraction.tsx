@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { EllipsisVertical } from 'lucide-react';
 // @ts-ignore
-import { generateRandom4Digit } from '@/utilFunctions.tsx';
+import { generateRandom4Digit } from '@/utilFunctions';
 
 
 export const createGifOverlay = (overlay: HTMLDivElement, url: string, photoOnClick) => {

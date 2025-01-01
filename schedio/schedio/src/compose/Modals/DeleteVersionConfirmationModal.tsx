@@ -1,9 +1,9 @@
 // @ts-ignore
-import { Profile, useModalStatesContext } from "@/app/layout.tsx";
+import { Profile, useModalStatesContext } from "@/layout";
 // @ts-ignore
-import { useWorkspaceContext } from "@/app/WorkspaceProvider.tsx";
+import { useWorkspaceContext } from "@/WorkspaceProvider";
 // @ts-ignore
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 import { motion } from 'framer-motion'
 
 

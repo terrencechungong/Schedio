@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import styles from '../ScssModules/compose.module.scss';
 import { PostPreviewComponent } from './PostPreviewComponent';
-import { useModalStatesContext } from '@/app/layout';
+import { useModalStatesContext } from '@/layout';
 import { PostCommentsComponent } from './PostCommentsComponent';
 import { SchedulePostComponent } from './SchedulePostComponent';
 

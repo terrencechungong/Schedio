@@ -1,21 +1,21 @@
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 // @ts-ignore
 import { motion } from 'framer-motion';
 // @ts-ignore
 import styles from '../../ScssModules/editmediamodal.module.scss';
 // @ts-ignore
-import { EditVideoMainPage } from './EditVideoMainPage.tsx';
+import { EditVideoMainPage } from './EditVideoMainPage';
 // @ts-ignore
-import { useEditVideoModalContext } from './EditVideoModalContext.tsx';
+import { useEditVideoModalContext } from './EditVideoModalContext';
 // @ts-ignore
-import { EditVideoModalContextProvider } from './EditVideoModalContext.tsx'
+import { EditVideoModalContextProvider } from './EditVideoModalContext'
 // @ts-ignore
-import { UploadThumbnailStepTwo } from './UploadThumbnailStepTwo.tsx';
+import { UploadThumbnailStepTwo } from './UploadThumbnailStepTwo';
 // @ts-ignore
-import { ViewThumbnail } from './ViewThumbnail.tsx';
+import { ViewThumbnail } from './ViewThumbnail';
 // @ts-ignore
-import { ChooseThumbnailFromVideo } from './ChooseThumbnailFromVideo.tsx';
+import { ChooseThumbnailFromVideo } from './ChooseThumbnailFromVideo';
 
 export const EditVideoModalWrapper = () => {
 

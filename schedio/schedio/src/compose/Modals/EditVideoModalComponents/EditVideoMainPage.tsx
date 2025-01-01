@@ -1,25 +1,25 @@
 // @ts-ignore
 import styles from '../../ScssModules/editmediamodal.module.scss';
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 // @ts-ignore
 import { Crop, Scissors, Upload, X } from 'lucide-react';
 // @ts-ignore
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui/button';
 // @ts-ignore
-import Tooltip from '@mui/material/Tooltip.tsx';
+import Tooltip from '@mui/material/Tooltip';
 // @ts-ignore
 import { useEffect, useRef } from 'react';
 // @ts-ignore
-import { useToast } from "@/hooks/use-toast.tsx"
+import { useToast } from "@/hooks/use-toast"
 // @ts-ignore
 import React from 'react';
 // @ts-ignore
-import { useEditVideoModalContext } from './EditVideoModalContext.tsx';
+import { useEditVideoModalContext } from './EditVideoModalContext';
 // @ts-ignore
-import { ToastAction } from '@/components/ui/toast.tsx';
+import { ToastAction } from '@/components/ui/toast';
 // @ts-ignore
-import { Skeleton } from '@/components/ui/skeleton.tsx';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const EditVideoMainPage: React.FC = () => {
     const { setShowEditVideoModal, mediaBeingEditedUrl, setShortVideoForPostData, shortVideoForPostData, setMediaBeingEditedUrl, setShowVideoEditorModal } = useModalStatesContext();

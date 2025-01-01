@@ -1,39 +1,28 @@
 
 import React, { createContext, useState, useContext, useEffect, ReactNode, useRef, RefObject, MutableRefObject } from "react";
-import localFont from "next/font/local";
-import "./globals.scss";
- // @ts-ignore 
-import { Toaster } from "./components/ui/toaster.tsx"
+import "./output.css";
+
+import { Toaster } from "./components/ui/toaster"
 import { ChevronRight, type LucideIcon } from "lucide-react"
 import { FaPinterest } from "react-icons/fa";
- // @ts-ignore 
-import AppCode from "./AppCode.tsx";
+
+import AppCode from "./AppCode";
 import { FaLinkedin, FaYoutube, FaTiktok } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import { Instagram } from "lucide-react";
 import { SiThreads } from "react-icons/si";
 import { IconType } from "react-icons/lib";
- // @ts-ignore 
-import client from "./apolloClient.tsx";
-import { ApolloProvider } from '@apollo/client';
- // @ts-ignore 
-import { WorkspaceProvider } from "./WorkspaceProvider.tsx";
-import { Route, Routes } from "react-router-dom";
- // @ts-ignore 
-import ComposePage from "./compose/page.tsx";
- // @ts-ignore 
-import SchedulePage from "./schedule/page.tsx";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import client from "./apolloClient";
+import { ApolloProvider } from '@apollo/client';
+
+import { WorkspaceProvider } from "./WorkspaceProvider";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
+import ComposePage from "./compose/page";
+
+import SchedulePage from "./schedule/page";
+
 
 export interface PhotoInPost {
   id: string;
@@ -384,11 +373,13 @@ export default function RootLayout() {
 
 
   return (
-    <html lang="en">
+    <Router>
+
       <body
         style={{ maxWidth: '100vw', maxHeight: '100vh', overflow: 'hidden' }}
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`antialiased`}
       >
+
         <ApolloProvider client={client}>
           <WorkspaceProvider>
             <ModalStatesProvider >
@@ -396,14 +387,22 @@ export default function RootLayout() {
                 <Routes>
                   <Route path="/compose" element={<ComposePage />} />
                   <Route path="/schedule" element={<SchedulePage />} />
-                  {/* Add other routes */}
                 </Routes>
               </AppCode>
             </ModalStatesProvider>
           </WorkspaceProvider>
         </ApolloProvider>
         <Toaster />
+
       </body>
-    </html>
+
+    </Router>
+
   );
+}
+
+
+const Hi = () => {
+
+  return <p>yo</p>
 }

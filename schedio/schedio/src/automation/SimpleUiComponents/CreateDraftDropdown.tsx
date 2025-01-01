@@ -9,8 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } 
- // @ts-ignore 
-from "@/components/ui/select.tsx"
+ 
+from "@/components/ui/select"
 
 export function CreateDraftDropdown() {
     // fix hover

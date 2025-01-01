@@ -10,7 +10,7 @@ import {
   SelectValue,
 } 
 // @ts-ignore
-from "@/components/ui/select.tsx";
+from "@/components/ui/select";
 
 interface SelectAiCaptionInterface {
   value: string;

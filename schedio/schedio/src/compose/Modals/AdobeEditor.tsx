@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 import { useEffect, useRef } from 'react';
 
 const AdobeEditor = () => {

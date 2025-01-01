@@ -1,6 +1,6 @@
 
 import FullCalendarWrapper from './FullCalendarWrapper'
-// app/schedule/page.tsx
+// app/schedule/page
 
 export default function PostPage() {
 

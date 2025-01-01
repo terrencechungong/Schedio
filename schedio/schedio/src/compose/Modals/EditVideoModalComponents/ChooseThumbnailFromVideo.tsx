@@ -2,15 +2,15 @@ import { ChevronLeft, X } from 'lucide-react';
 // @ts-ignore
 import styles from '../../ScssModules/editmediamodal.module.scss';
 // @ts-ignore
-import { Skeleton } from '@/components/ui/skeleton.tsx';
+import { Skeleton } from '@/components/ui/skeleton';
 // @ts-ignore
-import { useEditVideoModalContext } from './EditVideoModalContext.tsx';
+import { useEditVideoModalContext } from './EditVideoModalContext';
 // @ts-ignore
-import { useModalStatesContext } from '@/layout.tsx';
+import { useModalStatesContext } from '@/layout';
 // @ts-ignore
-import { Button } from '@/components/ui/button.tsx';
+import { Button } from '@/components/ui/button';
 // @ts-ignore
-import FrameSelector from './FrameSelector.tsx';
+import FrameSelector from './FrameSelector';
 
 
 

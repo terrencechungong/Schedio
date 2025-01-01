@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import { FaLinkedin, FaYoutube, FaTiktok, FaTag } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import { Instagram } from "lucide-react";
@@ -8,16 +7,16 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { useEffect, useRef, useState } from 'react';
- // @ts-ignore 
-import { Button } from '@/components/ui/button.tsx';
- // @ts-ignore 
-import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover.tsx';
+ 
+import { Button } from '@/components/ui/button';
+ 
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { PlatformColor, PlatformIcons, PlatformName, Profile, useModalStatesContext } from '../layout';
 import { EventImpl } from '@fullcalendar/core/internal';
- // @ts-ignore 
-const FullCalendar = dynamic(() => import('@fullcalendar/react'), { ssr: false });
+ 
+import FullCalendar from '@fullcalendar/react';
 
 // change event view for month add line for day and day
 

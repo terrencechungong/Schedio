@@ -1,7 +1,7 @@
 // @ts-ignore
-import { useModalStatesContext, VideoInPostThumbnail } from "@/app/layout.tsx";
+import { useModalStatesContext, VideoInPostThumbnail } from "@/layout";
 // @ts-ignore
-import { useWorkspaceContext } from "@/app/WorkspaceProvider.tsx";
+import { useWorkspaceContext } from "@/WorkspaceProvider";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface ComposeSidePanelContextType {

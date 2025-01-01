@@ -3,13 +3,13 @@ import { ImageUp, Search, X } from 'lucide-react';
 // @ts-ignore
 import styles from '../ScssModules/photostabcontent.module.scss'
 // @ts-ignore
-import { createGifOverlay, createImageOverlay, createImageOverlayUnsplash } from '../abstraction/GifTabAbstraction.tsx';
+import { createGifOverlay, createImageOverlay, createImageOverlayUnsplash } from '../abstraction/GifTabAbstraction';
 // @ts-ignore
 import { useEffect, useRef, useState } from 'react';
 // @ts-ignore
-import { PhotoInPost, useModalStatesContext } from '@/layout.tsx';
+import { PhotoInPost, useModalStatesContext } from '@/layout';
 // @ts-ignore
-import { generateRandom4Digit } from '@/utilFunctions.tsx';
+import { generateRandom4Digit } from '@/utilFunctions';
 
 export const AddMediaPhotosTabContent: React.FC = () => {
     const searchInput = useRef<HTMLInputElement | null>(null);

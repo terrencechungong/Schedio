@@ -1,6 +1,11 @@
+import path from 'path';
+
 module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.jsx'], // Include `.tsx`
+        alias: {
+          '@': path.resolve(__dirname, 'src'), // Adjust as needed
+        },
       },
     module: {
       rules: [

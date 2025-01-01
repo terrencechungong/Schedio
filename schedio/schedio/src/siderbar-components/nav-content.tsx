@@ -9,7 +9,6 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react"
-import { useRouter } from 'next/router';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { usePathname } from 'next/navigation';
+import { useLocation } from 'react-router-dom';
 
 export function NavContent({
   title,
@@ -41,11 +40,15 @@ export function NavContent({
 }) {
   const { isMobile } = useSidebar();
   const { selectedTab, setSelectedTab } = useContext(TabContext);
-  const pathname = usePathname();
+  const location = useLocation();
+  const parts = location.pathname.split("/"); // Split path into segments
+  const firstPart = parts[1]; 
+
   const isActive = (path: string) => {
     path = path.toLowerCase().split(' ').join('');
-    const pathName = pathname.substring(1, pathname.length).toLowerCase().split('-').join('');
-    return pathName === path
+    // const pathName = pathname.substring(1, pathname.length).toLowerCase().split('-').join('');
+    console.log("PART 1", path, firstPart)
+    return firstPart === path
   };
 
   return (

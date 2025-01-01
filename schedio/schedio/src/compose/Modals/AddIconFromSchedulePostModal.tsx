@@ -2,15 +2,15 @@ import { motion } from "framer-motion";
 // @ts-ignore
 import styles from '../ScssModules/addiconfromschedulepost.module.scss'
 // @ts-ignore
-import { useModalStatesContext } from "@/app/layout.tsx";
+import { useModalStatesContext } from "@/layout";
 // @ts-ignore
 import { PencilLine, PlusIcon, X } from "lucide-react";
 // @ts-ignore
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 // @ts-ignore
 import { useRef, useState } from "react";
 // @ts-ignore
-import { Input } from "@/components/ui/input.tsx";
+import { Input } from "@/components/ui/input";
 
 
 

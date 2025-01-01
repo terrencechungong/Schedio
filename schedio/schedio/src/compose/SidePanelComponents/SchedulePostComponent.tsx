@@ -7,11 +7,11 @@ import NumberInputHours from '../SimpleUIComponents/number-input';
 import { AvatarFallback, Avatar, AvatarImage } from '@/components/ui/avatar';
 import { FaLinkedin } from "react-icons/fa";
 import { SocialBadgeAndName } from '../SimpleUIComponents/SocialBadgeAndName';
-import { PlatformName, useModalStatesContext } from '@/app/layout';
+import { PlatformName, useModalStatesContext } from '@/layout';
 import React from 'react';
 import { SelectAccountForPost } from './SelectAccountForPost';
-import { useWorkspaceContext } from '@/app/WorkspaceProvider';
-import { Constants } from '@/app/constants';
+import { useWorkspaceContext } from '@/WorkspaceProvider';
+import { Constants } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const SchedulePostComponent: React.FC = () => {

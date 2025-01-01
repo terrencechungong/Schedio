@@ -1,6 +1,6 @@
 // components/ImageCropper.js
 
-import { useModalStatesContext } from '@/app/layout';
+import { useModalStatesContext } from '@/layout';
 import React, { useState, useRef, useEffect, useContext, MutableRefObject } from 'react';
 import ReactCrop, { Crop, PixelCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';

@@ -1,5 +1,5 @@
 import styles from '../ScssModules/shortdevicepreview.module.scss'
-import { PlatformName, useModalStatesContext } from '@/app/layout';
+import { PlatformName, useModalStatesContext } from '@/layout';
 import { Skeleton } from '@/components/ui/skeleton';
 import iphoneFrame from '../../assets/iphoneframe2.png'
 import signalStrength from '../../assets/signal.png'
@@ -179,9 +179,9 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, na
               alignItems: "center",
             }}
           >
-            <img src={signalStrength.src} style={{ width: "auto", height: "100%" }} />
-            <img src={wifi.src} style={{ width: "auto", height: "105%" }} />
-            <img src={battery.src} style={{ width: "auto", height: "103%" }} />
+            <img src={signalStrength} style={{ width: "auto", height: "100%" }} />
+            <img src={wifi} style={{ width: "auto", height: "105%" }} />
+            <img src={battery} style={{ width: "auto", height: "103%" }} />
           </div>
         </div>
 
@@ -198,7 +198,7 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, na
           zIndex: 1, width: "367px", height: "630px"
         }}
       >
-        <img src={iphoneFrame.src} style={{ width: "100%", height: "100%" }} />
+        <img src={iphoneFrame} style={{ width: "100%", height: "100%" }} />
       </div>
     </motion.div>
   )

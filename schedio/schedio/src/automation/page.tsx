@@ -1,18 +1,18 @@
 
- // @ts-ignore 
-import { Button } from '@/components/ui/button.tsx'
- // @ts-ignore 
+ 
+import { Button } from '@/components/ui/button'
+ 
 import styles from './ScssModules/automation.module.scss'
- // @ts-ignore 
+ 
 import { Copy, Ellipsis, Plus } from 'lucide-react'
- // @ts-ignore 
-import { Checkbox } from '@/components/ui/checkbox.tsx';
- // @ts-ignore 
-import { Switch } from '@/components/ui/switch.tsx';
- // @ts-ignore 
+ 
+import { Checkbox } from '@/components/ui/checkbox';
+ 
+import { Switch } from '@/components/ui/switch';
+ 
 import { useState } from 'react';
- // @ts-ignore 
-import { useModalStatesContext } from '../layout.tsx';
+ 
+import { useModalStatesContext } from '../layout';
 
 export default function AutomationPage() {
     const { setShowTriggerInfoModal } = useModalStatesContext();
