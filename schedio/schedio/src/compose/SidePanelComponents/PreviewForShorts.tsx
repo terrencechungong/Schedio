@@ -1,10 +1,6 @@
 import styles from '../ScssModules/shortdevicepreview.module.scss'
 import { PlatformName, useModalStatesContext } from '@/layout';
 import { Skeleton } from '@/components/ui/skeleton';
-import iphoneFrame from '../../assets/iphoneframe2.png'
-import signalStrength from '../../assets/signal.png'
-import battery from '../../assets/image (4).png'
-import wifi from '../../assets/image (5).png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from '@/components/ui/button';
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
@@ -15,7 +11,6 @@ import { FaCommentDots } from "react-icons/fa6";
 import { RiShareForwardFill } from "react-icons/ri";
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-
 // need name, photo, oistvariationkey, platform
 
 // NEED TO IMPLEMENT RESIZING
@@ -179,9 +174,9 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, na
               alignItems: "center",
             }}
           >
-            <img src={signalStrength} style={{ width: "auto", height: "100%" }} />
-            <img src={wifi} style={{ width: "auto", height: "105%" }} />
-            <img src={battery} style={{ width: "auto", height: "103%" }} />
+            <img src="/assets/signal.png" style={{ width: "auto", height: "100%" }} />
+            <img src="/assets/image (5).png" style={{ width: "auto", height: "105%" }} />
+            <img src="/assets/image (4).png" style={{ width: "auto", height: "103%" }} />
           </div>
         </div>
 
@@ -198,7 +193,7 @@ export const PreviewForShorts: React.FC<PreviewForShortsInput> = ({ platform, na
           zIndex: 1, width: "367px", height: "630px"
         }}
       >
-        <img src={iphoneFrame} style={{ width: "100%", height: "100%" }} />
+        <img src="/assets/iphoneframe2.png" style={{ width: "100%", height: "100%" }} />
       </div>
     </motion.div>
   )

@@ -3,12 +3,6 @@ import { useModalStatesContext } from "@/layout";
 // @ts-ignore
 import { motion } from "framer-motion";
 // @ts-ignore
-import videoIcon from '../../assets/online-video_12670011.png'
-// @ts-ignore
-import videoCutIcon from '../../assets/video-editing-app.png'
-// @ts-ignore
-import videoEdit from '../../assets/Untitled design (1).png'
-// @ts-ignore
 import { X } from "lucide-react";
 // @ts-ignore
 import styles from '../ScssModules/addshortvideomodal.module.scss'
@@ -115,7 +109,7 @@ export const AddShortVideoModal = () => {
                         if (inputFileRef) inputFileRef.current.click()
                     }}
                 >
-                    <img src={videoEdit} style={{ width: '105px', height: '105px' }} />
+                    <img src="/assets/Untitled design (1).png" style={{ width: '105px', height: '105px' }} />
                     <div style={{ alignSelf: 'center', textAlign: 'center' }}>
                         <p >Drag and drop, or click to upload your video</p>
                         <i style={{ color: 'rgb(120, 120, 120)', fontSize: '14px' }}>video/mp4, video/quicktime, video/mov</i>

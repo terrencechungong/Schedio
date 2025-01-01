@@ -223,8 +223,8 @@
     height: 40px;
     background-color: #c5513a;
     /* Your new icon color */
-    mask: url('../../assets/hashtag.png') no-repeat center;
-    -webkit-mask: url('../../assets/hashtag.png') no-repeat center;
+    mask: url('./icons/hashtag.png') no-repeat center;
+    -webkit-mask: url('./icons/hashtag.png') no-repeat center;
     mask-size: contain;
     -webkit-mask-size: contain;
 }
@@ -236,8 +236,8 @@
     height: 40px;
     background-color: #0d5a47;
     /* Your new icon color */
-    mask: url('../../assets/braces_variable_filled_icon.png') no-repeat center;
-    -webkit-mask: url('../../assets/braces_variable_filled_icon.png') no-repeat center;
+    mask: url('./icons/braces_variable_filled_icon.png') no-repeat center;
+    -webkit-mask: url('./icons/braces_variable_filled_icon.png') no-repeat center;
     mask-size: contain;
     -webkit-mask-size: contain;
 }
