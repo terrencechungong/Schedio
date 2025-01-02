@@ -1,25 +1,30 @@
+import { PostStatus } from "@/constants";
 
-export const createPostExec = () => {
-
-    // Object.values(postVariations).map(())
-
-    // export interface CreatePostVariationInput {
-    //     textContent: string;
-    //     shortVideo: string;
-    //     media: Schema.Types.ObjectId[];
-    // }
-    // interface CreatePostInput {
-    //     includedAccounts: [Schema.Types.ObjectId]
-    //     postType: string
-    //     createdBy: string
-    //     status: string
-    //     lastUpdatedBy: Schema.Types.ObjectId
-    //     scheduledDate: Date
-    //     workspace: Schema.Types.ObjectId
-    //     postVariations: [CreatePostVariationInput]
-    //     notes: string
-    // }
-
-
+export const createPostExec = async (globalProfilesArray, postVariations, postTypeData,
+    createPost, postBeingEditedId
+) => {
+    const includedAccounts = globalProfilesArray.filter(p => p.active).map(p => p._id);
+    let pv = Object.entries(postVariations).map(([key, value]) => ({ key, value }))
+    const newPost = {
+        includedAccounts,
+        postType: postTypeData.type,
+        status: PostStatus.Draft,
+        createdBy: "676c82ac58989ac8765ef21b",
+        lastUpdatedBy: "676c82ac58989ac8765ef21b",
+        postVariations: pv,
+        hasBeenPostedAtLeastOnce: false,
+        workspace: "676c918ba493330cedba04e4",
+        notes: "",
+    }
+    try {
+        const { data } = await createPost({
+            variables: { post: newPost },
+        });
+        const newURL = `${window.location.pathname}/${data.createPost._id}`; // Append to the current path
+        window.history.replaceState(null, '', newURL);
+        postBeingEditedId.current = data.createPost._id
+    } catch (err) {
+        console.error('Error executing mutation:', err);
+    }
 
 }

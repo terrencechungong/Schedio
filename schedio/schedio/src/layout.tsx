@@ -263,8 +263,6 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       composeScreenCreatingNewPost.current = false;
     }
 
-
-
   }
 
   const addOrUpdatePhotoInPost = (updates: Partial<PhotoInPost>, id = "") => {

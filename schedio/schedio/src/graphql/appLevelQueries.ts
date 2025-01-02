@@ -17,5 +17,18 @@ export const CREATE_NEW_POST_DURING_COMPOSE_EDIT = gql`
     createPost(post: $post) {
       _id
     }
-}
-`;
+}`;
+
+export const UPDATE_POST_MEDIA = gql`
+  mutation UpdatePostMedia($updatePostMediaId: ID!, $postVariationKey: String!, $media: [CreatePostMediaInput]!) {
+    updatePostMedia(id: $updatePostMediaId, postVariationKey: $postVariationKey, media: $media) {
+      _id
+    }
+}`;
+
+export const UPDATE_POST_CAPTION = gql`
+  mutation UpdatePostCaption($updatePostCaptionId: ID!, $postVariationKey: String!, $caption: String!) {
+    updatePostCaption(id: $updatePostCaptionId, postVariationKey: $postVariationKey, caption: $caption) {
+      _id
+    }
+  }`;
