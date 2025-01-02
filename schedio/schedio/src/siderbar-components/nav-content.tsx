@@ -47,7 +47,6 @@ export function NavContent({
   const isActive = (path: string) => {
     path = path.toLowerCase().split(' ').join('');
     // const pathName = pathname.substring(1, pathname.length).toLowerCase().split('-').join('');
-    console.log("PART 1", path, firstPart)
     return firstPart === path
   };
 

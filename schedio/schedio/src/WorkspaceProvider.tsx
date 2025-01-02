@@ -19,7 +19,7 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({ children 
 
     const [globalProfiles, setGlobalProfiles] = useState<{ [key: number]: Profile }>(
         {
-            0: { name: Constants.GLOBAL_PROFILES_STILL_LOADING, active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
+            0: { name: Constants.GLOBAL_PROFILES_STILL_LOADING, active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false, _id:'' } as Profile,
         }
     );
     const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
@@ -65,7 +65,9 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({ children 
         // then make the real thing after set up is done
         if (!loading && data && data.workspace) {
             const accounts = data.workspace.linkedAccounts.reduce((acc: any[], account: any) => {
+                console.log("THE IDE", account._id, typeof account._id)
                 const profileBasics = {
+                    _id: account._id,
                     name: account.username,
                     active: false,
                     unique: false, platform: account.platform as PlatformName, sharesName: false

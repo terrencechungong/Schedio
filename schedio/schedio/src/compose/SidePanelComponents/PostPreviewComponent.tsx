@@ -72,7 +72,7 @@ export const PostPreviewComponent: React.FC = () => {
                 </div> :
                 <div className={styles.shortPostPreviewContainer}>
                     {globalProfilesArray.filter(p => p.active && p.isShort).map((profile) => {
-                        const localPostVariationKey = profile.unique ? `${profile.platform}-${profile.name}-${profile.id}` : Constants.GENERIC_TEMPLATE;
+                        const localPostVariationKey = profile.unique ? `${profile.platform}-${profile._id}-${postTypeData.type}` : Constants.GENERIC_TEMPLATE;
                         return (
                             <div key={profile.id} className={styles.phoneAndTitleContainer}>
                                 <Tooltip title="Click to hide preview" placement="left" arrow>

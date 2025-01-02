@@ -23,17 +23,17 @@ interface WebPostPreviewParentProps {
 }
 
 const WebPostPreviewParent: React.FC<WebPostPreviewParentProps> = ({ profile, width }) => {
-    const { postVariations } = useModalStatesContext();
+    const { postVariations, postTypeData } = useModalStatesContext();
     const {globalProfilesArray} = useWorkspaceContext();
     const { currentPage, setCurrentPage } = useComposeSidePanelContext();
     const [localPostVariationKey, setLocalPostVariationKey] = useState(
         profile == null ? Constants.GENERIC_TEMPLATE :
-            (profile.unique ? `${profile.platform}-${profile.name}-${profile.id}` : Constants.GENERIC_TEMPLATE));
+            (profile.unique ? `${profile.platform}-${profile._id}-${postTypeData.type}` : Constants.GENERIC_TEMPLATE));
 
     useEffect(() => {
         setLocalPostVariationKey((
             profile == null ? Constants.GENERIC_TEMPLATE :
-                (profile.unique ? `${profile.platform}-${profile.name}-${profile.id}` : Constants.GENERIC_TEMPLATE)));
+                (profile.unique ? `${profile.platform}-${profile._id}-${postTypeData.type}` : Constants.GENERIC_TEMPLATE)));
     }, [globalProfilesArray])
 
     return (

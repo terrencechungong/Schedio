@@ -19,18 +19,19 @@ import { SiThreads } from 'react-icons/si';
 
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Input } from '../components/ui/input';
-
+import { useLocation } from 'react-router-dom';
 import { useWorkspaceContext } from '../WorkspaceProvider';
 import { AnimatePresence, motion } from 'framer-motion';
- 
+
 
 export default function ComposePage() {
+  const location = useLocation();
   const divRef = useRef(null); // Reference to the div element
   const { textareaRef, setPostCaption, imgContainer, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
     setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
-    postTypeData, setShowEditVideoModal
+    postTypeData, setShowEditVideoModal, composeScreenCreatingNewPost
   } = useModalStatesContext();
-  const {updateGlobalProfiles, globalProfilesArray} = useWorkspaceContext()
+  const { updateGlobalProfiles, globalProfilesArray } = useWorkspaceContext()
   const cardRef = useRef<HTMLDivElement>(null);
   const [emojiPosition, setEmojiPosition] = useState<{ top: number; left: number } | null>(null);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -65,16 +66,24 @@ export default function ComposePage() {
 
 
   useEffect(() => {
-    console.log("CHANGE", (postVariationKey == 'GenericTemplate'
-      && globalProfilesArray.some(profile => profile.platform == PlatformName.Youtube
-        && !profile.unique && profile.active)) ||
-      postVariationKey.split('-')[0] === PlatformName.Youtube)
     setShowYoutubeTitlePrompt((postVariationKey == 'GenericTemplate'
       && globalProfilesArray.some(profile => profile.platform == PlatformName.Youtube
         && !profile.unique && profile.active)) ||
       postVariationKey.split('-')[0] === PlatformName.Youtube
     )
   }, [globalProfilesArray, postVariationKey]);
+
+  useEffect(() => {
+    const parts = location.pathname.split("/"); // Split path into segments
+    const firstPart = parts[1]; 
+    console.log(parts, "PARTS")
+    if (parts.length == 2) {
+      composeScreenCreatingNewPost.current = true;
+    } else if (parts.length == 3) {
+      composeScreenCreatingNewPost.current = false;
+
+    }
+  }, []);
 
 
 
@@ -656,7 +665,7 @@ export default function ComposePage() {
             {showGenericTemplate && globalProfilesArray
               .filter((profile, index) => profile.unique && profile.active)
               .map((profile) => {
-                const key = `${profile.platform}-${profile.name}-${profile.id}`;
+                const key = `${profile.platform}-${profile._id}-${postTypeData.type}`;
                 return (
 
                   <Popover>
@@ -713,7 +722,7 @@ export default function ComposePage() {
                       <div
                         onClick={() => {
                           // if alrdy in setPostVariations set key and if not add it and set properties
-                          const key = `${profile.platform}-${profile.name}-${profile.id}`;
+                          const key = `${profile.platform}-${profile._id}-${postTypeData.type}`;
                           if (!Object.keys(postVariations).some(postVar => postVar == key)) {
                             setPostVariations((prev) => ({
                               ...prev, [key]: {
@@ -1467,7 +1476,7 @@ const TextAreaComponent: React.FC<TextAreaComponentInterface> = ({ handleInput, 
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-50 shadow-none !p-3 rounded-lg border-[0.5px] border-gray-100" align='start'>
-           test
+            test
           </PopoverContent>
         </Popover>
 

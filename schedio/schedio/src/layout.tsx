@@ -13,15 +13,17 @@ import { Instagram } from "lucide-react";
 import { SiThreads } from "react-icons/si";
 import { IconType } from "react-icons/lib";
 
-import client from "./apolloClient";
-import { ApolloProvider } from '@apollo/client';
 
-import { WorkspaceProvider } from "./WorkspaceProvider";
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useWorkspaceContext, WorkspaceProvider } from "./WorkspaceProvider";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import ComposePage from "./compose/page";
 
 import SchedulePage from "./schedule/page";
+import { createPostExec } from "./graphql/utils/postUtils";
+import { PostStatus } from "./constants";
+import { useApolloClient, useLazyQuery, useMutation } from "@apollo/client";
+import { CREATE_NEW_POST_DURING_COMPOSE_EDIT } from "./graphql/appLevelQueries";
 
 
 export interface PhotoInPost {
@@ -127,9 +129,11 @@ interface ModalStatesContextType {
   setShowPostDetailsFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
   showCreatePostFromCalendarModal: boolean;
   setShowCreatePostFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
+  composeScreenCreatingNewPost: MutableRefObject<boolean | undefined>;
 }
 
 export type Profile = {
+  _id: string;
   name: string;
   active: boolean;
   unique: boolean;
@@ -174,6 +178,8 @@ export const PlatformIcons: { [key in PlatformName]: IconType | LucideIcon } = {
 export const ModalStatesContext = createContext<ModalStatesContextType | undefined>(undefined);
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [createPost, createPostReturnValues] = useMutation(CREATE_NEW_POST_DURING_COMPOSE_EDIT);
+
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
   const [showEditVideoModal, setShowEditVideoModal] = useState(false);
   const [normalPostIsUsingVideo, setNormalPostIsUsingVideo] = useState<boolean>(false);
@@ -187,6 +193,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     defined: false,
     thumbnail: null
   });
+  const { globalProfiles, globalProfilesArray } = useWorkspaceContext()
   const [showAiGenCaption, setShowAiGenCaption] = useState<boolean>(false);
   const [showSelectPostTimeModal, setShowSelectPostTimeModal] = useState<boolean>(false);
   const [showTriggerInfoModal, setShowTriggerInfoModal] = useState<boolean>(false);
@@ -206,48 +213,17 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const mediaBeingEditedId = useRef<string>("");
   const [postTypeData, setPostTypeData] = useState<PostTypeData>({ defined: false, type: PostType.NONE });
   const [postVariationKey, setPostVariationKey] = useState("GenericTemplate"); // key is platform-name-id
-  // in reality we will give facebook profiles one for shorts and another entry for normal to avoid id mixups
-  // const [globalProfiles, setGlobalProfiles] = useState<{ [key: number]: Profile }>(
-  //   {
-  //     0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-  //     1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-  //     2: { name: 'Sarah Lee', active: false, unique: false, id: 2, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-  //     3: { name: 'David Davis', active: false, unique: false, id: 3, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-  //     4: { name: 'Jessica Martin', active: false, unique: false, id: 4, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-  //     5: { name: 'Kevin White', active: false, unique: false, id: 5, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-  //     6: { name: 'Amanda Taylor', active: false, unique: false, id: 6, platform: 'Facebook', isShort: true, sharesName: true } as Profile,
-  //     7: { name: 'Brian Hall', active: false, unique: false, id: 7, platform: 'Facebook', isShort: true, sharesName: false } as Profile,
-  //     8: { name: 'Rachel Patel', active: false, unique: false, id: 8, platform: 'Youtube', isShort: true, sharesName: false } as Profile,
-  //     9: { name: 'Christopher Brooks', active: false, unique: false, id: 9, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-  //     10: { name: 'Laura Garcia', active: false, unique: false, id: 10, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-  //     11: { name: 'Matthew Thompson', active: false, unique: false, id: 11, platform: 'Youtube', isShort: true, sharesName: false } as Profile
-  //   }
-  // );
-  // const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
+  const postBeingEditedId = useRef("");
+  const composeScreenCreatingNewPost = useRef(undefined);
   const [postVariations, setPostVariations] = useState<{ [key: string]: PostVariationData }>({
     "GenericTemplate": {
       postCaption: "",
-      // hasOneVideoLimit: false,
-      // hasPhotos: false,
-      // hasVideo: false,
       postMedia: [],
     }
   });
 
-  // useEffect(() => {
-  //   setGlobalProfilesArray(Object.values(globalProfiles));
-  // }, [globalProfiles]);
 
-  // // NO ADDING
-  // const updateGlobalProfiles = (id: number, profile: Partial<Profile>) => {
-  //   setGlobalProfiles((prev) => ({
-  //     ...prev,
-  //     [id]: { ...prev[id], ...profile }
-  //   }))
-  // }
-
-  // setPostCaption is a function that sets the selected key
-  const setPostCaption = (postCaption: string) => {
+  const setPostCaption = async (postCaption: string) => {
     setPostVariations((prev) => ({
       ...prev,
       [postVariationKey]: {
@@ -255,6 +231,40 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         postCaption,
       },
     }));
+
+    // if its not a real post and im adding -> say saving -> create -> changeurl -> saved
+
+    if (composeScreenCreatingNewPost.current && postCaption.trim() != "") {
+      const includedAccounts = globalProfilesArray.filter(p => p.active).map(p => p._id);
+      let pv = Object.entries(postVariations).map(([key, value]) => ({ key, value }))
+      const newPost = {
+        includedAccounts,
+        postType: postTypeData.type,
+        status: PostStatus.Draft,
+        createdBy: "676c82ac58989ac8765ef21b",
+        lastUpdatedBy: "676c82ac58989ac8765ef21b",
+        postVariations: pv,
+        hasBeenPostedAtLeastOnce: false,
+        workspace: "676c918ba493330cedba04e4",
+        notes: "",
+      }
+      try {
+        const { data } = await createPost({
+          variables: { post: newPost },
+        });
+        const newURL = `${window.location.pathname}/${data.createPost._id}`; // Append to the current path
+        window.history.replaceState(null, '', newURL);
+        postBeingEditedId.current = data.createPost._id
+      } catch (err) {
+        console.error('Error executing mutation:', err);
+      }
+
+
+      composeScreenCreatingNewPost.current = false;
+    }
+
+
+
   }
 
   const addOrUpdatePhotoInPost = (updates: Partial<PhotoInPost>, id = "") => {
@@ -347,6 +357,7 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       removePhotoFromPost,
       postTypeData,
       setPostTypeData,
+      composeScreenCreatingNewPost,
       // updateGlobalProfiles,
       // globalProfiles,
       // setGlobalProfiles,
@@ -380,18 +391,15 @@ export default function RootLayout() {
         className={`antialiased`}
       >
 
-        <ApolloProvider client={client}>
-          <WorkspaceProvider>
-            <ModalStatesProvider >
-              <AppCode>
-                <Routes>
-                  <Route path="/compose" element={<ComposePage />} />
-                  <Route path="/schedule" element={<SchedulePage />} />
-                </Routes>
-              </AppCode>
-            </ModalStatesProvider>
-          </WorkspaceProvider>
-        </ApolloProvider>
+        <ModalStatesProvider >
+          <AppCode>
+            <Routes>
+              <Route path="/compose" element={<ComposePage />} />
+              <Route path="/compose/:postId" element={<ComposePage />} />
+              <Route path="/schedule" element={<SchedulePage />} />
+            </Routes>
+          </AppCode>
+        </ModalStatesProvider>
         <Toaster />
 
       </body>
