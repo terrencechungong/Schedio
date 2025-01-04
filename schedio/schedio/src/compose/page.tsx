@@ -29,7 +29,7 @@ export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
   const { textareaRef, setPostCaption, imgContainer, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
     setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
-    postTypeData, setShowEditVideoModal, composeScreenCreatingNewPost, postInComposedDoneSaving
+    postTypeData, setShowEditVideoModal, composeScreenCreatingNewPost, postInComposedDoneSaving, postBeingEditedId
   } = useModalStatesContext();
   const { updateGlobalProfiles, globalProfilesArray } = useWorkspaceContext()
   const cardRef = useRef<HTMLDivElement>(null);
@@ -75,13 +75,11 @@ export default function ComposePage() {
 
   useEffect(() => {
     const parts = location.pathname.split("/"); // Split path into segments
-    const firstPart = parts[1];
-    console.log(parts, "PARTS")
     if (parts.length == 2) {
       composeScreenCreatingNewPost.current = true;
     } else if (parts.length == 3) {
       composeScreenCreatingNewPost.current = false;
-
+      postBeingEditedId.current = parts[2];
     }
   }, []);
 

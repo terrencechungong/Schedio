@@ -24,21 +24,6 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({ children 
     );
     const [globalProfilesArray, setGlobalProfilesArray] = useState(Object.values(globalProfiles))
 
-    //     {
-    //         0: { name: 'Emily Johnson', active: false, unique: false, id: 0, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-    //         1: { name: 'Michael Brown', active: false, unique: false, id: 1, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-    //         2: { name: 'Sarah Lee', active: false, unique: false, id: 2, platform: 'Instagram', isShort: false, sharesName: false } as Profile,
-    //         3: { name: 'David Davis', active: false, unique: false, id: 3, platform: 'Facebook', isShort: false, sharesName: false } as Profile,
-    //         4: { name: 'Jessica Martin', active: false, unique: false, id: 4, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-    //         5: { name: 'Kevin White', active: false, unique: false, id: 5, platform: 'LinkedIn', isShort: false, sharesName: false } as Profile,
-    //         6: { name: 'Amanda Taylor', active: false, unique: false, id: 6, platform: 'Facebook', isShort: true, sharesName: true } as Profile,
-    //         7: { name: 'Brian Hall', active: false, unique: false, id: 7, platform: 'Facebook', isShort: true, sharesName: false } as Profile,
-    //         8: { name: 'Rachel Patel', active: false, unique: false, id: 8, platform: 'Youtube', isShort: true, sharesName: false } as Profile,
-    //         9: { name: 'Christopher Brooks', active: false, unique: false, id: 9, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-    //         10: { name: 'Laura Garcia', active: false, unique: false, id: 10, platform: 'TikTok', isShort: true, sharesName: false } as Profile,
-    //         11: { name: 'Matthew Thompson', active: false, unique: false, id: 11, platform: 'Youtube', isShort: true, sharesName: false } as Profile
-    //     }
-    // );
 
     const accountIsOnlyShortForm = (platform: PlatformName) => {
         return [PlatformName.TikTok,
@@ -65,7 +50,6 @@ export const WorkspaceProvider: React.FC<{ children: ReactNode }> = ({ children 
         // then make the real thing after set up is done
         if (!loading && data && data.workspace) {
             const accounts = data.workspace.linkedAccounts.reduce((acc: any[], account: any) => {
-                console.log("THE IDE", account._id, typeof account._id)
                 const profileBasics = {
                     _id: account._id,
                     name: account.username,

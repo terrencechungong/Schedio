@@ -130,6 +130,7 @@ interface ModalStatesContextType {
   showCreatePostFromCalendarModal: boolean;
   setShowCreatePostFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
   composeScreenCreatingNewPost: MutableRefObject<boolean | undefined>;
+  postBeingEditedId: MutableRefObject<string>;
 }
 
 export type Profile = {
@@ -180,7 +181,7 @@ export const ModalStatesContext = createContext<ModalStatesContextType | undefin
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [createPost, createPostReturnValues] = useMutation(CREATE_NEW_POST_DURING_COMPOSE_EDIT);
   const [updatePostCaption, updatePostCaptionValues] = useMutation(UPDATE_POST_CAPTION);
-  const [postInComposedDoneSaving ,setPostInComposedDoneSaving] = useState<boolean | undefined>(undefined);
+  const [postInComposedDoneSaving, setPostInComposedDoneSaving] = useState<boolean | undefined>(undefined);
   const savePostTimer = useRef(undefined);
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
   const [showEditVideoModal, setShowEditVideoModal] = useState(false);
@@ -237,9 +238,9 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // if its not a real post and im adding -> say saving -> create -> changeurl -> saved
 
     if (composeScreenCreatingNewPost.current && postCaption.trim() != "") {
-      const {postCreated, id} = await createPostExec(globalProfilesArray, postVariations, postTypeData, createPost, postBeingEditedId)
+      const { postCreated, id } = await createPostExec(globalProfilesArray, postVariations, postTypeData, createPost, postBeingEditedId)
       composeScreenCreatingNewPost.current = !postCreated;
-      if (postCreated) postBeingEditedId.current =id;
+      if (postCreated) postBeingEditedId.current = id;
     } else {
       if (savePostTimer.current) clearTimeout(savePostTimer.current);
       savePostTimer.current = setTimeout(async () => {
@@ -351,7 +352,8 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       showPostDetailsFromCalendarModal,
       setShowPostDetailsFromCalendarModal,
       showCreatePostFromCalendarModal,
-      setShowCreatePostFromCalendarModal
+      setShowCreatePostFromCalendarModal,
+      postBeingEditedId
     }}>
       {children}
     </ModalStatesContext.Provider>

@@ -41,7 +41,6 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
 
 
     const color = PlatformColor[platformName as PlatformName];
-    console.log(color)
     const icon = platformIcons[platformName as PlatformName];
 
     // disabled depends on whats selected
@@ -89,7 +88,6 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
         }
         // at t his point we know only shorts can be active since its being selected
         const remaingSelected = globalProfilesArray.filter(profile => profile.active && profile.isShort == contentTypeIsShort).length;
-        console.log(remaingSelected, "REMAINING SELECTED");
         if (!activating && remaingSelected < 2) {
             setPostTypeData({ defined: false, type: PostType.NONE })
         }
@@ -98,7 +96,6 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
     const setCheckedHandler = (id: number) => {
         if (!disabled) {
             const active = !globalProfilesArray[id].active;
-            console.log("ACTIVE", globalProfilesArray[id], active)
             updateGlobalProfiles(id, { active });
             toggleGlobalPostType(active)
         }
