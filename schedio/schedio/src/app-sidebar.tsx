@@ -58,51 +58,51 @@ const data = {
     content: [
         {
             name: "Compose",
-            url: "compose",
+            url: "/compose",
             icon: NotebookPen,
         },
         {
             name: "Schedule",
-            url: "schedule",
+            url: "/schedule",
             icon: CalendarDays,
         },
         {
             name: "Posts",
-            url: "posts",
+            url: "/posts",
             icon: Group,
         },
         {
             name: "Resources",
-            url: "resources",
+            url: "/resources",
             icon: BoxIcon,
         },
     ],
     configuration: [
         {
             name: "Pages",
-            url: "pages",
+            url: "/pages",
             icon: BookUser,
         },
         {
             name: "Team",
-            url: "team",
+            url: "/team",
             icon: Users,
         },
         {
             name: "Settings",
-            url: "settings",
+            url: "/settings",
             icon: Settings,
         },
     ],
     interactions: [
         {
             name: "Inbox",
-            url: "inbox",
+            url: "/inbox",
             icon: Inbox,
         },
         {
             name: "Automation",
-            url: "automation",
+            url: "/automation",
             icon: Workflow,
         }
     ]
@@ -207,86 +207,86 @@ export function AppSidebar() {
 //   navMain: [
 //     {
 //       title: "Playground",
-//       url: "#",
+//       url: "/#",
 //       icon: SquareTerminal,
 //       isActive: true,
 //       items: [
 //         {
 //           title: "History",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Starred",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Settings",
-//           url: "#",
+//           url: "/#",
 //         },
 //       ],
 //     },
 //     {
 //       title: "Models",
-//       url: "#",
+//       url: "/#",
 //       icon: Bot,
 //       items: [
 //         {
 //           title: "Genesis",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Explorer",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Quantum",
-//           url: "#",
+//           url: "/#",
 //         },
 //       ],
 //     },
 //     {
 //       title: "Documentatiodddddn",
-//       url: "#",
+//       url: "/#",
 //       icon: BookOpen,
 //       items: [
 //         {
 //           title: "Introduction",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Get Started",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Tutorials",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Changelog",
-//           url: "#",
+//           url: "/#",
 //         },
 //       ],
 //     },
 //     {
 //       title: "Settings",
-//       url: "#",
+//       url: "/#",
 //       icon: Settings2,
 //       items: [
 //         {
 //           title: "General",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Team",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Billing",
-//           url: "#",
+//           url: "/#",
 //         },
 //         {
 //           title: "Limits",
-//           url: "#",
+//           url: "/#",
 //         },
 //       ],
 //     },
@@ -294,17 +294,17 @@ export function AppSidebar() {
 //   projects: [
 //     {
 //       name: "Design Engineering",
-//       url: "#",
+//       url: "/#",
 //       icon: Frame,
 //     },
 //     {
 //       name: "Sales & Marketing",
-//       url: "#",
+//       url: "/#",
 //       icon: PieChart,
 //     },
 //     {
 //       name: "Travel",
-//       url: "#",
+//       url: "/#",
 //       icon: Map,
 //     },
 //   ],

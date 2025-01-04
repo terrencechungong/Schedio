@@ -7,7 +7,7 @@ import { Instagram } from 'lucide-react'
 import { FaPinterest, FaTiktok } from 'react-icons/fa'
 import { FaFacebook } from "react-icons/fa";
 import { SiGooglemybusiness, SiThreads } from "react-icons/si";
-import { useEffect, use, useState } from "react";
+import { useEffect, useState } from "react";
 import { PlatformColor, PlatformName, PostType, useModalStatesContext } from "@/layout";
 import Tooltip from '@mui/material/Tooltip';
 import { useWorkspaceContext } from "@/WorkspaceProvider";
@@ -41,6 +41,7 @@ export const SelectAccountForPost: React.FC<PlatFormInput> = ({ platformName, co
 
 
     const color = PlatformColor[platformName as PlatformName];
+    console.log(color)
     const icon = platformIcons[platformName as PlatformName];
 
     // disabled depends on whats selected
@@ -140,7 +141,17 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id, setChecked, dis
     //     'TikTok': <FaTiktok color='#000000' />,
     // };
     const { globalProfilesArray } = useWorkspaceContext()
-    const toolTipMessage = `Cannot use in combination with ${globalProfilesArray[id].isShort ? 'a normal post' : 'a short or reel'}`
+    const toolTipMessage = `Cannot use in combination with ${globalProfilesArray[id].isShort ? 'a normal post' : 'a short or reel'}`;
+    const classNames = {
+        '#0a66c2': "data-[state=checked]:bg-[#0a66c2] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}",
+        '#FF0000': "data-[state=checked]:bg-[#FF0000] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}",
+        '#0866ff': "data-[state=checked]:bg-[#0866ff] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}",
+        '#833ab4': "data-[state=checked]:bg-[#833ab4] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}",
+        '#89CFF0': "data-[state=checked]:bg-[#89CFF0] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}",
+        '#000000': "data-[state=checked]:bg-[#000000] data-[state=checked]:text-white shadow-none w-4 h-4 ${styles.checkbox}"
+    }
+
+
     const accountRow = (
         <div
             onClick={() => setChecked()}
@@ -149,7 +160,8 @@ const AccountRow: React.FC<AccountRowInput> = ({ checkColor, id, setChecked, dis
                 id="terms"
                 disabled={disabled}
                 checked={globalProfilesArray[id].active}
-                className={`border-[${checkColor}] data-[state=checked]:bg-[${checkColor}] data-[state=checked]:text-white shadow-none w-4 h-4`}
+                style={{borderColor:checkColor}}
+                className={classNames[checkColor]}
             />
             <Avatar style={{ width: '22px', height: '22px' }}>
                 <AvatarImage style={{ width: '22px', height: '22px' }} src="https://github.com/shadcn.png" />

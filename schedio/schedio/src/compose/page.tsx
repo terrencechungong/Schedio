@@ -3,7 +3,7 @@ import { LegacyRef, RefObject, useContext, useEffect, useRef, useState } from 'r
 import { AlignLeft, BadgeInfo, Camera, Check, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, Expand, Hash, Info, Instagram, MoveLeft, Plus, SmilePlus, Video, WandSparkles, Wrench, X } from 'lucide-react';
 
 import { CreatePostHeader } from './SimpleUIComponents/CreatePostHeader';
-
+import CircularProgress from '@mui/material/CircularProgress';
 import { ModalStatesContext, PlatformColor, PlatformIcons, PlatformName, PostType, Profile, useModalStatesContext } from '../layout';
 
 import { ComposePoseSidePanelWrapper } from './composeSidePanel/ComposePostSidePanel';
@@ -29,7 +29,7 @@ export default function ComposePage() {
   const divRef = useRef(null); // Reference to the div element
   const { textareaRef, setPostCaption, imgContainer, mediaBeingEditedId, setMediaBeingEditedUrl, setShowEditMediaModal, mediaIsGif,
     setPostVariationKey, postVariationKey, setPostVariations, postVariations, setShowDeletionConfirmationModal, shortVideoForPostData,
-    postTypeData, setShowEditVideoModal, composeScreenCreatingNewPost
+    postTypeData, setShowEditVideoModal, composeScreenCreatingNewPost, postInComposedDoneSaving
   } = useModalStatesContext();
   const { updateGlobalProfiles, globalProfilesArray } = useWorkspaceContext()
   const cardRef = useRef<HTMLDivElement>(null);
@@ -75,7 +75,7 @@ export default function ComposePage() {
 
   useEffect(() => {
     const parts = location.pathname.split("/"); // Split path into segments
-    const firstPart = parts[1]; 
+    const firstPart = parts[1];
     console.log(parts, "PARTS")
     if (parts.length == 2) {
       composeScreenCreatingNewPost.current = true;
@@ -520,7 +520,7 @@ export default function ComposePage() {
         setPostCaption(lastHightlited);
         // Move the cursor to the end after setting innerHTML
         if (text != '') {
-          setCursorToEnd(textarea.current);
+          // setCursorToEnd(textarea.current);
         }
       } else {
         // width
@@ -644,6 +644,26 @@ export default function ComposePage() {
     <div className={styles.container}>
       <div className={styles.composePostCenterDiv}>
         <div style={{ width: '100%' }}>
+          <div style={{
+            width: '100%', padding: '0 5px 5px',
+            display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end'
+          }}>
+            {postInComposedDoneSaving != undefined &&
+              (<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                {postInComposedDoneSaving == false &&
+                  <>
+                    <CircularProgress style={{ color: 'hsl(262.1, 83.3%, 57.8%)' }} size={18} />
+                    <p style={{ fontSize: '14px', paddingLeft: '4px', color: '#454d5a' }} className="m-0">Saving...</p>
+                  </>
+                }
+                {postInComposedDoneSaving == true &&
+                  <>
+                    <FaCircleCheck size={18} color='#6bd3a4' />
+                    <p style={{ fontSize: '14px', paddingLeft: '4px', color: '#454d5a' }} className="m-0">Saved</p>
+                  </>
+                }
+              </div>)}
+          </div>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
             {showGenericTemplate &&
               <Tooltip title={`${globalProfilesArray.filter(p => p.active && !p.unique).map((p) => (
@@ -1111,7 +1131,7 @@ export default function ComposePage() {
                       <p style={{ fontSize: '12px', paddingTop: '1px', color: '#454d5a' }} className="m-0">Saved</p>
                     </div>}
                     {postNotesSaving && <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
-                      <ClipLoader color='hsl(262.1, 83.3%, 57.8%)' size={17} />
+                      <CircularProgress style={{ color: 'hsl(262.1, 83.3%, 57.8%)' }} size={18} />
                       <p style={{ fontSize: '12px', paddingTop: '1px', color: '#454d5a' }} className="m-0">Saving...</p>
                     </div>}
                     <div className={styles.textAreaWrapper}>

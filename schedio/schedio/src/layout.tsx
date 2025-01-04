@@ -20,10 +20,12 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 import ComposePage from "./compose/page";
 
 import SchedulePage from "./schedule/page";
-import { createPostExec } from "./graphql/utils/postUtils";
+import { createPostExec, updatePostCaptionExec } from "./graphql/utils/postUtils";
 import { PostStatus } from "./constants";
 import { useApolloClient, useLazyQuery, useMutation } from "@apollo/client";
-import { CREATE_NEW_POST_DURING_COMPOSE_EDIT } from "./graphql/appLevelQueries";
+import { CREATE_NEW_POST_DURING_COMPOSE_EDIT, UPDATE_POST_CAPTION } from "./graphql/appLevelQueries";
+import TeamPage from "./team/page";
+import { waitForNSeconds } from "./graphql/utils/generalUtils";
 
 
 export interface PhotoInPost {
@@ -121,10 +123,8 @@ interface ModalStatesContextType {
   removePhotoFromPost: (id: string) => void;
   postTypeData: PostTypeData;
   setPostTypeData: React.Dispatch<React.SetStateAction<PostTypeData>>;
-  // globalProfiles: { [key: number]: Profile };
-  // setGlobalProfiles: React.Dispatch<React.SetStateAction<{ [key: number]: Profile }>>;
-  // updateGlobalProfiles: (id: number, profile: Partial<Profile>) => void;
-  // globalProfilesArray: Profile[];
+  postInComposedDoneSaving: boolean | undefined;
+  setPostInComposedDoneSaving: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   showPostDetailsFromCalendarModal: boolean;
   setShowPostDetailsFromCalendarModal: React.Dispatch<React.SetStateAction<boolean>>;
   showCreatePostFromCalendarModal: boolean;
@@ -179,7 +179,9 @@ export const ModalStatesContext = createContext<ModalStatesContextType | undefin
 
 const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [createPost, createPostReturnValues] = useMutation(CREATE_NEW_POST_DURING_COMPOSE_EDIT);
-
+  const [updatePostCaption, updatePostCaptionValues] = useMutation(UPDATE_POST_CAPTION);
+  const [postInComposedDoneSaving ,setPostInComposedDoneSaving] = useState<boolean | undefined>(undefined);
+  const savePostTimer = useRef(undefined);
   const [showAddLabelFromSchedulePost, setShowAddLabelFromSchedulePost] = useState(false);
   const [showEditVideoModal, setShowEditVideoModal] = useState(false);
   const [normalPostIsUsingVideo, setNormalPostIsUsingVideo] = useState<boolean>(false);
@@ -235,32 +237,20 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // if its not a real post and im adding -> say saving -> create -> changeurl -> saved
 
     if (composeScreenCreatingNewPost.current && postCaption.trim() != "") {
-      const includedAccounts = globalProfilesArray.filter(p => p.active).map(p => p._id);
-      let pv = Object.entries(postVariations).map(([key, value]) => ({ key, value }))
-      const newPost = {
-        includedAccounts,
-        postType: postTypeData.type,
-        status: PostStatus.Draft,
-        createdBy: "676c82ac58989ac8765ef21b",
-        lastUpdatedBy: "676c82ac58989ac8765ef21b",
-        postVariations: pv,
-        hasBeenPostedAtLeastOnce: false,
-        workspace: "676c918ba493330cedba04e4",
-        notes: "",
-      }
-      try {
-        const { data } = await createPost({
-          variables: { post: newPost },
-        });
-        const newURL = `${window.location.pathname}/${data.createPost._id}`; // Append to the current path
-        window.history.replaceState(null, '', newURL);
-        postBeingEditedId.current = data.createPost._id
-      } catch (err) {
-        console.error('Error executing mutation:', err);
-      }
-
-
-      composeScreenCreatingNewPost.current = false;
+      const {postCreated, id} = await createPostExec(globalProfilesArray, postVariations, postTypeData, createPost, postBeingEditedId)
+      composeScreenCreatingNewPost.current = !postCreated;
+      if (postCreated) postBeingEditedId.current =id;
+    } else {
+      if (savePostTimer.current) clearTimeout(savePostTimer.current);
+      savePostTimer.current = setTimeout(async () => {
+        setPostInComposedDoneSaving(false)
+        const postUpdated = await updatePostCaptionExec(
+          postBeingEditedId.current, postVariationKey,
+          postCaption, updatePostCaption
+        )
+        await waitForNSeconds(1.5);
+        setPostInComposedDoneSaving(true)
+      }, 2000);
     }
 
   }
@@ -356,10 +346,8 @@ const ModalStatesProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       postTypeData,
       setPostTypeData,
       composeScreenCreatingNewPost,
-      // updateGlobalProfiles,
-      // globalProfiles,
-      // setGlobalProfiles,
-      // globalProfilesArray,
+      postInComposedDoneSaving,
+      setPostInComposedDoneSaving,
       showPostDetailsFromCalendarModal,
       setShowPostDetailsFromCalendarModal,
       showCreatePostFromCalendarModal,
@@ -395,6 +383,7 @@ export default function RootLayout() {
               <Route path="/compose" element={<ComposePage />} />
               <Route path="/compose/:postId" element={<ComposePage />} />
               <Route path="/schedule" element={<SchedulePage />} />
+              <Route path="/team" element={<TeamPage />} />
             </Routes>
           </AppCode>
         </ModalStatesProvider>

@@ -22,9 +22,28 @@ export const createPostExec = async (globalProfilesArray, postVariations, postTy
         });
         const newURL = `${window.location.pathname}/${data.createPost._id}`; // Append to the current path
         window.history.replaceState(null, '', newURL);
-        postBeingEditedId.current = data.createPost._id
+        return {postCreated: true, id: data.createPost._id};
     } catch (err) {
         console.error('Error executing mutation:', err);
+        return {postCreated: false, id: ""};
     }
+}
 
+export const updatePostCaptionExec = async (updatePostCaptionId: string, postVariationKey: string, 
+    caption: string, updatePostCaption
+) => {
+
+    try {
+        const { data } = await updatePostCaption({
+            variables: {
+                updatePostCaptionId,
+                postVariationKey, caption
+             },
+        });
+        // handle errors
+        if (data.updatePostCaption._id) return true;
+    } catch (err) {
+        console.error('Error executing mutation:', err);
+        return false;
+    }
 }

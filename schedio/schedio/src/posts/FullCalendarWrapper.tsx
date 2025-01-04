@@ -208,16 +208,16 @@ export const FullCalendarWrapper = () => {
         >
           <div style={{ zIndex: 1, height: '100%', width: '100%', minHeight: '100%', borderRadius: '8px', overflow: 'hidden' }}>
             <div style={{ ...eventBgSlicStyles, backgroundColor: '#FF91B3', borderRadius: '8px 8px 0 0' }}>
-              <span style={{ ...innerSliceText }}>Tester</span>
+              <span style={{ ...innerSliceText }}>Informational</span>
             </div>
             <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#1BC7B7' }}>
-              <span style={{ ...innerSliceText }}>Tester</span>
+              <span style={{ ...innerSliceText }}>Motivation</span>
             </div>
             <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#FFE13D' }}>
-              <span style={{ ...innerSliceText }}>Tester</span>
+              <span style={{ ...innerSliceText }}>Advertise</span>
             </div>
             <div style={{ ...eventBgSlicStyles, paddingRight: '5px', backgroundColor: '#FF0000', borderRadius: '0 0 8px 8px' }}>
-              <span style={{ ...innerSliceText }}>Tester</span>
+              <span style={{ ...innerSliceText }}>Tip</span>
             </div>
 
           </div>
@@ -232,7 +232,7 @@ export const FullCalendarWrapper = () => {
               className="clamped-text"
               style={eventTextStyle}
             >
-              ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+              This is a test caption for a post that has been scheduled!
             </div>
 
             <div
@@ -313,8 +313,8 @@ export const FullCalendarWrapper = () => {
 
           <div
             style={{ ...eventTextStyle, WebkitLineClamp: 1 }}>
-            dddddddddddddddddddddddddddddddddddddddddddddddddd
-          </div>
+              This is a test caption for a post that has been scheduled!
+              </div>
 
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '3px' }}>
